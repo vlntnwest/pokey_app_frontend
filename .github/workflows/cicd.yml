@@ -1,0 +1,41 @@
+name: Deploy React Application
+
+on:
+  push:
+    branches:
+      - mern-ec2-docker
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: CHECKOUT SOURCE
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker Image
+        run: docker build -t vlntnwest/pokey-app-react .
+
+      - name: Publish Image to Docker Hub
+        run: docker push vlntnwest/pokey-app-react:latest
+
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Pull Image from Docker Hub
+        run: docker pull vlntnwest/pokey-app-react:latest
+
+      - name: Stop and Remove Existing Container
+        run: |
+          docker stop reactjs-app-container || true
+          docker rm reactjs-app-container || true
+
+      - name: Run Docker Container
+        run: |
+          docker run -d -p 3000:80 \
+            --name reactjs-app-container \
+            -e REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} \
+            vlntnwest/pokey-app-react:latest
