@@ -1,13 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AppBar, Box, IconButton, Toolbar } from "@mui/material";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
+import Badge from "@mui/material/Badge";
 import BottomDrawer from "./Modal/BottomDrawer";
 import Cart from "./Cart/Cart";
 import { useShoppingCart } from "../Context/ShoppingCartContext";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
+  const [cartValue, setCartValue] = useState();
   const { cartItems } = useShoppingCart();
+
+  useEffect(() => {
+    let value = 0;
+    for (let i = 0; i < cartItems.length; i++) {
+      value += cartItems[i].quantity;
+      setCartValue(value);
+    }
+  }, [cartItems]);
 
   return (
     <Box
@@ -44,7 +54,9 @@ const Header = () => {
           </Box>
           {cartItems.length > 0 ? (
             <IconButton onClick={() => setOpen(true)}>
-              <ShoppingBagOutlinedIcon />
+              <Badge badgeContent={cartValue} color="primary">
+                <ShoppingBagOutlinedIcon />
+              </Badge>
             </IconButton>
           ) : null}
           <BottomDrawer open={open} setOpen={setOpen}>
