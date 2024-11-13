@@ -3,7 +3,6 @@ import BottomDrawer from "./Modal/BottomDrawer";
 import MealDisplay from "./MealDisplay";
 import CompositionValidator from "./CompositionValidator";
 import { useShoppingCart } from "../Context/ShoppingCartContext";
-import ValidationModal from "./Modal/ValidationModal";
 
 const sidePrices = {
   "Fallafels x5": 3.5,
@@ -227,7 +226,6 @@ const MealDetails = ({ meal, open, setOpen }) => {
         isLoading={isLoading}
         calculateTotalPrice={calculateTotalPrice}
       />
-      {showConfirmation && <ValidationModal />}
     </BottomDrawer>
   );
 };
