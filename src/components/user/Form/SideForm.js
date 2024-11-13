@@ -23,7 +23,7 @@ const SideForm = ({ handleSideChange }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [sauceSelections, setSauceSelections] = useState({});
-  const [addSideCounts, setAddSideCounts] = useState({});
+  const [sideCounts, setSideCounts] = useState({});
 
   useEffect(() => {
     const fetchCustomItems = async () => {
@@ -59,17 +59,38 @@ const SideForm = ({ handleSideChange }) => {
   }
 
   const handleSideAdd = (side) => {
-    const currentCount = addSideCounts[side.name] || 0;
+    // Get the current count for the selected side (default is 0 if not found)
+    const currentCount = sideCounts[side.name] || 0;
+
+    // Determine the new count (toggle between 1 and 0)
     const newCount = currentCount === 1 ? 0 : 1;
 
-    setAddSideCounts((prevCounts) => ({
-      ...prevCounts,
-      [side.name]: newCount,
-    }));
+    // Update the sideCounts state with the new count for the selected side
+    setSideCounts((prevCounts) => {
+      const updatedCounts = {
+        ...prevCounts,
+        [side.name]: newCount, // Update the count for the selected side
+      };
 
-    const selectedSauce = sauceSelections[side.name] || null;
-    if (side.hasSauce === false)
+      // If the side count becomes 0, remove the entry from the sauceSelections as well
+      if (newCount === 0) {
+        const updatedSelections = { ...sauceSelections };
+        delete updatedSelections[side.name]; // Remove the sauce selection for the side
+        setSauceSelections(updatedSelections);
+        handleSideChange(side.name, newCount, updatedSelections);
+      }
+
+      return updatedCounts;
+    });
+
+    // Determine the selected sauce based on the new count (null if count is 0)
+    const selectedSauce =
+      newCount === 0 ? null : sauceSelections[side.name] || null;
+
+    // If the side does not have sauce, notify the parent with the side name, new count, and selected sauce
+    if (side.hasSauce === false) {
       handleSideChange(side.name, newCount, selectedSauce);
+    }
   };
 
   const handleSauceChange = (e, sideName) => {
@@ -79,7 +100,7 @@ const SideForm = ({ handleSideChange }) => {
       [sideName]: selectedSauce,
     }));
 
-    const count = addSideCounts[sideName] || 0;
+    const count = sideCounts[sideName] || 0;
     handleSideChange(sideName, count, selectedSauce);
   };
 
@@ -100,13 +121,13 @@ const SideForm = ({ handleSideChange }) => {
               <span style={{ fontSize: 16, fontWeight: "400" }}>
                 +{side.price}€
               </span>
-              {addSideCounts[side.name] > 0 ? (
+              {sideCounts[side.name] > 0 ? (
                 <>
                   <RemoveCircleOutlineIcon
                     color="primary"
                     sx={{ margin: "11px" }}
                   />
-                  <span>{addSideCounts[side.name]}</span>
+                  <span>{sideCounts[side.name]}</span>
                   <AddCircleOutlineIcon
                     color="disabled"
                     sx={{ margin: "11px" }}
@@ -117,7 +138,7 @@ const SideForm = ({ handleSideChange }) => {
               )}
             </ListItemButton>
 
-            {side.hasSauce && addSideCounts[side.name] > 0 && (
+            {side.hasSauce && sideCounts[side.name] > 0 && (
               <Box>
                 <FormControl fullWidth>
                   <InputLabel id="sideSauceSelectLabel">

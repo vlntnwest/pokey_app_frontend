@@ -5,20 +5,20 @@ import CompositionValidator from "./CompositionValidator";
 import { useShoppingCart } from "../Context/ShoppingCartContext";
 
 const sidePrices = {
-  "Fallafels x5": 3.5,
-  "Salade d'edamame": 3.5,
-  Gyoza: 3.9,
-  "Salade de wakame": 3.9,
+  "Fallafels x5": "3,5",
+  "Salade d'edamame": "3,5",
+  Gyoza: "3,9",
+  "Salade de wakame": "3,9",
 };
 
 const proteinPrices = {
-  Saumon: 3.5,
-  "Saumon teriyaki": 3.5,
-  Thon: 3.5,
-  "Poulet crispy": 3.5,
-  Gyoza: 3.5,
-  Fallafels: 3.5,
-  Gyozas: 3.5,
+  Saumon: "3,5",
+  "Saumon teriyaki": "3,5",
+  Thon: "3,5",
+  "Poulet crispy": "3,5",
+  Gyoza: "3,5",
+  Fallafels: "3,5",
+  Gyozas: "3,5",
 };
 
 const MealDetails = ({ meal, open, setOpen }) => {
@@ -53,6 +53,7 @@ const MealDetails = ({ meal, open, setOpen }) => {
     setSelectedSauces([]);
     setSelectedProtSup([]);
     setCount(1);
+    setSelectedSide([]);
     setAddSideCounts({});
     setIsLoading(false);
   };
@@ -82,12 +83,13 @@ const MealDetails = ({ meal, open, setOpen }) => {
 
     Object.keys(addSideCounts).forEach((side) => {
       if (addSideCounts[side] > 0) {
-        totalPrice += sidePrices[side] * addSideCounts[side];
+        totalPrice +=
+          parseFloat(sidePrices[side].replace(",", ".")) * addSideCounts[side];
       }
     });
 
     selectedProtSup.forEach((protein) => {
-      totalPrice += proteinPrices[protein];
+      totalPrice += parseFloat(proteinPrices[protein].replace(",", "."));
     });
 
     totalPrice *= count;
@@ -121,7 +123,7 @@ const MealDetails = ({ meal, open, setOpen }) => {
         name: sideArray[0],
         sauces: sideArray[1] ? [sideArray[1]] : [],
         quantity: count,
-        price,
+        price: sidePrices[sideArray[0]],
       };
       sides.push(side);
     });
@@ -179,6 +181,11 @@ const MealDetails = ({ meal, open, setOpen }) => {
       // Met à jour le tableau selectedSide
       setSelectedSide((prev) => {
         const existingSideIndex = prev.findIndex((s) => s[0] === side);
+
+        if (count === 0) {
+          // Si le count est 0, supprimer l'entrée du tableau
+          return prev.filter((s) => s[0] !== side);
+        }
 
         if (existingSideIndex !== -1) {
           // Si le side existe déjà, le remplacer

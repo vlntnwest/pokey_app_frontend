@@ -29,7 +29,6 @@ const FormRenderer = ({ type, options, handlers }) => {
     handleToppingsChange,
     handleSauceChange,
     handleSideChange,
-
     handleProtSupChange,
   } = handlers;
   return (
