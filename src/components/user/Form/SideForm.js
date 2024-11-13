@@ -18,7 +18,7 @@ import {
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
-const SideForm = ({ handleSideChange }) => {
+const SideForm = ({ handleSideChange, addSideCounts }) => {
   const [sides, setSides] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);

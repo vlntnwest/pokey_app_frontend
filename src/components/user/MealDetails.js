@@ -101,7 +101,7 @@ const MealDetails = ({ meal, open, setOpen }) => {
     setIsLoading(true);
 
     const item = {
-      id: `${_id}-${timestamp}`,
+      id: `${_id}-${Math.floor(Math.random() * timestamp)}`,
       type,
       name,
       base: selectedBase,
@@ -118,7 +118,7 @@ const MealDetails = ({ meal, open, setOpen }) => {
 
     selectedSide.forEach((sideArray) => {
       const side = {
-        id: `${_id}-${timestamp}-side`,
+        id: `${_id}-${Math.floor(Math.random() * timestamp)}-side`,
         type: "side",
         name: sideArray[0],
         sauces: sideArray[1] ? [sideArray[1]] : [],

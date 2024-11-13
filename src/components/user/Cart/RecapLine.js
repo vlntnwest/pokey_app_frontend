@@ -5,6 +5,13 @@ import EditCartItems from "./EditCartItems";
 
 const RecapLine = ({ item, updateItemCount }) => {
   const [open, setOpen] = useState(false);
+  const orderDetails = [
+    ...[item.base],
+    ...(item.extraProtein ? item.extraProtein : []),
+    ...(item.garnishes ? item.garnishes : []),
+    ...(item.sauces ? item.sauces : []),
+    ...(item.toppings ? item.toppings : []),
+  ];
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
@@ -34,7 +41,7 @@ const RecapLine = ({ item, updateItemCount }) => {
           sx={{
             display: "flex",
             justifyContent: "space-between",
-            alignItems: "center",
+            alignItems: "flex-start",
           }}
         >
           <Box sx={{ mr: 1.5, pl: 2, py: 1.5 }}>
@@ -54,6 +61,17 @@ const RecapLine = ({ item, updateItemCount }) => {
           >
             <Typography sx={{ textAlign: "left", fontWeight: "400" }}>
               {item.name}
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                textAlign: "left",
+                color: "text.secondary",
+                textTransform: "none",
+                pt: 0.5,
+              }}
+            >
+              {orderDetails.filter(Boolean).join(", ")}
             </Typography>
           </Box>
           <Box sx={{ ml: 1.5 }}>
