@@ -59,17 +59,40 @@ const SideForm = ({ handleSideChange }) => {
   }
 
   const handleSideAdd = (side) => {
+    // Get the current count for the selected side (default is 0 if not found)
     const currentCount = addSideCounts[side.name] || 0;
+
+    // Determine the new count (toggle between 1 and 0)
     const newCount = currentCount === 1 ? 0 : 1;
 
+    // Update the addSideCounts state with the new count for the selected side
     setAddSideCounts((prevCounts) => ({
-      ...prevCounts,
-      [side.name]: newCount,
+      ...prevCounts, // Retain the previous counts for other sides
+      [side.name]: newCount, // Set the new count for the selected side
     }));
 
-    const selectedSauce = sauceSelections[side.name] || null;
-    if (side.hasSauce === false)
+    // If the side count is being set to 0, reset the selected sauce for this side
+    if (newCount === 0) {
+      setSauceSelections((prevSelections) => {
+        // Create a copy of the previous sauce selections
+        const newSelections = { ...prevSelections };
+
+        // Remove the sauce selection for the current side by deleting its entry
+        delete newSelections[side.name];
+
+        // Return the updated sauce selections
+        return newSelections;
+      });
+    }
+
+    // Determine the selected sauce based on the new count (null if count is 0)
+    const selectedSauce =
+      newCount === 0 ? null : sauceSelections[side.name] || null;
+
+    // If the side does not have sauce, notify the parent with the side name, new count, and selected sauce
+    if (side.hasSauce === false) {
       handleSideChange(side.name, newCount, selectedSauce);
+    }
   };
 
   const handleSauceChange = (e, sideName) => {
