@@ -3,21 +3,28 @@ import BottomDrawer from "./Modal/BottomDrawer";
 import MealDisplay from "./MealDisplay";
 import CompositionValidator from "./CompositionValidator";
 import { useShoppingCart } from "../Context/ShoppingCartContext";
+import ValidationModal from "./Modal/ValidationModal";
 
 const sidePrices = {
   "Fallafels x5": 3.5,
   "Salade d'edamame": 3.5,
+  Gyoza: 3.9,
+  "Salade de wakame": 3.9,
 };
 
 const proteinPrices = {
   Saumon: 3.5,
+  "Saumon teriyaki": 3.5,
   Thon: 3.5,
-  "Poulet croustillant": 3.5,
+  "Poulet crispy": 3.5,
   Gyoza: 3.5,
+  Fallafels: 3.5,
+  Gyozas: 3.5,
 };
 
 const MealDetails = ({ meal, open, setOpen }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const { addToCart } = useShoppingCart();
 
   const { name, price, type, _id } = meal;
@@ -92,40 +99,44 @@ const MealDetails = ({ meal, open, setOpen }) => {
   const sendToCart = () => {
     setIsLoading(true);
 
-    setTimeout(() => {
-      const item = {
-        id: `${_id}-${timestamp}`,
-        type,
-        name,
-        base: selectedBase,
-        proteins: selectedProt,
-        garnishes: selectedGarnishes,
-        toppings: selectedToppings,
-        sauces: selectedSauces || [],
-        extraProtein: selectedProtSup,
+    const item = {
+      id: `${_id}-${timestamp}`,
+      type,
+      name,
+      base: selectedBase,
+      proteins: selectedProt,
+      garnishes: selectedGarnishes,
+      toppings: selectedToppings,
+      sauces: selectedSauces || [],
+      extraProtein: selectedProtSup,
+      quantity: count,
+      price,
+    };
+
+    const sides = [];
+
+    selectedSide.forEach((sideArray) => {
+      const side = {
+        id: `${_id}-${timestamp}-side`,
+        type: "side",
+        name: sideArray[0],
+        sauces: sideArray[1] ? [sideArray[1]] : [],
         quantity: count,
         price,
       };
+      sides.push(side);
+    });
 
-      const sides = [];
+    addToCart(item); // Ajout du plat principal au panier
+    sides.forEach((side) => addToCart(side));
 
-      selectedSide.forEach((sideArray) => {
-        const side = {
-          id: `${_id}-${timestamp}-side`,
-          type: "side",
-          name: sideArray[0],
-          sauces: sideArray[1] ? [sideArray[1]] : [],
-          quantity: count,
-          price,
-        };
-        sides.push(side);
-      });
+    setIsLoading(true);
+    setShowConfirmation(true); // Affiche la confirmation
+    setOpen(false); // Ferme le modal
 
-      addToCart(item); // Ajout du plat principal au panier
-      sides.forEach((side) => addToCart(side));
-
-      setOpen(false);
-    }, 1000);
+    setTimeout(() => {
+      setShowConfirmation(false); // Masque la confirmation après 2 secondes
+    }, 2000);
   };
 
   const handlers = {
@@ -216,6 +227,7 @@ const MealDetails = ({ meal, open, setOpen }) => {
         isLoading={isLoading}
         calculateTotalPrice={calculateTotalPrice}
       />
+      {showConfirmation && <ValidationModal />}
     </BottomDrawer>
   );
 };
