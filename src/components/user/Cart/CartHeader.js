@@ -65,7 +65,7 @@ const CartHeader = ({ setOpen }) => {
         </AppBar>
       </Box>
       <Drawer open={openDrawer} onClose={toggleDrawer(false)} anchor="bottom">
-        <DeleteCart toggleDrawer={toggleDrawer} />
+        <DeleteCart toggleDrawer={toggleDrawer} setOpen={setOpen} />
       </Drawer>
     </>
   );

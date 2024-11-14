@@ -10,12 +10,13 @@ import React from "react";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { useShoppingCart } from "../../Context/ShoppingCartContext";
 
-const DeleteCart = ({ toggleDrawer }) => {
+const DeleteCart = ({ toggleDrawer, setOpen }) => {
   const { clearCart } = useShoppingCart();
 
   const deleteCart = () => {
     clearCart();
     toggleDrawer(false)();
+    setOpen(false);
   };
 
   return (
