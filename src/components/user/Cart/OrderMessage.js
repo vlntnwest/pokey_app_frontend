@@ -62,7 +62,7 @@ const OrderMessage = () => {
         onClose={toggleDrawer(false)}
         anchor="bottom"
       >
-        <Box sx={{ height: "95vh", display: "flex", flexDirection: "column" }}>
+        <Box sx={{ height: "95svh", display: "flex", flexDirection: "column" }}>
           <Toolbar sx={{ padding: "0 8px" }}>
             <IconButton onClick={() => setOpen(false)}>
               <CloseRoundedIcon />
