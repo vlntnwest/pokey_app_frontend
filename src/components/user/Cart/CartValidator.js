@@ -46,7 +46,7 @@ const CartValidator = ({ setOpen }) => {
     const dataToPrint = {
       tableNumber,
       items: items,
-      message,
+      specialInstructions: message,
     };
 
     try {
