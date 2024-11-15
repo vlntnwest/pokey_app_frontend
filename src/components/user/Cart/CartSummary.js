@@ -2,6 +2,7 @@ import { Box, Card, Typography } from "@mui/material";
 import React from "react";
 import RecapLine from "./RecapLine";
 import { useShoppingCart } from "../../Context/ShoppingCartContext";
+import OrderMessage from "./OrderMessage";
 
 const CartSummary = () => {
   const { cartItems, updateItemCount } = useShoppingCart();
@@ -15,7 +16,7 @@ const CartSummary = () => {
       <Typography variant="h2" fontSize={18} pt={1} pb={2} color="textPrimary">
         Panier
       </Typography>
-      <Card>
+      <Card sx={{ border: "1px solid #0000000a" }}>
         {cartItems.map((item, index) => (
           <RecapLine
             key={index}
@@ -24,6 +25,7 @@ const CartSummary = () => {
           />
         ))}
       </Card>
+      <OrderMessage />
     </Box>
   );
 };

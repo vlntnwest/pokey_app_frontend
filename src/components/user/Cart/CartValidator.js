@@ -7,7 +7,7 @@ import { useShoppingCart } from "../../Context/ShoppingCartContext";
 const CartValidator = ({ setOpen }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { tableNumber } = useParams();
-  const { cartItems, clearCart } = useShoppingCart();
+  const { cartItems, clearCart, message, setMessage } = useShoppingCart();
 
   const calculateTotalPrice = () => {
     return cartItems
@@ -46,6 +46,7 @@ const CartValidator = ({ setOpen }) => {
     const dataToPrint = {
       tableNumber,
       items: items,
+      message,
     };
 
     try {
@@ -75,6 +76,7 @@ const CartValidator = ({ setOpen }) => {
     clearCart();
     setOpen(false);
     setIsSubmitting(false);
+    setMessage("");
   };
 
   return (

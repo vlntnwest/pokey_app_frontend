@@ -25,14 +25,14 @@ const CartHeader = ({ setOpen }) => {
       >
         <AppBar
           component="nav"
-          style={{
+          sx={{
             background: "#fff",
             boxShadow: "none",
             position: "sticky",
             top: "0",
           }}
         >
-          <Toolbar style={{ padding: "0 8px" }}>
+          <Toolbar sx={{ padding: "0 8px" }}>
             <IconButton onClick={() => setOpen(false)}>
               <CloseRoundedIcon />
             </IconButton>
@@ -40,7 +40,7 @@ const CartHeader = ({ setOpen }) => {
               sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}
             >
               <div
-                style={{
+                sx={{
                   width: "100px",
                   backgroundImage:
                     "url('https://g10afdaataaj4tkl.public.blob.vercel-storage.com/img/1Fichier-21.svg')",

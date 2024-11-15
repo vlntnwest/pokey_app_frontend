@@ -12,6 +12,8 @@ export default function ShoppingCartProvider({ children }) {
     return storedCart ? JSON.parse(storedCart) : [];
   });
 
+  const [message, setMessage] = useState("Aucune indication renseignée");
+
   const addToCart = (item) => {
     setCartItems((prevItems) => [...prevItems, item]);
   };
@@ -56,6 +58,8 @@ export default function ShoppingCartProvider({ children }) {
         updateItemCount,
         removeFromCart,
         clearCart,
+        message,
+        setMessage,
       }}
     >
       {children}
