@@ -6,3 +6,11 @@ export const isEmpty = (value) => {
     (typeof value === "string" && value.trim().length === 0)
   );
 };
+
+export const formatPrice = (price) => {
+  return parseFloat(price.replace(",", "."));
+};
+
+export const formatPriceBack = (price) => {
+  return parseFloat(price.replace(".", ","));
+};

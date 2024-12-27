@@ -2,6 +2,7 @@ import { Box, Button, Divider, Drawer, Typography } from "@mui/material";
 import React, { useState } from "react";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import EditCartItems from "./EditCartItems";
+import { formatPrice } from "../../Utils";
 
 const RecapLine = ({ item, updateItemCount }) => {
   const [open, setOpen] = useState(false);
@@ -18,10 +19,13 @@ const RecapLine = ({ item, updateItemCount }) => {
   };
 
   const calculateTotalPrice = () => {
-    let totalPrice = parseFloat(item.price.replace(",", "."));
+    let price = formatPrice(item.price);
 
-    totalPrice *= item.quantity;
+    let totalPrice = item.quantity * price;
 
+    if (item.extraProtein) {
+      totalPrice += item.quantity * 3;
+    }
     return totalPrice.toFixed(2);
   };
 
