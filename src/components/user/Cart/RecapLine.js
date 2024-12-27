@@ -23,7 +23,7 @@ const RecapLine = ({ item, updateItemCount }) => {
 
     let totalPrice = item.quantity * price;
 
-    if (item.extraProtein) {
+    if (item.extraProtein.length > 0) {
       totalPrice += item.quantity * 3;
     }
     return totalPrice.toFixed(2);

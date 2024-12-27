@@ -13,7 +13,7 @@ const CartValidator = ({ setOpen }) => {
     return cartItems
       .reduce((total, item) => {
         const price = parseFloat(item.price.replace(",", "."));
-        return total + price * item.quantity + item.quantity * 3;
+        return total + price * item.quantity + item.extraProtein.length * 3;
       }, 0)
       .toFixed(2);
   };
