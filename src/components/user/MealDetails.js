@@ -3,13 +3,15 @@ import BottomDrawer from "./Modal/BottomDrawer";
 import MealDisplay from "./MealDisplay";
 import CompositionValidator from "./CompositionValidator";
 import { useShoppingCart } from "../Context/ShoppingCartContext";
+import { formatPrice, isEmpty } from "../Utils";
+import { useSelector } from "react-redux";
 
-const sidePrices = {
-  "Fallafels x5": "3,5",
-  "Salade d'edamame": "3,5",
-  Gyoza: "3,9",
-  "Salade de wakame": "3,9",
-};
+// const sidePrices = {
+//   "Fallafels x5": "3,5",
+//   "Salade d'edamame": "3,5",
+//   Gyoza: "3,9",
+//   "Salade de wakame": "3,9",
+// };
 
 const proteinPrices = {
   Saumon: "3,5",
@@ -23,7 +25,6 @@ const proteinPrices = {
 
 const MealDetails = ({ meal, open, setOpen }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [showConfirmation, setShowConfirmation] = useState(false);
   const { addToCart } = useShoppingCart();
 
   const { name, price, type, _id } = meal;
@@ -38,6 +39,11 @@ const MealDetails = ({ meal, open, setOpen }) => {
   const [selectedSide, setSelectedSide] = useState([]);
   const [count, setCount] = useState(1);
   const [addSideCounts, setAddSideCounts] = useState({});
+
+  const mealsData = useSelector((state) => state.mealReducer);
+  const sidePrices = !isEmpty(mealsData)
+    ? mealsData.filter((meal) => meal.type === "side")
+    : [];
 
   useEffect(() => {
     if (!open) {
@@ -78,18 +84,54 @@ const MealDetails = ({ meal, open, setOpen }) => {
     } else return false;
   };
 
-  const calculateTotalPrice = () => {
-    let totalPrice = parseFloat(price.replace(",", "."));
+  // const calculateTotalPrice = () => {
+  //   let totalPrice = parseFloat(price.replace(",", "."));
 
-    Object.keys(addSideCounts).forEach((side) => {
-      if (addSideCounts[side] > 0) {
-        totalPrice +=
-          parseFloat(sidePrices[side].replace(",", ".")) * addSideCounts[side];
+  //   Object.keys(addSideCounts).forEach((side) => {
+  //     if (addSideCounts[side] > 0) {
+  //       totalPrice +=
+  //         parseFloat(sidePrices[side].price.replace(",", ".")) *
+  //         addSideCounts[side];
+  //     }
+  //   });
+
+  //   selectedProtSup.forEach((protein) => {
+  //     totalPrice += parseFloat(proteinPrices[protein].replace(",", "."));
+  //   });
+
+  //   totalPrice *= count;
+
+  //   return totalPrice.toFixed(2);
+  // };
+
+  const calculateTotalPrice = () => {
+    let totalPrice = formatPrice(price);
+
+    selectedSide.forEach((side) => {
+      if (side) {
+        const getPrice = (sideName) => {
+          const item = sidePrices.find(
+            (sideItem) => sideItem.name === sideName
+          );
+          console.log(item);
+
+          if (!item) {
+            console.log(`Prix non trouvé pour: ${sideName}`);
+            return null;
+          }
+          return item.price;
+        };
+
+        const sidePrice = getPrice(side[0]);
+
+        if (sidePrice) {
+          totalPrice += formatPrice(sidePrice) * side[2];
+        }
       }
     });
 
     selectedProtSup.forEach((protein) => {
-      totalPrice += parseFloat(proteinPrices[protein].replace(",", "."));
+      totalPrice += formatPrice(proteinPrices[protein]);
     });
 
     totalPrice *= count;
@@ -132,12 +174,7 @@ const MealDetails = ({ meal, open, setOpen }) => {
     sides.forEach((side) => addToCart(side));
 
     setIsLoading(true);
-    setShowConfirmation(true); // Affiche la confirmation
     setOpen(false); // Ferme le modal
-
-    setTimeout(() => {
-      setShowConfirmation(false); // Masque la confirmation après 2 secondes
-    }, 2000);
   };
 
   const handlers = {
