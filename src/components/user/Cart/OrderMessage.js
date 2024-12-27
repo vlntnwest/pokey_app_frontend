@@ -60,6 +60,7 @@ const OrderMessage = () => {
       <SwipeableDrawer
         open={open}
         onClose={toggleDrawer(false)}
+        onOpen={toggleDrawer(true)}
         anchor="bottom"
       >
         <Box sx={{ height: "95svh", display: "flex", flexDirection: "column" }}>

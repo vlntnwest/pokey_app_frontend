@@ -21,14 +21,11 @@ const RecapLine = ({ item, updateItemCount }) => {
   const calculateTotalPrice = () => {
     let price = formatPrice(item.price);
 
+    let totalPrice = item.quantity * price;
+
     if (item.extraProtein) {
-      const totalPrice = item.quantity * price + item.quantity * 3.5;
-
-      return totalPrice.toFixed(2);
+      totalPrice += item.quantity * 3;
     }
-
-    const totalPrice = item.quantity * price;
-
     return totalPrice.toFixed(2);
   };
 

@@ -5,23 +5,17 @@ import CompositionValidator from "./CompositionValidator";
 import { useShoppingCart } from "../Context/ShoppingCartContext";
 import { formatPrice, isEmpty } from "../Utils";
 import { useSelector } from "react-redux";
+import axios from "axios";
 
-// const sidePrices = {
-//   "Fallafels x5": "3,5",
-//   "Salade d'edamame": "3,5",
-//   Gyoza: "3,9",
-//   "Salade de wakame": "3,9",
+// const proteinPrices = {
+//   Saumon: "3",
+//   "Saumon teriyaki": "3",
+//   Thon: "3",
+//   "Poulet crispy": "3",
+//   Gyoza: "3",
+//   Fallafels: "3",
+//   Gyozas: "3",
 // };
-
-const proteinPrices = {
-  Saumon: "3,5",
-  "Saumon teriyaki": "3,5",
-  Thon: "3,5",
-  "Poulet crispy": "3,5",
-  Gyoza: "3,5",
-  Fallafels: "3,5",
-  Gyozas: "3,5",
-};
 
 const MealDetails = ({ meal, open, setOpen }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -39,11 +33,36 @@ const MealDetails = ({ meal, open, setOpen }) => {
   const [selectedSide, setSelectedSide] = useState([]);
   const [count, setCount] = useState(1);
   const [addSideCounts, setAddSideCounts] = useState({});
+  const [proteinPrices, setProteinPrices] = useState({});
 
   const mealsData = useSelector((state) => state.mealReducer);
   const sidePrices = !isEmpty(mealsData)
     ? mealsData.filter((meal) => meal.type === "side")
     : [];
+
+  useEffect(() => {
+    const fetchCustomItems = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}api/item/custom/proteins`
+        );
+
+        const proteins = response.data.reduce((acc, item) => {
+          acc[item.name] = item.price.replace(",", ".");
+          return acc;
+        }, {});
+
+        setProteinPrices(proteins);
+      } catch (err) {
+        console.error("Error fetching custom items:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCustomItems();
+  }, []);
 
   useEffect(() => {
     if (!open) {
