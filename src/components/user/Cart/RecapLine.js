@@ -18,9 +18,9 @@ const RecapLine = ({ item, updateItemCount }) => {
   };
 
   const calculateTotalPrice = () => {
-    let totalPrice = parseFloat(item.price.replace(",", "."));
+    let price = parseFloat(item.price.replace(",", "."));
 
-    totalPrice *= item.quantity;
+    const totalPrice = item.quantity * price + item.extraProtein.length * 3.5;
 
     return totalPrice.toFixed(2);
   };
