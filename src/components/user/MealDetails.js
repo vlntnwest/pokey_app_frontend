@@ -84,26 +84,6 @@ const MealDetails = ({ meal, open, setOpen }) => {
     } else return false;
   };
 
-  // const calculateTotalPrice = () => {
-  //   let totalPrice = parseFloat(price.replace(",", "."));
-
-  //   Object.keys(addSideCounts).forEach((side) => {
-  //     if (addSideCounts[side] > 0) {
-  //       totalPrice +=
-  //         parseFloat(sidePrices[side].price.replace(",", ".")) *
-  //         addSideCounts[side];
-  //     }
-  //   });
-
-  //   selectedProtSup.forEach((protein) => {
-  //     totalPrice += parseFloat(proteinPrices[protein].replace(",", "."));
-  //   });
-
-  //   totalPrice *= count;
-
-  //   return totalPrice.toFixed(2);
-  // };
-
   const calculateTotalPrice = () => {
     let totalPrice = formatPrice(price);
 
@@ -113,8 +93,6 @@ const MealDetails = ({ meal, open, setOpen }) => {
           const item = sidePrices.find(
             (sideItem) => sideItem.name === sideName
           );
-          console.log(item);
-
           if (!item) {
             console.log(`Prix non trouvé pour: ${sideName}`);
             return null;
@@ -159,13 +137,16 @@ const MealDetails = ({ meal, open, setOpen }) => {
     const sides = [];
 
     selectedSide.forEach((sideArray) => {
+      const item = sidePrices.find(
+        (sideItem) => sideItem.name === sideArray[0]
+      );
       const side = {
         id: `${_id}-${Math.floor(Math.random() * timestamp)}-side`,
         type: "side",
         name: sideArray[0],
         sauces: sideArray[1] ? [sideArray[1]] : [],
         quantity: count,
-        price: sidePrices[sideArray[0]],
+        price: item.price,
       };
       sides.push(side);
     });
