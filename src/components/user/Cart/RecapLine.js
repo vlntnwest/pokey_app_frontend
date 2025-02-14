@@ -83,7 +83,10 @@ const RecapLine = ({ item, updateItemCount }) => {
               <Typography sx={{ fontWeight: "400" }}>
                 {calculateTotalPrice().replace(".", ",")}€
               </Typography>
-              <ArrowForwardIosRoundedIcon sx={{ ml: 1, maxHeight: "21px" }} />
+              <ArrowForwardIosRoundedIcon
+                sx={{ ml: 1, maxHeight: "21px" }}
+                color="primary"
+              />
             </Box>
           </Box>
         </Box>
