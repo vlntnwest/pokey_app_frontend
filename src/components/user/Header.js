@@ -5,6 +5,7 @@ import Badge from "@mui/material/Badge";
 import BottomDrawer from "./Modal/BottomDrawer";
 import Cart from "./Cart/Cart";
 import { useShoppingCart } from "../Context/ShoppingCartContext";
+import AuthButtons from "./Auth/AuthButtons";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
@@ -59,6 +60,7 @@ const Header = () => {
               </Badge>
             </IconButton>
           ) : null}
+          <AuthButtons />
           <BottomDrawer open={open} setOpen={setOpen}>
             <Cart setOpen={setOpen} />
           </BottomDrawer>
