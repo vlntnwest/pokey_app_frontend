@@ -1,7 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
+import { getUser } from "../../../actions/users.action";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useDispatch } from "react-redux";
 
 const AccountDetails = () => {
+  const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (isAuthenticated && user?.email) {
+        try {
+          const token = await getAccessTokenSilently();
+          dispatch(getUser(user.email, token));
+        } catch (err) {
+          console.error("Erreur lors de la récupération du token", err);
+        }
+      }
+    };
+
+    fetchUser();
+  }, [isAuthenticated, user?.email, getAccessTokenSilently, dispatch]);
   return (
     <Box
       sx={{

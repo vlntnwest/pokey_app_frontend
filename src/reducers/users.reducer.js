@@ -1,4 +1,4 @@
-import { GET_USER } from "../actions/user.action";
+import { GET_USER } from "../actions/users.action";
 
 const initialState = {};
 

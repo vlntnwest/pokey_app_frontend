@@ -5,7 +5,7 @@ import AdminHeader from "../components/admin/adminComponents/AdminHeader";
 import { useDispatch } from "react-redux";
 import Tabs from "../components/admin/adminComponents/Tabs";
 import axios from "axios";
-import { getUser } from "../actions/user.action";
+import { getUser } from "../actions/users.action";
 
 const Admin = () => {
   const [uid, setUid] = useState(null);
