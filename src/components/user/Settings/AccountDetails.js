@@ -1,27 +1,14 @@
 import React, { useEffect } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { getUser } from "../../../actions/users.action";
-import { useAuth0 } from "@auth0/auth0-react";
-import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 const AccountDetails = () => {
-  const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
-  const dispatch = useDispatch();
+  const userData = useSelector((state) => state.userReducer);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      if (isAuthenticated && user?.email) {
-        try {
-          const token = await getAccessTokenSilently();
-          dispatch(getUser(user.email, token));
-        } catch (err) {
-          console.error("Erreur lors de la récupération du token", err);
-        }
-      }
-    };
+    console.log(userData);
+  }, []);
 
-    fetchUser();
-  }, [isAuthenticated, user?.email, getAccessTokenSilently, dispatch]);
   return (
     <Box
       sx={{
@@ -44,25 +31,25 @@ const AccountDetails = () => {
       >
         <TextField
           label="Prénom"
-          defaultValue="Valentin"
+          defaultValue={userData.firstName}
           variant="standard"
           sx={{ width: "100%", mb: 2 }}
         />
         <TextField
           label="Nom"
-          defaultValue="Westermeyer"
+          defaultValue={userData.lastName}
           variant="standard"
           sx={{ width: "100%", mb: 2 }}
         />
         <TextField
           label="Numéro de téléphone"
-          defaultValue="06 03 75 14 57"
+          defaultValue={userData.phone}
           variant="standard"
           sx={{ width: "100%", mb: 2 }}
         />
         <TextField
           label="Email"
-          defaultValue="valentin@westermeyer.fr"
+          defaultValue={userData.email}
           variant="standard"
           helperText="Contacté le restaurant pour changer votre email"
           sx={{ width: "100%" }}
