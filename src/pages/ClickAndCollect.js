@@ -10,6 +10,8 @@ import { getMeals } from "../actions/meal.action";
 import ShoppingCartProvider from "../components/Context/ShoppingCartContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getUser } from "../actions/users.action";
+import Onboarding from "../components/user/Onboarding/Onboarding";
+import axios from "axios";
 
 const Table = () => {
   const dispatch = useDispatch();
@@ -21,9 +23,11 @@ const Table = () => {
 
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isNewUser, setIsNewUser] = useState(null);
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchEverything = async () => {
+      setIsLoading(true);
       if (isAuthenticated && user?.email) {
         try {
           const token = await getAccessTokenSilently({
@@ -32,19 +36,28 @@ const Table = () => {
               scope: "read:current_user read:users_app_metadata",
             },
           });
-          dispatch(getUser(user.email, token));
+          const result = await dispatch(getUser(user.email, token));
+
+          if (!result.success) {
+            setIsNewUser(true);
+            const data = {
+              email: user.email,
+            };
+            try {
+              axios.post(`${process.env.REACT_APP_API_URL}api/users`, data, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+            } catch (err) {
+              console.error("Erreur lors de la création de l'utilisateur", err);
+            }
+          }
         } catch (err) {
           console.error("Erreur lors de la récupération du token", err);
         }
       }
-    };
 
-    fetchUser();
-  }, [isAuthenticated, user, dispatch, getAccessTokenSilently, audience]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
       try {
         await dispatch(getMeals());
         await dispatch(getDetails());
@@ -59,8 +72,15 @@ const Table = () => {
       }
     };
 
-    fetchData();
-  }, [dispatch, tableNumber]);
+    fetchEverything();
+  }, [
+    isAuthenticated,
+    user,
+    dispatch,
+    getAccessTokenSilently,
+    audience,
+    tableNumber,
+  ]);
 
   if (isLoading) {
     return (
@@ -104,6 +124,10 @@ const Table = () => {
         </Alert>
       </Container>
     );
+  }
+
+  if (isNewUser === true && isAuthenticated) {
+    return <Onboarding />;
   }
 
   return (

@@ -1,13 +1,57 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteUser, editUser } from "../../../actions/users.action";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const AccountDetails = () => {
   const userData = useSelector((state) => state.userReducer);
+  const dispatch = useDispatch();
+  const { getAccessTokenSilently, logout } = useAuth0();
+  const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
-  useEffect(() => {
-    console.log(userData);
-  }, []);
+  const [firstName, setFirstName] = useState(userData.firstName);
+  const [lastName, setlastName] = useState(userData.lastName);
+  const [phone, setPhone] = useState(userData.phone);
+
+  const handleEdit = async (e) => {
+    e.preventDefault();
+
+    const data = {
+      firstName: firstName,
+      lastName: lastName,
+      phone: phone,
+    };
+
+    try {
+      const token = await getAccessTokenSilently({
+        authorizationParams: {
+          audience: audience,
+          scope: "read:current_user read:users_app_metadata",
+        },
+      });
+      dispatch(editUser(data, userData._id, token));
+    } catch (err) {
+      console.error("Erreur lors de la récupération du token", err);
+    }
+  };
+
+  const handleDelete = async (e) => {
+    e.preventDefault();
+
+    try {
+      const token = await getAccessTokenSilently({
+        authorizationParams: {
+          audience: audience,
+          scope: "read:current_user read:users_app_metadata",
+        },
+      });
+      dispatch(deleteUser(userData._id, token));
+      logout({ returnTo: window.location.origin });
+    } catch (err) {
+      console.error("Erreur lors de la récupération du token", err);
+    }
+  };
 
   return (
     <Box
@@ -31,21 +75,24 @@ const AccountDetails = () => {
       >
         <TextField
           label="Prénom"
-          defaultValue={userData.firstName}
+          defaultValue={firstName}
           variant="standard"
           sx={{ width: "100%", mb: 2 }}
+          onChange={(e) => setFirstName(e.target.value)}
         />
         <TextField
           label="Nom"
-          defaultValue={userData.lastName}
+          defaultValue={lastName}
           variant="standard"
           sx={{ width: "100%", mb: 2 }}
+          onChange={(e) => setlastName(e.target.value)}
         />
         <TextField
           label="Numéro de téléphone"
-          defaultValue={userData.phone}
+          defaultValue={phone}
           variant="standard"
           sx={{ width: "100%", mb: 2 }}
+          onChange={(e) => setPhone(e.target.value)}
         />
         <TextField
           label="Email"
@@ -71,6 +118,7 @@ const AccountDetails = () => {
             borderRadius: 0,
             mb: 4,
           }}
+          onClick={handleEdit}
         >
           <Box
             sx={{
@@ -109,6 +157,7 @@ const AccountDetails = () => {
               p: 0,
               display: "block",
             }}
+            onClick={handleDelete}
           >
             <Typography
               sx={{
