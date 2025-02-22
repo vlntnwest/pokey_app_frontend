@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import Header from "../components/user/Header";
 import { useDispatch } from "react-redux";
 import { getDetails } from "../actions/details.action";
@@ -15,7 +14,6 @@ import axios from "axios";
 
 const Table = () => {
   const dispatch = useDispatch();
-  const { tableNumber } = useParams();
   const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
   const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
@@ -26,61 +24,80 @@ const Table = () => {
   const [isNewUser, setIsNewUser] = useState(null);
 
   useEffect(() => {
-    const fetchEverything = async () => {
-      setIsLoading(true);
-      if (isAuthenticated && user?.email) {
-        try {
-          const token = await getAccessTokenSilently({
-            authorizationParams: {
-              audience: audience,
-              scope: "read:current_user read:users_app_metadata",
-            },
-          });
-          const result = await dispatch(getUser(user.email, token));
-
-          if (!result.success) {
-            setIsNewUser(true);
-            const data = {
-              email: user.email,
-            };
-            try {
-              axios.post(`${process.env.REACT_APP_API_URL}api/users`, data, {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              });
-            } catch (err) {
-              console.error("Erreur lors de la création de l'utilisateur", err);
-            }
-          }
-        } catch (err) {
-          console.error("Erreur lors de la récupération du token", err);
-        }
-      }
+    const handleAuthentication = async () => {
+      if (!isAuthenticated || !user?.email) return;
 
       try {
+        const token = await getAccessTokenSilently({
+          authorizationParams: {
+            audience: audience,
+            scope: "read:current_user read:users_app_metadata",
+          },
+        });
+
+        const result = await dispatch(getUser(user.email, token));
+
+        if (!result.success) {
+          setIsNewUser(true);
+          await createNewUser(token, user.email);
+        }
+      } catch (err) {
+        console.error("Erreur lors de l'authentification", err);
+      }
+    };
+
+    const createNewUser = async (token, email) => {
+      try {
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_URL}api/users`,
+          { email },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        console.log(response);
+      } catch (err) {
+        console.error("Erreur lors de la création de l'utilisateur", err);
+      }
+    };
+
+    handleAuthentication();
+  }, [isAuthenticated, user, dispatch, getAccessTokenSilently, audience]);
+
+  useEffect(() => {
+    const fetchMeals = async () => {
+      try {
         await dispatch(getMeals());
+      } catch (error) {
+        setError(
+          error.response
+            ? error.response.data.error
+            : "Error fetching meals data"
+        );
+      }
+    };
+
+    fetchMeals();
+  }, [dispatch]);
+
+  useEffect(() => {
+    const fetchDetails = async () => {
+      setIsLoading(true);
+      try {
         await dispatch(getDetails());
       } catch (error) {
         setError(
           error.response
             ? error.response.data.error
-            : "Error fetching tables data"
+            : "Error fetching details data"
         );
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchEverything();
-  }, [
-    isAuthenticated,
-    user,
-    dispatch,
-    getAccessTokenSilently,
-    audience,
-    tableNumber,
-  ]);
+    fetchDetails();
+  }, [dispatch]);
 
   if (isLoading) {
     return (
@@ -127,7 +144,7 @@ const Table = () => {
   }
 
   if (isNewUser === true && isAuthenticated) {
-    return <Onboarding />;
+    return <Onboarding setIsNewUser={setIsNewUser} />;
   }
 
   return (

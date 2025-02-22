@@ -3,6 +3,7 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteUser, editUser } from "../../../actions/users.action";
 import { useAuth0 } from "@auth0/auth0-react";
+import FullWidthBtn from "../../Buttons/FullWidthBtn";
 
 const AccountDetails = () => {
   const userData = useSelector((state) => state.userReducer);
@@ -108,41 +109,7 @@ const AccountDetails = () => {
         />
       </Box>
       <Box>
-        <Button
-          color="primary"
-          disableElevation
-          fullWidth
-          sx={{
-            p: 0,
-            display: "block",
-            borderRadius: 0,
-            mb: 4,
-          }}
-          onClick={handleEdit}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-              borderTop: "1px solid #0000001a",
-              borderBottom: "1px solid #0000001a",
-            }}
-          >
-            <Box
-              sx={{
-                flex: 1,
-                py: 2,
-                pl: 2,
-                pr: 2,
-                mr: "auto",
-                alignItems: "flex-start",
-              }}
-            >
-              <Typography sx={{ fontWeight: "400" }}>Enregistrer</Typography>
-            </Box>
-          </Box>
-        </Button>
+        <FullWidthBtn handleAction={handleEdit} name={"Enregistrer"} />
         <Box
           sx={{
             display: "flex",
