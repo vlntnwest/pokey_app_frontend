@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Link, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteUser, editUser } from "../../../actions/users.action";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -11,18 +11,95 @@ const AccountDetails = () => {
   const { getAccessTokenSilently, logout } = useAuth0();
   const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
-  const [firstName, setFirstName] = useState(userData.firstName);
-  const [lastName, setlastName] = useState(userData.lastName);
-  const [phone, setPhone] = useState(userData.phone);
+  const [formData, setFormData] = useState({
+    firstName: userData.firstName || "",
+    lastName: userData.lastName || "",
+    phone: userData.phone || "",
+  });
+
+  const [errors, setErrors] = useState({
+    firstName: false,
+    lastName: false,
+    phone: false,
+  });
+
+  const [errorMessages, setErrorMessages] = useState({
+    firstName: "",
+    lastName: "",
+    phone: "",
+  });
+
+  const validateField = (name, value) => {
+    let isValid = true;
+    let message = "";
+
+    switch (name) {
+      case "firstName":
+        if (!value.trim()) {
+          isValid = false;
+          message = "Le prénom est requis";
+        }
+        break;
+
+      case "lastName":
+        if (!value.trim()) {
+          isValid = false;
+          message = "Le nom est requis";
+        }
+        break;
+
+      case "phone":
+        const phoneRegex = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/;
+        if (!value.trim()) {
+          isValid = false;
+          message = "Le numéro de téléphone est requis";
+        } else if (!phoneRegex.test(value)) {
+          isValid = false;
+          message = "Format de numéro de téléphone invalide";
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    return { isValid, message };
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = {};
+    const newErrorMessages = {};
+
+    Object.keys(formData).forEach((field) => {
+      const { isValid: fieldIsValid, message } = validateField(
+        field,
+        formData[field]
+      );
+      newErrors[field] = !fieldIsValid;
+      newErrorMessages[field] = message;
+      if (!fieldIsValid) isValid = false;
+    });
+
+    setErrors(newErrors);
+    setErrorMessages(newErrorMessages);
+    return isValid;
+  };
 
   const handleEdit = async (e) => {
     e.preventDefault();
 
-    const data = {
-      firstName: firstName,
-      lastName: lastName,
-      phone: phone,
-    };
+    if (!validateForm()) {
+      return;
+    }
 
     try {
       const token = await getAccessTokenSilently({
@@ -31,7 +108,7 @@ const AccountDetails = () => {
           scope: "read:current_user read:users_app_metadata",
         },
       });
-      dispatch(editUser(data, userData._id, token));
+      dispatch(editUser(formData, userData._id, token));
     } catch (err) {
       console.error("Erreur lors de la récupération du token", err);
     }
@@ -75,25 +152,37 @@ const AccountDetails = () => {
         mb={2}
       >
         <TextField
+          name="firstName"
           label="Prénom"
-          defaultValue={firstName}
+          required
+          value={formData.firstName}
+          error={errors.firstName}
+          helperText={errorMessages.firstName}
           variant="standard"
           sx={{ width: "100%", mb: 2 }}
-          onChange={(e) => setFirstName(e.target.value)}
+          onChange={handleChange}
         />
         <TextField
+          name="lastName"
           label="Nom"
-          defaultValue={lastName}
+          required
+          value={formData.lastName}
+          error={errors.lastName}
+          helperText={errorMessages.lastName}
           variant="standard"
           sx={{ width: "100%", mb: 2 }}
-          onChange={(e) => setlastName(e.target.value)}
+          onChange={handleChange}
         />
         <TextField
+          name="phone"
           label="Numéro de téléphone"
-          defaultValue={phone}
+          required
+          value={formData.phone}
+          error={errors.phone}
+          helperText={errorMessages.phone}
           variant="standard"
           sx={{ width: "100%", mb: 2 }}
-          onChange={(e) => setPhone(e.target.value)}
+          onChange={handleChange}
         />
         <TextField
           label="Email"
@@ -117,27 +206,18 @@ const AccountDetails = () => {
             justifyContent: "center",
           }}
         >
-          <Button
-            color="none"
-            disableElevation
+          <Link
             sx={{
-              p: 0,
-              display: "block",
+              textTransform: "none",
+              color: "rgba(0, 0, 0, 0.6);",
+              fontSize: "0.75rem",
+              fontWeight: "400",
+              textDecoration: "underline",
             }}
             onClick={handleDelete}
           >
-            <Typography
-              sx={{
-                textTransform: "none",
-                color: "rgba(0, 0, 0, 0.6);",
-                fontSize: "0.75rem",
-                fontWeight: "400",
-                textDecoration: "underline",
-              }}
-            >
-              Supprimer le compte
-            </Typography>
-          </Button>
+            Supprimer le compte
+          </Link>
         </Box>
       </Box>
     </Box>

@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Link, Typography } from "@mui/material";
 import React from "react";
 import NavigationItem from "./NavigationItem";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -33,27 +33,18 @@ const NavigationMenu = () => {
           justifyContent: "center",
         }}
       >
-        <Button
-          color="none"
-          disableElevation
+        <Link
           sx={{
-            p: 0,
-            display: "block",
+            textTransform: "none",
+            color: "rgba(0, 0, 0, 0.6);",
+            fontSize: "0.75rem",
+            fontWeight: "400",
+            textDecoration: "underline",
           }}
           onClick={logout}
         >
-          <Typography
-            sx={{
-              textTransform: "none",
-              color: "rgba(0, 0, 0, 0.6);",
-              fontSize: "0.75rem",
-              fontWeight: "400",
-              textDecoration: "underline",
-            }}
-          >
-            Se déconnecter
-          </Typography>
-        </Button>
+          Se déconnecter
+        </Link>
       </Box>
     </Box>
   );
