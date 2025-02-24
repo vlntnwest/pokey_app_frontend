@@ -3,7 +3,6 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Admin from "../../pages/Admin";
 import Table from "../../pages/Table";
 import ClickAndCollect from "../../pages/ClickAndCollect";
-import Onboarding from "../user/Onboarding/Onboarding";
 
 const Index = () => {
   return (
@@ -15,7 +14,6 @@ const Index = () => {
         <Route path="/table/*" element={<Navigate to="/" />} />
         <Route path="/clickandcollect" element={<ClickAndCollect />} />
         <Route path="/*" element={<Navigate to="/" />} />
-        <Route path="/onboarding" element={<Onboarding />} />
       </Routes>
     </BrowserRouter>
   );
