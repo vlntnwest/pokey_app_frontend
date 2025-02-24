@@ -1,15 +1,31 @@
 import React, { useState } from "react";
-import { Box, Link, TextField } from "@mui/material";
+import { Box, Button, Link, Modal, TextField, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteUser, editUser } from "../../../actions/users.action";
 import { useAuth0 } from "@auth0/auth0-react";
 import FullWidthBtn from "../../Buttons/FullWidthBtn";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 2,
+  borderRadius: 1,
+  minWidth: 300,
+};
 
 const AccountDetails = () => {
   const userData = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
   const { getAccessTokenSilently, logout } = useAuth0();
   const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const [formData, setFormData] = useState({
     firstName: userData.firstName || "",
@@ -214,10 +230,44 @@ const AccountDetails = () => {
               fontWeight: "400",
               textDecoration: "underline",
             }}
-            onClick={handleDelete}
+            onClick={handleOpen}
           >
             Supprimer le compte
           </Link>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <Box sx={{ mb: 3 }}>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                  Supprimer votre compte ?
+                </Typography>
+                <Typography
+                  id="modal-modal-description"
+                  variant="body1"
+                  sx={{ mt: 1, fontWeight: 400 }}
+                >
+                  Êtes-vous sûr de vouloir supprimer votre compte ? Cette action
+                  est irréversible et toutes vos données seront perdues.
+                </Typography>
+              </Box>
+              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                <Button variant="text" onClick={handleClose}>
+                  Annuler
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={handleDelete}
+                >
+                  Supprimer
+                </Button>
+              </Box>
+            </Box>
+          </Modal>
         </Box>
       </Box>
     </Box>
