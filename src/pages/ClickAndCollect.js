@@ -158,7 +158,7 @@ const Table = () => {
           scrollbarWidth: "none",
         }}
       >
-        <Header />
+        <Header auth />
         <Box component="main">
           <Popular />
           {types.map((type, index) => (
