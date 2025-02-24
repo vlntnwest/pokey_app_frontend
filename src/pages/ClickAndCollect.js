@@ -38,8 +38,8 @@ const Table = () => {
         const result = await dispatch(getUser(user.email, token));
 
         if (!result.success) {
-          setIsNewUser(true);
           await createNewUser(token, user.email);
+          setIsNewUser(true);
         }
       } catch (err) {
         console.error("Erreur lors de l'authentification", err);
@@ -47,15 +47,18 @@ const Table = () => {
     };
 
     const createNewUser = async (token, email) => {
+      const firstName = user.given_name;
+      const lastName = user.family_name;
+
       try {
-        const response = await axios.post(
+        await axios.post(
           `${process.env.REACT_APP_API_URL}api/users`,
-          { email },
+          { email, firstName, lastName },
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        console.log(response);
+        await dispatch(getUser(email, token));
       } catch (err) {
         console.error("Erreur lors de la création de l'utilisateur", err);
       }

@@ -26,7 +26,8 @@ root.render(
     authorizationParams={{
       redirect_uri: window.location.origin,
       audience: `https://${domain}/api/v2/`,
-      scope: "openid profile email read:current_user read:users_app_metadata",
+      scope:
+        "openid profile email read:current_user read:users_app_metadata delete:users",
     }}
   >
     <Provider store={store}>

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteUser, editUser } from "../../../actions/users.action";
 import { useAuth0 } from "@auth0/auth0-react";
 import FullWidthBtn from "../../Buttons/FullWidthBtn";
+import axios from "axios";
 
 const style = {
   position: "absolute",
@@ -20,11 +21,14 @@ const style = {
 const AccountDetails = () => {
   const userData = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
-  const { getAccessTokenSilently, logout } = useAuth0();
+  const { getAccessTokenSilently, user } = useAuth0();
   const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+    console.log(user);
+  };
   const handleClose = () => setOpen(false);
 
   const [formData, setFormData] = useState({
@@ -137,11 +141,26 @@ const AccountDetails = () => {
       const token = await getAccessTokenSilently({
         authorizationParams: {
           audience: audience,
-          scope: "read:current_user read:users_app_metadata",
+          scope: "read:current_user read:users_app_metadata delete:users",
         },
       });
+
+      await axios
+        .delete(
+          `${process.env.REACT_APP_API_URL}api/users/${userData._id}/${user.sub}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
+        .then(() => {
+          console.log(`Utilisateur ${user.sub} supprimé`);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
       dispatch(deleteUser(userData._id, token));
-      logout({ returnTo: window.location.origin });
+      window.location = "/";
     } catch (err) {
       console.error("Erreur lors de la récupération du token", err);
     }
@@ -254,7 +273,13 @@ const AccountDetails = () => {
                   est irréversible et toutes vos données seront perdues.
                 </Typography>
               </Box>
-              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: "16px",
+                }}
+              >
                 <Button variant="text" onClick={handleClose}>
                   Annuler
                 </Button>
