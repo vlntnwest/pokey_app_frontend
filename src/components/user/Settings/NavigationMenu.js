@@ -1,4 +1,4 @@
-import { Box, Button, Link, Typography } from "@mui/material";
+import { Box, Link } from "@mui/material";
 import React from "react";
 import NavigationItem from "./NavigationItem";
 import { useAuth0 } from "@auth0/auth0-react";
