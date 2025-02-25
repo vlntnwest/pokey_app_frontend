@@ -7,16 +7,6 @@ import { formatPrice, isEmpty } from "../Utils";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
-// const proteinPrices = {
-//   Saumon: "3",
-//   "Saumon teriyaki": "3",
-//   Thon: "3",
-//   "Poulet crispy": "3",
-//   Gyoza: "3",
-//   Fallafels: "3",
-//   Gyozas: "3",
-// };
-
 const MealDetails = ({ meal, open, setOpen }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { addToCart } = useShoppingCart();

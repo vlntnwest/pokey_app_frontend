@@ -7,7 +7,7 @@ import Cart from "./Cart/Cart";
 import { useShoppingCart } from "../Context/ShoppingCartContext";
 import AuthButtons from "./Auth/AuthButtons";
 
-const Header = () => {
+const Header = ({ auth }) => {
   const [open, setOpen] = useState(false);
   const [cartValue, setCartValue] = useState();
   const { cartItems } = useShoppingCart();
@@ -60,7 +60,7 @@ const Header = () => {
               </Badge>
             </IconButton>
           ) : null}
-          <AuthButtons />
+          {auth ? <AuthButtons /> : null}
           <BottomDrawer open={open} setOpen={setOpen}>
             <Cart setOpen={setOpen} />
           </BottomDrawer>

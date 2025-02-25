@@ -20,8 +20,8 @@ const AdminTabs = () => {
       <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <TabList onChange={handleChange} aria-label="lab API tabs example">
-            <Tab label="Orders" value="1" />
-            <Tab label="Archive" value="2" />
+            <Tab label="Commandes" value="1" />
+            <Tab label="Archives" value="2" />
             <Tab label="Tables" value="3" />
           </TabList>
         </Box>

@@ -2,36 +2,19 @@ import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import cookie from "js-cookie";
-import axios from "axios";
 
 import Button from "@mui/material/Button";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const AdminHeader = () => {
-  const removeCookie = (key) => {
-    if (window !== "undefined") {
-      cookie.remove(key, { expires: 1 });
-    }
-  };
-
-  const logout = async () => {
-    await axios({
-      method: "get",
-      url: `${process.env.REACT_APP_API_URL}api/user/logout`,
-      withCredentials: true,
-    })
-      .then(() => removeCookie("jwt"))
-      .catch((err) => console.log(err));
-
-    window.location = "/admin";
-  };
+  const { logout } = useAuth0();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
           <Button color="inherit" onClick={logout}>
-            Disconnect
+            Se déconnecter
           </Button>
         </Toolbar>
       </AppBar>

@@ -1,47 +1,59 @@
 import React, { useEffect, useState } from "react";
-import LogModal from "../components/admin/Modal/LogModal";
-import { UidContext } from "../components/Context/AppContext";
 import AdminHeader from "../components/admin/adminComponents/AdminHeader";
-import { useDispatch } from "react-redux";
 import Tabs from "../components/admin/adminComponents/Tabs";
-import axios from "axios";
-import { getUser } from "../actions/user.action";
+import { useAuth0 } from "@auth0/auth0-react";
+import { jwtDecode } from "jwt-decode";
+import { IconButton } from "@mui/material";
+import PersonIcon from "@mui/icons-material/Person";
 
 const Admin = () => {
-  const [uid, setUid] = useState(null);
-  const dispatch = useDispatch();
+  const { getAccessTokenSilently, isAuthenticated, loginWithRedirect } =
+    useAuth0();
+
+  const [userRoles, setUserRoles] = useState([]);
 
   useEffect(() => {
-    const fetchToken = async () => {
-      try {
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}jwtid`, {
-          withCredentials: true,
-        });
-        setUid(res.data);
-      } catch (err) {
-        console.log("No token");
+    const fetchUserRole = async () => {
+      if (isAuthenticated) {
+        try {
+          const token = await getAccessTokenSilently();
+          const decodedToken = jwtDecode(token);
+          const roles = decodedToken["https://app.pokey-bar.fr/roles"] || [];
+          setUserRoles(roles);
+        } catch (error) {
+          console.error("Erreur lors de la récupération des rôles :", error);
+        }
       }
     };
 
-    fetchToken();
-  }, []);
+    fetchUserRole();
+  }, [isAuthenticated, getAccessTokenSilently]);
 
-  useEffect(() => {
-    if (uid) {
-      dispatch(getUser(uid));
-    }
-  }, [uid, dispatch]);
-
-  if (uid) {
+  if (isAuthenticated && userRoles.includes("Admin")) {
     return (
-      <UidContext.Provider value={uid}>
+      <div>
         <AdminHeader />
         <Tabs />
-      </UidContext.Provider>
+      </div>
     );
   }
 
-  return <LogModal />;
+  return (
+    <IconButton
+      sx={{
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+      }}
+      onClick={() =>
+        loginWithRedirect({ redirectUri: window.location.origin + "/admin" })
+      }
+      color="primary"
+    >
+      <PersonIcon />
+    </IconButton>
+  );
 };
 
 export default Admin;

@@ -1,44 +1,106 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import Header from "../components/user/Header";
 import { useDispatch } from "react-redux";
-import { getTable } from "../actions/table.action";
 import { getDetails } from "../actions/details.action";
 import { Alert, Box, CircularProgress, Container } from "@mui/material";
 import Popular from "../components/user/Popular";
 import MealCategory from "../components/user/MealCategory";
 import { getMeals } from "../actions/meal.action";
 import ShoppingCartProvider from "../components/Context/ShoppingCartContext";
+import { useAuth0 } from "@auth0/auth0-react";
+import { getUser } from "../actions/users.action";
+import Onboarding from "../components/user/Onboarding/Onboarding";
+import axios from "axios";
 
 const Table = () => {
   const dispatch = useDispatch();
-  const { tableNumber } = useParams();
+  const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
+  const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
   const types = ["bowl", "custom", "side", "dessert", "drink"];
 
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isNewUser, setIsNewUser] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const handleAuthentication = async () => {
+      if (!isAuthenticated || !user?.email) return;
+
+      try {
+        const token = await getAccessTokenSilently({
+          authorizationParams: {
+            audience: audience,
+            scope: "read:current_user read:users_app_metadata",
+          },
+        });
+
+        const result = await dispatch(getUser(user.email, token));
+
+        if (!result.success) {
+          await createNewUser(token, user.email);
+          setIsNewUser(true);
+        }
+      } catch (err) {
+        console.error("Erreur lors de l'authentification", err);
+      }
+    };
+
+    const createNewUser = async (token, email) => {
+      const firstName = user.given_name;
+      const lastName = user.family_name;
+
+      try {
+        await axios.post(
+          `${process.env.REACT_APP_API_URL}api/users`,
+          { email, firstName, lastName },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        await dispatch(getUser(email, token));
+      } catch (err) {
+        console.error("Erreur lors de la création de l'utilisateur", err);
+      }
+    };
+
+    handleAuthentication();
+  }, [isAuthenticated, user, dispatch, getAccessTokenSilently, audience]);
+
+  useEffect(() => {
+    const fetchMeals = async () => {
+      try {
+        await dispatch(getMeals());
+      } catch (error) {
+        setError(
+          error.response
+            ? error.response.data.error
+            : "Error fetching meals data"
+        );
+      }
+    };
+
+    fetchMeals();
+  }, [dispatch]);
+
+  useEffect(() => {
+    const fetchDetails = async () => {
       setIsLoading(true);
       try {
-        await dispatch(getTable(tableNumber));
-        await dispatch(getMeals());
         await dispatch(getDetails());
       } catch (error) {
         setError(
           error.response
             ? error.response.data.error
-            : "Error fetching tables data"
+            : "Error fetching details data"
         );
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchData();
-  }, [dispatch, tableNumber]);
+    fetchDetails();
+  }, [dispatch]);
 
   if (isLoading) {
     return (
@@ -84,6 +146,10 @@ const Table = () => {
     );
   }
 
+  if (isNewUser === true && isAuthenticated) {
+    return <Onboarding setIsNewUser={setIsNewUser} />;
+  }
+
   return (
     <ShoppingCartProvider>
       <Box
@@ -95,7 +161,7 @@ const Table = () => {
           scrollbarWidth: "none",
         }}
       >
-        <Header />
+        <Header auth />
         <Box component="main">
           <Popular />
           {types.map((type, index) => (

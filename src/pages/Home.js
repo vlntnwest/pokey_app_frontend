@@ -9,7 +9,7 @@ const Home = () => {
         alt="pokey logo"
         style={{ width: "100%" }}
       />
-      <Typography variant="h2" textAlign={"center"}>
+      <Typography variant="body1" textAlign={"center"}>
         Scannez le QR Code de la table pour continuer
       </Typography>
     </Container>
