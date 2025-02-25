@@ -4,6 +4,7 @@ import orderReducer from "./order.reducer";
 import userReducer from "./users.reducer";
 import tableReducer from "./table.reducer";
 import detailsReducer from "./details.reducer";
+import foodReducer from "./food.reducer";
 
 export default combineReducers({
   mealReducer,
@@ -11,4 +12,5 @@ export default combineReducers({
   userReducer,
   tableReducer,
   detailsReducer,
+  foodReducer,
 });

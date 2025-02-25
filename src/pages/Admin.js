@@ -5,10 +5,14 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { jwtDecode } from "jwt-decode";
 import { IconButton } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
+import { useDispatch } from "react-redux";
+import { getFoods } from "../actions/food.action";
 
 const Admin = () => {
   const { getAccessTokenSilently, isAuthenticated, loginWithRedirect } =
     useAuth0();
+
+  const dispatch = useDispatch();
 
   const [userRoles, setUserRoles] = useState([]);
 
@@ -28,6 +32,19 @@ const Admin = () => {
 
     fetchUserRole();
   }, [isAuthenticated, getAccessTokenSilently]);
+
+  useEffect(() => {
+    const fetchFood = async () => {
+      if (isAuthenticated) {
+        try {
+          await dispatch(getFoods());
+        } catch (error) {
+          console.log("Erreur lors de la récupération des plats :", error);
+        }
+      }
+    };
+    fetchFood();
+  }, [isAuthenticated, dispatch]);
 
   if (isAuthenticated && userRoles.includes("Admin")) {
     return (
