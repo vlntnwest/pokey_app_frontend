@@ -27,7 +27,6 @@ const AccountDetails = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
     setOpen(true);
-    console.log(user);
   };
   const handleClose = () => setOpen(false);
 
