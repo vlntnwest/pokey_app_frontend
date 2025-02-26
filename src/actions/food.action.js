@@ -19,7 +19,7 @@ export const getFoods = () => {
   };
 };
 
-export const editFood = (data, id) => {
+export const editFood = (id, data) => {
   return (dispatch) => {
     return axios
       .put(`${process.env.REACT_APP_API_URL}api/food/${id}`, data)
@@ -27,8 +27,12 @@ export const editFood = (data, id) => {
         dispatch({ type: EDIT_FOOD, payload: res.data.food });
       })
       .catch((err) => {
-        console.log(err);
-        return { sucess: false, error: err };
+        console.error("Erreur lors de la mise à jour de l'aliment:", err);
+        dispatch({
+          type: "EDIT_FOOD_ERROR",
+          payload: err.response ? err.response.data : err.message,
+        });
+        return { success: false, error: err };
       });
   };
 };
