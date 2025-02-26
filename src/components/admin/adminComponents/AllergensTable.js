@@ -11,6 +11,7 @@ import axios from "axios";
 import {
   Box,
   Checkbox,
+  Divider,
   TextField,
   Toolbar,
   Tooltip,
@@ -22,8 +23,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 const COLOR_MAP = {
   non: "",
-  trace: "#2196F3", // Bleu
-  oui: "#F44336", // Rouge
+  trace: "#cbdaf1",
+  oui: "#1f4493",
 };
 
 const NEXT_STATE = {
@@ -227,6 +228,59 @@ const AllergensTable = () => {
             />
           </Box>
         </Toolbar>
+        <Divider variant="middle" />
+        <Box
+          sx={{
+            my: 2,
+            ml: 2,
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+          }}
+        >
+          <Box
+            sx={{
+              width: 20,
+              height: 20,
+              backgroundColor: "#cbdaf1",
+              marginRight: 1,
+            }}
+          ></Box>
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            sx={{ marginRight: 3 }}
+          >
+            Trace
+          </Typography>
+          <Box
+            sx={{
+              width: 20,
+              height: 20,
+              backgroundColor: "#1f4493",
+              marginRight: 1,
+            }}
+          ></Box>
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            sx={{ marginRight: 3 }}
+          >
+            Présent
+          </Typography>
+          <Box
+            sx={{
+              width: 20,
+              height: 20,
+              backgroundColor: "transparent",
+              border: "1px solid #000",
+              marginRight: 1,
+            }}
+          ></Box>
+          <Typography variant="body2" color="textSecondary">
+            Aucun
+          </Typography>
+        </Box>
       </TableContainer>
     </div>
   );
