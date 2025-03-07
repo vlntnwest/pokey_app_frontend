@@ -69,7 +69,7 @@ const Admin = () => {
   if (isAuthenticated && userRoles.includes("Admin")) {
     return (
       <div>
-        <AdminHeader style={{ position: "sticky", top: 0 }} />
+        <AdminHeader />
         <Tabs />
       </div>
     );
