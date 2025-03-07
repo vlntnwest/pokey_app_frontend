@@ -33,14 +33,18 @@ const NEXT_STATE = {
   oui: "non",
 };
 
+const cellStyle = {
+  borderLeft: "1px solid rgb(224, 224, 224)",
+};
+
 const AllergensTable = () => {
   const [allergenData, setAllergenData] = useState([]);
   const [newFood, setNewFood] = useState("");
   const foodReducer = useSelector((state) => state.foodReducer);
   const [foodsData, setFoodsData] = useState([]);
-  const [toTrash, setToTrash] = useState([]);
+  const [isChecked, setIsChecked] = useState([]);
   const rowCount = foodReducer.length;
-  const numSelected = toTrash.length;
+  const numSelected = isChecked.length;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -56,6 +60,10 @@ const AllergensTable = () => {
   }, [foodReducer]);
 
   const handleCellClick = async (foodIndex, allergen, food) => {
+    if (!isChecked.includes(food._id)) {
+      return;
+    }
+
     const updatedFoods = [...foodsData];
 
     const updatedAllergens = updatedFoods[foodIndex].allergens.map(
@@ -95,8 +103,8 @@ const AllergensTable = () => {
     setNewFood("");
   };
 
-  const moveToTrash = (e, food) => {
-    setToTrash((prevTrash) =>
+  const handleCheckbox = (e, food) => {
+    setIsChecked((prevTrash) =>
       e.target.checked
         ? [...prevTrash, food._id]
         : prevTrash.filter((id) => id !== food._id)
@@ -105,58 +113,59 @@ const AllergensTable = () => {
 
   const selectAll = (e) => {
     if (e.target.checked) {
-      setToTrash(foodsData.map((food) => food._id));
+      setIsChecked(foodsData.map((food) => food._id));
     } else {
-      setToTrash([]);
+      setIsChecked([]);
     }
   };
 
   const emptyTrash = async (e) => {
     try {
-      await dispatch(deleteFood(toTrash));
-      setToTrash([]);
+      await dispatch(deleteFood(isChecked));
+      setIsChecked([]);
     } catch (error) {
       console.error("Erreur lors de la suppression des aliments :", error);
     }
   };
 
   return (
-    <div>
-      <TableContainer component={Paper}>
-        <Toolbar>
-          {numSelected > 0 ? (
-            <Typography
-              sx={{ flex: "1 1 100%" }}
-              color="inherit"
-              variant="subtitle1"
-              component="div"
-            >
-              {numSelected > 1
-                ? `${numSelected} sélectionnés`
-                : `${numSelected} sélectionné`}
-            </Typography>
-          ) : (
-            <Typography
-              sx={{ flex: "1 1 100%" }}
-              variant="h6"
-              id="tableTitle"
-              component="div"
-            >
-              Allergènes
-            </Typography>
-          )}
-          {numSelected > 0 ? (
-            <Tooltip title="Delete">
-              <IconButton onClick={emptyTrash}>
-                <DeleteIcon />
-              </IconButton>
-            </Tooltip>
-          ) : null}
-        </Toolbar>
-        <Table aria-label="simple table">
+    <Paper sx={{ width: "100%", overflow: "hidden" }}>
+      {" "}
+      <Toolbar>
+        {numSelected > 0 ? (
+          <Typography
+            sx={{ flex: "1 1 100%" }}
+            color="inherit"
+            variant="subtitle1"
+            component="div"
+          >
+            {numSelected > 1
+              ? `${numSelected} sélectionnés`
+              : `${numSelected} sélectionné`}
+          </Typography>
+        ) : (
+          <Typography
+            sx={{ flex: "1 1 100%" }}
+            variant="h6"
+            id="tableTitle"
+            component="div"
+          >
+            Allergènes
+          </Typography>
+        )}
+        {numSelected > 0 ? (
+          <Tooltip title="Delete">
+            <IconButton onClick={emptyTrash}>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+        ) : null}
+      </Toolbar>
+      <TableContainer component={Paper} sx={{ maxHeight: "80vh" }}>
+        <Table stickyHeader aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell padding="checkbox">
+              <TableCell sx={{ backgroundColor: "white" }}>
                 <Checkbox
                   color="primary"
                   indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -167,14 +176,17 @@ const AllergensTable = () => {
                   }}
                 />
               </TableCell>
-              <TableCell>
-                {" "}
+              <TableCell sx={{ backgroundColor: "white", minWidth: 150 }}>
                 <Typography variant="body1" component="p">
                   Aliments
                 </Typography>
               </TableCell>
               {allergenData.map((allergen, index) => (
-                <TableCell key={index} align="center">
+                <TableCell
+                  key={index}
+                  align="center"
+                  sx={{ backgroundColor: "white", minWidth: 150 }}
+                >
                   <Typography
                     variant="body1"
                     component="p"
@@ -189,14 +201,22 @@ const AllergensTable = () => {
           <TableBody>
             {foodsData.map((food, foodIndex) => (
               <TableRow key={food.name}>
-                <TableCell padding="checkbox">
+                <TableCell>
                   <Checkbox
                     color="primary"
-                    onChange={(e) => moveToTrash(e, food)}
-                    checked={toTrash.includes(food._id)}
+                    onChange={(e) => handleCheckbox(e, food)}
+                    checked={isChecked.includes(food._id)}
                   />
                 </TableCell>
-                <TableCell scope="row">{food.name}</TableCell>
+                <TableCell scope="row" style={cellStyle}>
+                  <Typography
+                    variant="body1"
+                    component="p"
+                    sx={{ fontWeight: 400 }}
+                  >
+                    {food.name}
+                  </Typography>
+                </TableCell>
                 {food.allergens.map((allergen, index) => {
                   const allergenLevel = allergen.level || "oui";
                   return (
@@ -209,6 +229,7 @@ const AllergensTable = () => {
                         cursor: "pointer",
                         transition: "background 0.3s",
                       }}
+                      style={cellStyle}
                     ></TableCell>
                   );
                 })}
@@ -282,7 +303,7 @@ const AllergensTable = () => {
           </Typography>
         </Box>
       </TableContainer>
-    </div>
+    </Paper>
   );
 };
 
