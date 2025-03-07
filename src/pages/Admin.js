@@ -3,14 +3,18 @@ import AdminHeader from "../components/admin/adminComponents/AdminHeader";
 import Tabs from "../components/admin/adminComponents/Tabs";
 import { useAuth0 } from "@auth0/auth0-react";
 import { jwtDecode } from "jwt-decode";
-import { IconButton } from "@mui/material";
+import { Box, CircularProgress, IconButton } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import { useDispatch } from "react-redux";
 import { getFoods } from "../actions/food.action";
 
 const Admin = () => {
-  const { getAccessTokenSilently, isAuthenticated, loginWithRedirect } =
-    useAuth0();
+  const {
+    getAccessTokenSilently,
+    isAuthenticated,
+    loginWithRedirect,
+    isLoading,
+  } = useAuth0();
 
   const dispatch = useDispatch();
 
@@ -45,6 +49,22 @@ const Admin = () => {
     };
     fetchFood();
   }, [isAuthenticated, dispatch]);
+
+  if (isLoading) {
+    return (
+      <Box
+        style={{
+          width: "100vw",
+          height: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   if (isAuthenticated && userRoles.includes("Admin")) {
     return (
