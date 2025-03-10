@@ -1,13 +1,25 @@
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useShoppingCart } from "../../Context/ShoppingCartContext";
 
 const CartValidator = ({ setOpen }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { tableNumber } = useParams();
+  const location = useLocation();
+
   const { cartItems, clearCart, message, setMessage } = useShoppingCart();
+
+  let orderType = "";
+
+  if (location.pathname.includes("clickandcollect")) {
+    orderType = "clickandcollect";
+  } else if (tableNumber) {
+    orderType = "dine-in";
+  } else {
+    orderType = "clickandcollect";
+  }
 
   const calculateTotalPrice = () => {
     return cartItems
@@ -44,7 +56,8 @@ const CartValidator = ({ setOpen }) => {
     });
 
     const dataToPrint = {
-      tableNumber,
+      orderType,
+      ...(orderType === "dine-in" && { tableNumber }),
       items: items,
       specialInstructions: message,
     };
