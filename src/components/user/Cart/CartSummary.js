@@ -3,6 +3,7 @@ import React from "react";
 import RecapLine from "./RecapLine";
 import { useShoppingCart } from "../../Context/ShoppingCartContext";
 import OrderMessage from "./OrderMessage";
+import CartTimer from "./CartTimer";
 
 const CartSummary = () => {
   const { cartItems, updateItemCount } = useShoppingCart();
@@ -26,6 +27,7 @@ const CartSummary = () => {
         ))}
       </Card>
       <OrderMessage />
+      <CartTimer />
     </Box>
   );
 };

@@ -33,7 +33,7 @@ const theme = createTheme({
     },
     body1: {
       fontSize: 14,
-      fontWeight: 700,
+      fontWeight: 400,
       fontFamily: "sans-serif",
     },
     body2: {
