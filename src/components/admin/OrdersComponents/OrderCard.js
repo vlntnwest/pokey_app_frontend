@@ -12,7 +12,15 @@ import { toggleArchive } from "../../../actions/order.action";
 import axios from "axios";
 
 const OrderCard = ({ order, modal, handleOnChange }) => {
-  const { items, tableNumber, specialInstructions, isArchived, _id } = order;
+  const {
+    items,
+    tableNumber,
+    specialInstructions,
+    isArchived,
+    _id,
+    orderType,
+    createdAt,
+  } = order;
 
   const dispatch = useDispatch();
 
@@ -69,11 +77,27 @@ const OrderCard = ({ order, modal, handleOnChange }) => {
     setIsSubmitting(false);
   };
 
+  const date = new Date(createdAt);
+
+  const dateFr = new Intl.DateTimeFormat("fr-FR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(date);
+
   if (archived === false || modal === true)
     return (
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
-          <Typography variant="h5">Table: {tableNumber}</Typography>
+          {orderType === "dine-in" ? (
+            <Typography variant="h5">Table: {tableNumber}</Typography>
+          ) : (
+            <Typography variant="h5">Click and Collect</Typography>
+          )}
+          <Typography variant="body2">{dateFr}</Typography>
           <Divider sx={{ my: 1 }} />
           {items.map((item, index) => (
             <ItemsList key={index} item={item} />
