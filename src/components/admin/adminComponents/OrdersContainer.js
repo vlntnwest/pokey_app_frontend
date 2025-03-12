@@ -37,7 +37,7 @@ const OrdersContainer = () => {
   }, [dispatch, uid]);
 
   const unarchivedOrders = !isEmpty(ordersData)
-    ? ordersData.filter((order) => !order.archived)
+    ? ordersData.filter((order) => !order.isArchived)
     : [];
 
   const sortedOrders = unarchivedOrders.sort(
@@ -58,6 +58,8 @@ const OrdersContainer = () => {
         {sortedOrders.map((order, index) => (
           <OrderCard key={index} order={order} />
         ))}
+        {/*Need an empty div to prevent masory error when archiving last order*/}
+        {isEmpty(sortedOrders) ? null : <div></div>}
       </Masonry>
     </Box>
   );
