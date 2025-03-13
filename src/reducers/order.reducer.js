@@ -1,4 +1,8 @@
-import { GET_ORDERS, TOGGLE_ARCHIVE } from "../actions/order.action";
+import {
+  GET_ORDERS,
+  TOGGLE_ARCHIVE,
+  DELETE_ORDER,
+} from "../actions/order.action";
 
 const initialState = {};
 
@@ -12,6 +16,8 @@ export default function orderReducer(state = initialState, action) {
           ? { ...order, isArchived: action.payload.isArchived }
           : order
       );
+    case DELETE_ORDER:
+      return state.filter((order) => order._id !== action.payload);
     default:
       return state;
   }

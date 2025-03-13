@@ -19,7 +19,8 @@ const OrderCard = ({ order, modal, handleOnChange }) => {
     isArchived,
     _id,
     orderType,
-    createdAt,
+    // createdAt,
+    orderDate,
   } = order;
 
   const dispatch = useDispatch();
@@ -77,16 +78,17 @@ const OrderCard = ({ order, modal, handleOnChange }) => {
     setIsSubmitting(false);
   };
 
-  const date = new Date(createdAt);
+  // If we want to display the date of the order
+  // const date = new Date(createdAt);
 
-  const dateFr = new Intl.DateTimeFormat("fr-FR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).format(date);
+  // const dateFr = new Intl.DateTimeFormat("fr-FR", {
+  //   day: "2-digit",
+  //   month: "2-digit",
+  //   year: "numeric",
+  //   hour: "2-digit",
+  //   minute: "2-digit",
+  //   hour12: false,
+  // }).format(date);
 
   if (archived === false || modal === true)
     return (
@@ -97,7 +99,11 @@ const OrderCard = ({ order, modal, handleOnChange }) => {
           ) : (
             <Typography variant="h5">Click and Collect</Typography>
           )}
-          <Typography variant="body2">{dateFr}</Typography>
+          {orderDate && (
+            <Typography variant="body2">
+              {orderDate.date} - {orderDate.time}
+            </Typography>
+          )}
           <Divider sx={{ my: 1 }} />
           {items.map((item, index) => (
             <ItemsList key={index} item={item} />

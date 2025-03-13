@@ -14,6 +14,11 @@ export default function ShoppingCartProvider({ children }) {
 
   const [message, setMessage] = useState("Aucune indication renseignée");
 
+  const [selectedDate, setSelectedDate] = useState({
+    date: "Aujourd'hui", // Default selected
+    time: "",
+  });
+
   const addToCart = (item) => {
     setCartItems((prevItems) => [...prevItems, item]);
   };
@@ -60,6 +65,8 @@ export default function ShoppingCartProvider({ children }) {
         clearCart,
         message,
         setMessage,
+        selectedDate,
+        setSelectedDate,
       }}
     >
       {children}

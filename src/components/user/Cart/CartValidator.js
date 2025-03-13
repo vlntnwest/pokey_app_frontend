@@ -9,7 +9,14 @@ const CartValidator = ({ setOpen }) => {
   const { tableNumber } = useParams();
   const location = useLocation();
 
-  const { cartItems, clearCart, message, setMessage } = useShoppingCart();
+  const {
+    cartItems,
+    clearCart,
+    message,
+    setMessage,
+    selectedDate,
+    setSelectedDate,
+  } = useShoppingCart();
 
   let orderType = "";
 
@@ -34,7 +41,7 @@ const CartValidator = ({ setOpen }) => {
     setIsSubmitting(true);
 
     if (!cartItems.length) {
-      // Vérifier si le panier est vide
+      // Check if cart is empty
       console.error("Aucune donnée dans le panier");
       setIsSubmitting(false);
       return;
@@ -60,6 +67,7 @@ const CartValidator = ({ setOpen }) => {
       ...(orderType === "dine-in" && { tableNumber }),
       items: items,
       specialInstructions: message,
+      orderDate: selectedDate,
     };
 
     try {
@@ -74,22 +82,26 @@ const CartValidator = ({ setOpen }) => {
         error.response?.data || error.message
       );
     }
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}api/order/print-order`,
-        { orderData: dataToPrint }
-      );
-      console.log("Commande envoyée avec succès:", response.data);
-    } catch (error) {
-      console.error(
-        "Erreur lors de l'envoi des données à l'API:",
-        error.response?.data || error.message
-      );
-    }
+    // try {
+    //   const response = await axios.post(
+    //     `${process.env.REACT_APP_API_URL}api/order/print-order`,
+    //     { orderData: dataToPrint }
+    //   );
+    //   console.log("Commande envoyée avec succès:", response.data);
+    // } catch (error) {
+    //   console.error(
+    //     "Erreur lors de l'envoi des données à l'API:",
+    //     error.response?.data || error.message
+    //   );
+    // }
     clearCart();
     setOpen(false);
     setIsSubmitting(false);
     setMessage("");
+    setSelectedDate({
+      date: "Aujourd'hui",
+      time: "",
+    });
   };
 
   return (

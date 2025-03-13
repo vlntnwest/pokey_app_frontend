@@ -10,10 +10,11 @@ import {
 } from "@mui/material";
 import PrintIcon from "@mui/icons-material/Print";
 import UnarchiveIcon from "@mui/icons-material/Unarchive";
+import DeleteIcon from "@mui/icons-material/Delete";
 import React, { useState } from "react";
 import OrderCard from "./OrderCard";
 import { useDispatch } from "react-redux";
-import { toggleArchive } from "../../../actions/order.action";
+import { deleteOrder, toggleArchive } from "../../../actions/order.action";
 import axios from "axios";
 
 const OrderList = ({ order }) => {
@@ -25,7 +26,7 @@ const OrderList = ({ order }) => {
     boxShadow: 24,
   };
 
-  const { isArchived, tableNumber, _id, createdAt } = order;
+  const { isArchived, tableNumber, _id, createdAt, orderType } = order;
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -99,6 +100,17 @@ const OrderList = ({ order }) => {
     setIsSubmitting(false);
   };
 
+  const handleDelete = async () => {
+    try {
+      dispatch(deleteOrder(_id));
+    } catch (error) {
+      console.error(
+        "Erreur lors de la suppression de la commande:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
   if (archived === true)
     return (
       <>
@@ -108,7 +120,11 @@ const OrderList = ({ order }) => {
           </TableCell>
           <TableCell>
             <Button variant="text" onClick={handleOpen}>
-              <Typography>Table: {tableNumber}</Typography>
+              {(orderType !== "clickandcollect") & tableNumber ? (
+                <Typography>Table: {tableNumber}</Typography>
+              ) : (
+                <Typography>Click & Collect</Typography>
+              )}
             </Button>
           </TableCell>
           <TableCell width={1}>
@@ -123,6 +139,11 @@ const OrderList = ({ order }) => {
           <TableCell width={1}>
             <IconButton aria-label="unarchive" onClick={handleOnChange}>
               <UnarchiveIcon />
+            </IconButton>
+          </TableCell>
+          <TableCell width={1}>
+            <IconButton aria-label="trash" onClick={handleDelete}>
+              <DeleteIcon />
             </IconButton>
           </TableCell>
         </TableRow>
