@@ -9,7 +9,7 @@ const CustomBowlItem = ({
   garnishes,
   toppings,
   sauces,
-  extraProteins,
+  extraProtein,
 }) => {
   return (
     <Box sx={{ pt: 2 }}>
@@ -26,10 +26,10 @@ const CustomBowlItem = ({
       <Typography variant="body2">{toppings.join(", ")}</Typography>
       <Typography variant="body1">Sauces:</Typography>
       <Typography variant="body2">{sauces.join(", ")}</Typography>
-      {extraProteins ? (
+      {extraProtein ? (
         <>
-          <Typography variant="body1">Extra Proteine</Typography>
-          <Typography variant="body2">{extraProteins.join(", ")}</Typography>
+          <Typography variant="body1">Extra Proteine:</Typography>
+          <Typography variant="body2">{extraProtein.join(", ")}</Typography>
         </>
       ) : null}
     </Box>

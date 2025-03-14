@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 
-const BowlItem = ({ name, quantity, base, sauces, extraProteins }) => {
+const BowlItem = ({ name, quantity, base, sauces, extraProtein }) => {
   return (
     <Box sx={{ pt: 2 }}>
       <Typography variant="h6">
@@ -11,10 +11,10 @@ const BowlItem = ({ name, quantity, base, sauces, extraProteins }) => {
       <Typography variant="body2">{base}</Typography>
       <Typography variant="body1">Sauces:</Typography>
       <Typography variant="body2">{sauces.join(", ")}</Typography>
-      {extraProteins ? (
+      {extraProtein ? (
         <>
-          <Typography variant="body1">Extra Proteine</Typography>
-          <Typography variant="body2">{extraProteins.join(", ")}</Typography>
+          <Typography variant="body1">Extra Proteine:</Typography>
+          <Typography variant="body2">{extraProtein.join(", ")}</Typography>
         </>
       ) : null}
     </Box>

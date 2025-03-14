@@ -28,11 +28,15 @@ const CartValidator = ({ setOpen }) => {
     orderType = "clickandcollect";
   }
 
+  const addedProteins = cartItems.map((item) =>
+    item.extraProtein ? item.extraProtein.length : 0
+  );
+
   const calculateTotalPrice = () => {
     return cartItems
-      .reduce((total, item) => {
+      .reduce((total, item, index) => {
         const price = parseFloat(item.price.replace(",", "."));
-        return total + price * item.quantity + item.extraProtein.length * 3;
+        return total + price * item.quantity + addedProteins[index] * 3;
       }, 0)
       .toFixed(2);
   };
@@ -53,7 +57,7 @@ const CartValidator = ({ setOpen }) => {
         name: item.name,
         base: item.base,
         proteins: item.proteins,
-        extraProteins: item.extraProtein,
+        extraProtein: item.extraProtein,
         garnishes: item.garnishes,
         toppings: item.toppings,
         sauces: item.sauces,

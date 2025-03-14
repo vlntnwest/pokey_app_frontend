@@ -28,6 +28,7 @@ const CartTimer = () => {
           textTransform: "none",
           flexDirection: "column",
           color: "rgba(0, 0, 0, 0.87)",
+          backgroundColor: "white",
         }}
       >
         <RadioGroup
