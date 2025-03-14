@@ -11,7 +11,7 @@ const BowlItem = ({ name, quantity, base, sauces, extraProtein }) => {
       <Typography variant="body2">{base}</Typography>
       <Typography variant="body1">Sauces:</Typography>
       <Typography variant="body2">{sauces.join(", ")}</Typography>
-      {extraProtein ? (
+      {extraProtein && extraProtein.length > 0 ? (
         <>
           <Typography variant="body1">Extra Proteine:</Typography>
           <Typography variant="body2">{extraProtein.join(", ")}</Typography>
