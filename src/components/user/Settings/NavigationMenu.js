@@ -10,6 +10,7 @@ const NavigationMenu = () => {
     { label: "Détails du compte", component: "AccountDetails" },
     { label: "Commandes", component: "OrdersList" },
   ];
+
   return (
     <Box
       px={2}

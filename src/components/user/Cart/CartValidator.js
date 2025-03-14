@@ -1,13 +1,37 @@
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Drawer,
+  Typography,
+} from "@mui/material";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useShoppingCart } from "../../Context/ShoppingCartContext";
+import InsideDrawer from "../InsideDrawer";
+import CheckoutForm from "../Checkout/CheckoutForm";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const CartValidator = ({ setOpen }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { tableNumber } = useParams();
   const location = useLocation();
+
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
+
+  const [isClickAndCollect, setIsClickAndCollect] = useState(false);
+
+  const [openCheckout, setOpenCheckout] = useState(false);
+  const toggleDrawer = (newOpen) => () => setOpenCheckout(newOpen);
+
+  useEffect(() => {
+    if (location.pathname.includes("table")) {
+      setIsClickAndCollect(false);
+    } else {
+      setIsClickAndCollect(true);
+    }
+  }, [location.pathname]);
 
   const {
     cartItems,
@@ -108,50 +132,67 @@ const CartValidator = ({ setOpen }) => {
     });
   };
 
+  const handleCheckout = async () => {
+    if (!isAuthenticated) {
+      await loginWithRedirect();
+    } else {
+      setOpenCheckout(true);
+    }
+  };
+
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100vw",
-        backgroundColor: "#fff",
-        p: 2,
-        filter: "drop-shadow(0 1px 4px rgba(0, 0, 0, .08))",
-      }}
-    >
+    <div>
       <Box
         sx={{
-          width: "100%",
           display: "flex",
-          pb: 2,
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100vw",
+          backgroundColor: "#fff",
+          p: 2,
+          filter: "drop-shadow(0 1px 4px rgba(0, 0, 0, .08))",
         }}
       >
-        <Box sx={{ flex: 1 }}>
-          <Typography variant="body2" color="textPrimary">
-            Total de la commande
-          </Typography>
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            pb: 2,
+          }}
+        >
+          <Box sx={{ flex: 1 }}>
+            <Typography variant="body2" color="textPrimary">
+              Total de la commande
+            </Typography>
+          </Box>
+          <Box>
+            <Typography color="textPrimary">
+              {calculateTotalPrice().replace(".", ",")}€
+            </Typography>
+          </Box>
         </Box>
-        <Box>
-          <Typography color="textPrimary">
-            {calculateTotalPrice().replace(".", ",")}€
-          </Typography>
-        </Box>
+        <Button
+          variant="contained"
+          fullWidth
+          sx={{ py: 1.5 }}
+          onClick={isClickAndCollect ? handleCheckout : handleSubmit}
+        >
+          {isClickAndCollect ? (
+            "Finaliser la commande"
+          ) : isSubmitting ? (
+            <CircularProgress color="secondary" size={24.5} />
+          ) : (
+            "Finaliser la commande"
+          )}
+        </Button>
       </Box>
-      <Button
-        variant="contained"
-        fullWidth
-        sx={{ py: 1.5 }}
-        onClick={handleSubmit}
-      >
-        {isSubmitting ? (
-          <CircularProgress color="secondary" size={24.5} />
-        ) : (
-          "Finaliser la commande"
-        )}
-      </Button>
-    </Box>
+      <Drawer open={openCheckout} onClose={toggleDrawer(false)} anchor="right">
+        <InsideDrawer toggleDrawer={toggleDrawer}>
+          <CheckoutForm />
+        </InsideDrawer>
+      </Drawer>
+    </div>
   );
 };
 
