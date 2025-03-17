@@ -15,7 +15,7 @@ export default function ShoppingCartProvider({ children }) {
   const [message, setMessage] = useState("Aucune indication renseignée");
 
   const [selectedDate, setSelectedDate] = useState({
-    date: "Aujourd'hui", // Default selected
+    date: "",
     time: "",
   });
 

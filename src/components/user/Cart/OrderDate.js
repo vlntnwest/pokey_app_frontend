@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import dayjs from "dayjs";
 import Picker from "react-mobile-picker";
 import { useShoppingCart } from "../../Context/ShoppingCartContext";
@@ -100,7 +100,12 @@ const OrderDate = () => {
     return [...lunchSlots, ...dinnerSlots];
   }, [selectedDate.date, availableDates]);
 
-  console.log(selectedDate);
+  useEffect(() => {
+    const dayOfWeek = dayjs().day();
+    if (dayOfWeek === 1) {
+      setSelectedDate({ date: "Demain", time: "" });
+    }
+  }, [setSelectedDate]);
 
   return (
     <Box sx={{ display: "flex", gap: 2 }}>

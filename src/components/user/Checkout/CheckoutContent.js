@@ -1,9 +1,10 @@
 import React from "react";
 import { Box } from "@mui/system";
-import { PaymentElement } from "@stripe/react-stripe-js";
+import { PaymentElement, useCheckout } from "@stripe/react-stripe-js";
 import PayButton from "./PayButton";
 
 const CheckoutContent = ({ handleSubmit, email }) => {
+  const checkout = useCheckout();
   return (
     <Box
       sx={{
@@ -14,6 +15,8 @@ const CheckoutContent = ({ handleSubmit, email }) => {
       }}
       p={2}
     >
+      <pre>{JSON.stringify(checkout.lineItems, null, 2)}</pre>
+
       <form>
         <PaymentElement options={{ layout: "tabs" }} />
       </form>

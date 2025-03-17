@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { CheckoutProvider } from "@stripe/react-stripe-js";
 import axios from "axios";
 import { loadStripe } from "@stripe/stripe-js";
@@ -8,6 +8,7 @@ import { Box } from "@mui/system";
 import { validateForm } from "../../../utils/";
 import FullWidthBtn from "../../Buttons/FullWidthBtn";
 import { useSelector } from "react-redux";
+import { formatPrice } from "../../Utils";
 
 const CheckoutForm = ({ handleSubmit, isGuest }) => {
   const [savedInfo, setSavedInfo] = useState(false);
@@ -18,6 +19,8 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
   const [clientSecret, setClientSecret] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const [cartData, setCartData] = useState([]);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -40,28 +43,62 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
   const user = useSelector((state) => state.userReducer);
   const [email, setEmail] = useState("");
 
+  const items = useMemo(() => {
+    return cartData.map((item) => {
+      const itemPrice = (
+        (formatPrice(item.price) +
+          (item.extraProteinPrice ? parseFloat(item.extraProteinPrice) : 0)) *
+        100
+      ).toFixed(0);
+
+      const el = {
+        price_data: {
+          currency: "eur",
+          product_data: {
+            name: item.name,
+          },
+          unit_amount: parseInt(itemPrice),
+        },
+        quantity: item.quantity,
+      };
+      return el;
+    });
+  }, [cartData]);
+
+  const createCheckoutSession = useCallback(
+    async (email) => {
+      try {
+        console.log(items);
+        setLoading(true);
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_URL}api/checkout/create-checkout-session`,
+          {
+            email,
+            items,
+          }
+        );
+
+        setClientSecret(response.data.checkoutSessionClientSecret);
+      } catch (error) {
+        console.error("Erreur lors de la création de la session :", error);
+        setError(`Erreur: ${error.message}`);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [items]
+  );
+
   useEffect(() => {
-    if (!isGuest) createCheckoutSession(user.email);
-  }, [isGuest, user]);
+    const storedCart = JSON.parse(sessionStorage.getItem("Cart")) || [];
+    setCartData(storedCart);
+  }, []);
 
-  const createCheckoutSession = async (email) => {
-    try {
-      setLoading(true);
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}api/checkout/create-checkout-session`,
-        {
-          email: email,
-        }
-      );
-
-      setClientSecret(response.data.checkoutSessionClientSecret);
-    } catch (error) {
-      console.error("Erreur lors de la création de la session :", error);
-      setError(`Erreur: ${error.message}`);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (!isGuest && user?.email && items.length > 0) {
+      createCheckoutSession(user.email);
     }
-  };
+  }, [isGuest, user?.email, createCheckoutSession, items]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

@@ -15,6 +15,7 @@ import InsideDrawer from "../InsideDrawer";
 import CheckoutForm from "../Checkout/CheckoutForm";
 import { useAuth0 } from "@auth0/auth0-react";
 import FullWidthBtn from "../../Buttons/FullWidthBtn";
+import { formatPrice } from "../../Utils";
 
 const modalStyle = {
   position: "absolute",
@@ -72,24 +73,16 @@ const CartValidator = ({ setOpen }) => {
     orderType = "clickandcollect";
   }
 
-  const addedProteins = cartItems.map((item) =>
-    item.extraProtein ? item.extraProtein.length : 0
-  );
-
   const calculateTotalPrice = () => {
-    return cartItems
-      .reduce((total, item, index) => {
-        const price = parseFloat(item.price.replace(",", "."));
+    const total = cartItems.map((item) => {
+      const elPrice =
+        (formatPrice(item.price) +
+          (item.extraProteinPrice ? parseFloat(item.extraProteinPrice) : 0)) *
+        item.quantity;
+      return elPrice;
+    });
 
-        return (
-          total +
-          price * item.quantity +
-          addedProteins[index] *
-            addedProteins[index] *
-            (item.extraProteinPrice || 0)
-        );
-      }, 0)
-      .toFixed(2);
+    return total.reduce((acc, curr) => acc + curr).toFixed(2);
   };
 
   const handleSubmit = async () => {
