@@ -139,6 +139,7 @@ const MealDetails = ({ meal, open, setOpen }) => {
       toppings: selectedToppings,
       sauces: selectedSauces || [],
       extraProtein: selectedProtSup,
+      extraProteinPrice: proteinPrices[selectedProtSup],
       quantity: count,
       price,
     };
@@ -160,11 +161,11 @@ const MealDetails = ({ meal, open, setOpen }) => {
       sides.push(side);
     });
 
-    addToCart(item); // Ajout du plat principal au panier
+    addToCart(item);
     sides.forEach((side) => addToCart(side));
 
     setIsLoading(true);
-    setOpen(false); // Ferme le modal
+    setOpen(false);
   };
 
   const handlers = {

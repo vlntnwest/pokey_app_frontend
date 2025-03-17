@@ -1,7 +1,7 @@
-import { Box, Button, Typography } from "@mui/material";
 import React from "react";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 
-const FullWidthBtn = ({ handleAction, name }) => {
+const FullWidthBtn = ({ handleAction, name, isSubmitting }) => {
   return (
     <Button
       color="primary"
@@ -34,7 +34,13 @@ const FullWidthBtn = ({ handleAction, name }) => {
             alignItems: "flex-start",
           }}
         >
-          <Typography sx={{ fontWeight: "400" }}>{name}</Typography>
+          <Typography sx={{ fontWeight: "400" }}>
+            {isSubmitting ? (
+              <CircularProgress color="secondary" size={24.5} />
+            ) : (
+              name
+            )}
+          </Typography>
         </Box>
       </Box>
     </Button>
