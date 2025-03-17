@@ -5,7 +5,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import CheckoutContent from "./CheckoutContent";
 import { TextField } from "@mui/material";
 import { Box } from "@mui/system";
-import { validateForm } from "../../../utils";
+import { validateForm } from "../../../utils/";
 import FullWidthBtn from "../../Buttons/FullWidthBtn";
 import { useSelector } from "react-redux";
 
