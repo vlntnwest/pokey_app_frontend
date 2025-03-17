@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useDispatch, useSelector } from "react-redux";
 import { editUser, getUser } from "../../../actions/users.action";
+import { validateField } from "../../../utils";
 
 const Onboarding = ({ setIsNewUser }) => {
   const userData = useSelector((state) => state.userReducer);
@@ -45,43 +46,6 @@ const Onboarding = ({ setIsNewUser }) => {
     };
     fetchUser();
   }, [user.email, dispatch, getAccessTokenSilently, audience]);
-
-  const validateField = (name, value) => {
-    let isValid = true;
-    let message = "";
-
-    switch (name) {
-      case "firstName":
-        if (!value.trim()) {
-          isValid = false;
-          message = "Le prénom est requis";
-        }
-        break;
-
-      case "lastName":
-        if (!value.trim()) {
-          isValid = false;
-          message = "Le nom est requis";
-        }
-        break;
-
-      case "phone":
-        const phoneRegex = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/;
-        if (!value.trim()) {
-          isValid = false;
-          message = "Le numéro de téléphone est requis";
-        } else if (!phoneRegex.test(value)) {
-          isValid = false;
-          message = "Format de numéro de téléphone invalide";
-        }
-        break;
-
-      default:
-        break;
-    }
-
-    return { isValid, message };
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;

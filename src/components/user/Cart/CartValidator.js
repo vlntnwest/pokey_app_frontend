@@ -3,6 +3,8 @@ import {
   Button,
   CircularProgress,
   Drawer,
+  Link,
+  Modal,
   Typography,
 } from "@mui/material";
 import axios from "axios";
@@ -12,11 +14,28 @@ import { useShoppingCart } from "../../Context/ShoppingCartContext";
 import InsideDrawer from "../InsideDrawer";
 import CheckoutForm from "../Checkout/CheckoutForm";
 import { useAuth0 } from "@auth0/auth0-react";
+import FullWidthBtn from "../../Buttons/FullWidthBtn";
+
+const modalStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 2,
+  borderRadius: 1,
+  minWidth: 300,
+};
 
 const CartValidator = ({ setOpen }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { tableNumber } = useParams();
   const location = useLocation();
+
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
 
   const { isAuthenticated, loginWithRedirect } = useAuth0();
 
@@ -24,6 +43,7 @@ const CartValidator = ({ setOpen }) => {
 
   const [openCheckout, setOpenCheckout] = useState(false);
   const toggleDrawer = (newOpen) => () => setOpenCheckout(newOpen);
+  const [isGuest, setIsGuest] = useState(false);
 
   useEffect(() => {
     if (location.pathname.includes("table")) {
@@ -140,12 +160,18 @@ const CartValidator = ({ setOpen }) => {
     });
   };
 
-  const handleCheckout = async () => {
+  const handleCheckout = () => {
     if (!isAuthenticated) {
-      await loginWithRedirect();
+      handleOpenModal();
     } else {
       setOpenCheckout(true);
     }
+  };
+
+  const handleGuestCheckout = () => {
+    setIsGuest(true);
+    setOpenCheckout(true);
+    handleCloseModal();
   };
 
   return (
@@ -197,9 +223,39 @@ const CartValidator = ({ setOpen }) => {
       </Box>
       <Drawer open={openCheckout} onClose={toggleDrawer(false)} anchor="right">
         <InsideDrawer toggleDrawer={toggleDrawer}>
-          <CheckoutForm handleSubmit={handleSubmit} />
+          <CheckoutForm handleSubmit={handleSubmit} isGuest={isGuest} />
         </InsideDrawer>
       </Drawer>
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={modalStyle}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Souhaite-vous vous identifier ?
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              mt: 2,
+              gap: 1,
+              alignItems: "center",
+            }}
+          >
+            <FullWidthBtn
+              handleAction={() => loginWithRedirect()}
+              name={"S'identifier"}
+            />
+
+            <Link onClick={() => handleGuestCheckout()}>
+              Continuer en tant qu'invité
+            </Link>
+          </Box>
+        </Box>
+      </Modal>
     </div>
   );
 };
