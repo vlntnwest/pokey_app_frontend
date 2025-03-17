@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useCheckout } from "@stripe/react-stripe-js";
+import FullWidthBtn from "../../Buttons/FullWidthBtn";
 
-const PayButton = () => {
+const PayButton = ({ handleSubmit }) => {
   const { confirm } = useCheckout();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -11,19 +12,27 @@ const PayButton = () => {
 
     confirm({
       email: "valentinwestermeyer@gmail.com",
-    }).then((result) => {
-      if (result.type === "error") {
-        setError(result.error);
-      }
-      setLoading(false);
-    });
+      redirect: "if_required",
+    })
+      .then((result) => {
+        if (result.type === "error") {
+          setError(result.error);
+        }
+      })
+      .then(() => {
+        handleSubmit();
+        setLoading(false);
+      });
   };
 
   return (
     <div>
-      <button disabled={loading} onClick={handleClick}>
-        Payer
-      </button>
+      <FullWidthBtn
+        handleAction={handleClick}
+        name={"Payer"}
+        disabled={loading}
+        isSubmitting={loading}
+      />
       {error && <div>{error.message}</div>}
     </div>
   );

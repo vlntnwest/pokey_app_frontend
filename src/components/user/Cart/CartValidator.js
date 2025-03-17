@@ -60,7 +60,14 @@ const CartValidator = ({ setOpen }) => {
     return cartItems
       .reduce((total, item, index) => {
         const price = parseFloat(item.price.replace(",", "."));
-        return total + price * item.quantity + addedProteins[index] * 3;
+
+        return (
+          total +
+          price * item.quantity +
+          addedProteins[index] *
+            addedProteins[index] *
+            (item.extraProteinPrice || 0)
+        );
       }, 0)
       .toFixed(2);
   };
@@ -82,6 +89,7 @@ const CartValidator = ({ setOpen }) => {
         base: item.base,
         proteins: item.proteins,
         extraProtein: item.extraProtein,
+        extraProteinPrice: item.extraProteinPrice,
         garnishes: item.garnishes,
         toppings: item.toppings,
         sauces: item.sauces,
@@ -189,7 +197,7 @@ const CartValidator = ({ setOpen }) => {
       </Box>
       <Drawer open={openCheckout} onClose={toggleDrawer(false)} anchor="right">
         <InsideDrawer toggleDrawer={toggleDrawer}>
-          <CheckoutForm />
+          <CheckoutForm handleSubmit={handleSubmit} />
         </InsideDrawer>
       </Drawer>
     </div>

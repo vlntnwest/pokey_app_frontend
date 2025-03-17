@@ -3,7 +3,7 @@ import { Box } from "@mui/system";
 import { PaymentElement } from "@stripe/react-stripe-js";
 import PayButton from "./PayButton";
 
-const CheckoutContent = () => {
+const CheckoutContent = ({ handleSubmit }) => {
   return (
     <Box
       sx={{
@@ -17,7 +17,7 @@ const CheckoutContent = () => {
       <form>
         <PaymentElement options={{ layout: "tabs" }} />
       </form>
-      <PayButton />
+      <PayButton handleSubmit={handleSubmit} />
     </Box>
   );
 };

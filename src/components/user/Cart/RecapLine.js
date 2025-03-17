@@ -8,7 +8,6 @@ const RecapLine = ({ item, updateItemCount }) => {
   const [open, setOpen] = useState(false);
   const orderDetails = [
     ...[item.base],
-    ...(item.extraProtein ? item.extraProtein : []),
     ...(item.garnishes ? item.garnishes : []),
     ...(item.sauces ? item.sauces : []),
     ...(item.toppings ? item.toppings : []),
@@ -23,8 +22,12 @@ const RecapLine = ({ item, updateItemCount }) => {
 
     let totalPrice = item.quantity * price;
 
-    if (item.extraProtein && item.extraProtein.length > 0) {
-      totalPrice += item.quantity * 3;
+    if (
+      item.extraProtein &&
+      item.extraProtein.length > 0 &&
+      item.extraProteinPrice
+    ) {
+      totalPrice += item.quantity * item.extraProteinPrice;
     }
     return totalPrice.toFixed(2);
   };
@@ -77,6 +80,32 @@ const RecapLine = ({ item, updateItemCount }) => {
             >
               {orderDetails.filter(Boolean).join(", ")}
             </Typography>
+            {item.extraProtein && item.extraProtein.length > 0 && (
+              <Box>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    textAlign: "left",
+                    color: "text.secondary",
+                    textTransform: "none",
+                    pt: 0.5,
+                  }}
+                >
+                  Extra protéine:
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    textAlign: "left",
+                    color: "text.secondary",
+                    textTransform: "none",
+                    pt: 0.5,
+                  }}
+                >
+                  {item.extraProtein.map((protein) => protein)}
+                </Typography>
+              </Box>
+            )}
           </Box>
           <Box sx={{ ml: 1.5 }}>
             <Box sx={{ display: "flex", px: 2, py: 1.5, alignItems: "center" }}>

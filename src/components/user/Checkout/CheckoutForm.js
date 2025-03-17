@@ -4,7 +4,7 @@ import axios from "axios";
 import { loadStripe } from "@stripe/stripe-js";
 import CheckoutContent from "./CheckoutContent";
 
-const CheckoutForm = () => {
+const CheckoutForm = ({ handleSubmit }) => {
   const stripeKey = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
 
   const stripe = loadStripe(stripeKey, {
@@ -50,7 +50,7 @@ const CheckoutForm = () => {
   if (clientSecret) {
     return (
       <CheckoutProvider stripe={stripe} options={{ clientSecret }}>
-        <CheckoutContent />
+        <CheckoutContent handleSubmit={handleSubmit} />
       </CheckoutProvider>
     );
   } else {
