@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const ShoppingCartContext = createContext({});
 
@@ -7,17 +8,20 @@ export function useShoppingCart() {
 }
 
 export default function ShoppingCartProvider({ children }) {
+  const location = useLocation();
+  const [isClickAndCollect, setIsClickAndCollect] = useState(false);
+
   const [cartItems, setCartItems] = useState(() => {
     const storedCart = sessionStorage.getItem("Cart");
     return storedCart ? JSON.parse(storedCart) : [];
   });
 
   const [message, setMessage] = useState("Aucune indication renseignée");
-
   const [selectedDate, setSelectedDate] = useState({
     date: "",
     time: "",
   });
+  const [selectedDay, setSelectedDay] = useState("now");
 
   const addToCart = (item) => {
     setCartItems((prevItems) => [...prevItems, item]);
@@ -55,6 +59,14 @@ export default function ShoppingCartProvider({ children }) {
     }
   }, []);
 
+  useEffect(() => {
+    if (location.pathname.includes("table")) {
+      setIsClickAndCollect(false);
+    } else {
+      setIsClickAndCollect(true);
+    }
+  }, [location.pathname]);
+
   return (
     <ShoppingCartContext.Provider
       value={{
@@ -67,6 +79,9 @@ export default function ShoppingCartProvider({ children }) {
         setMessage,
         selectedDate,
         setSelectedDate,
+        selectedDay,
+        setSelectedDay,
+        isClickAndCollect,
       }}
     >
       {children}

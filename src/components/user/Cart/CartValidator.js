@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useShoppingCart } from "../../Context/ShoppingCartContext";
 import InsideDrawer from "../InsideDrawer";
 import CheckoutForm from "../Checkout/CheckoutForm";
@@ -30,9 +30,9 @@ const modalStyle = {
 };
 
 const CartValidator = ({ setOpen }) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const { tableNumber } = useParams();
-  const location = useLocation();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [orderType, setOrderType] = useState("");
 
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(true);
@@ -40,19 +40,9 @@ const CartValidator = ({ setOpen }) => {
 
   const { isAuthenticated, loginWithRedirect } = useAuth0();
 
-  const [isClickAndCollect, setIsClickAndCollect] = useState(false);
-
   const [openCheckout, setOpenCheckout] = useState(false);
   const toggleDrawer = (newOpen) => () => setOpenCheckout(newOpen);
   const [isGuest, setIsGuest] = useState(false);
-
-  useEffect(() => {
-    if (location.pathname.includes("table")) {
-      setIsClickAndCollect(false);
-    } else {
-      setIsClickAndCollect(true);
-    }
-  }, [location.pathname]);
 
   const {
     cartItems,
@@ -61,17 +51,18 @@ const CartValidator = ({ setOpen }) => {
     setMessage,
     selectedDate,
     setSelectedDate,
+    isClickAndCollect,
   } = useShoppingCart();
 
-  let orderType = "";
-
-  if (location.pathname.includes("clickandcollect")) {
-    orderType = "clickandcollect";
-  } else if (tableNumber) {
-    orderType = "dine-in";
-  } else {
-    orderType = "clickandcollect";
-  }
+  useEffect(() => {
+    if (isClickAndCollect) {
+      setOrderType("clickandcollect");
+    } else if (tableNumber) {
+      setOrderType("dine-in");
+    } else {
+      setOrderType("clickandcollect");
+    }
+  }, [isClickAndCollect, tableNumber]);
 
   const calculateTotalPrice = () => {
     const total = cartItems.map((item) => {

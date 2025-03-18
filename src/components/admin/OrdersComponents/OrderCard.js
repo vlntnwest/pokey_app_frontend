@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
@@ -19,14 +19,15 @@ const OrderCard = ({ order, modal, handleOnChange }) => {
     isArchived,
     _id,
     orderType,
-    // createdAt,
+    createdAt,
     orderDate,
   } = order;
+
+  const [timeString, setTimeString] = useState("");
 
   const dispatch = useDispatch();
 
   const [archived, setArchived] = useState(isArchived);
-
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleLocalChange = async () => {
@@ -90,6 +91,21 @@ const OrderCard = ({ order, modal, handleOnChange }) => {
   //   hour12: false,
   // }).format(date);
 
+  useEffect(() => {
+    const dateString = createdAt;
+    const date = new Date(dateString);
+
+    date.setTime(date.getTime() + 30 * 60 * 1000);
+
+    const timeString = date.toLocaleTimeString("fr-FR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+
+    setTimeString(timeString);
+  }, [createdAt]);
+
   if (archived === false || modal === true)
     return (
       <Card sx={{ minWidth: 275 }}>
@@ -97,11 +113,13 @@ const OrderCard = ({ order, modal, handleOnChange }) => {
           {orderType === "dine-in" ? (
             <Typography variant="h5">Table: {tableNumber}</Typography>
           ) : (
-            <Typography variant="h5">Click and Collect</Typography>
+            <Typography variant="h5">Click and Collect </Typography>
           )}
-          {orderDate && (
+          {orderDate?.date && (
             <Typography variant="body2">
-              {orderDate.date} - {orderDate.time}
+              {orderDate.date === "Aujourd'hui" && !orderDate.time
+                ? `${orderDate.date} - ${timeString}`
+                : `${orderDate.date} - ${orderDate.time}`}
             </Typography>
           )}
           <Divider sx={{ my: 1 }} />

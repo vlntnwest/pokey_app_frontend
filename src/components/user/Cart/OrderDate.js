@@ -3,6 +3,7 @@ import React, { useEffect, useMemo } from "react";
 import dayjs from "dayjs";
 import Picker from "react-mobile-picker";
 import { useShoppingCart } from "../../Context/ShoppingCartContext";
+import { isEmpty } from "../../Utils";
 
 const OrderDate = () => {
   const { selectedDate, setSelectedDate } = useShoppingCart();
@@ -102,10 +103,13 @@ const OrderDate = () => {
 
   useEffect(() => {
     const dayOfWeek = dayjs().day();
+    if (!isEmpty(selectedDate.time)) return;
     if (dayOfWeek === 1) {
-      setSelectedDate({ date: "Demain", time: "" });
+      setSelectedDate({ date: "Demain", time: availableTimes[0] });
+    } else if (dayOfWeek !== 0 && dayOfWeek !== 1) {
+      setSelectedDate({ date: "Aujourd'hui", time: availableTimes[0] });
     }
-  }, [setSelectedDate]);
+  }, [setSelectedDate, selectedDate?.time, availableTimes]);
 
   return (
     <Box sx={{ display: "flex", gap: 2 }}>

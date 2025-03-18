@@ -6,7 +6,7 @@ import OrderMessage from "./OrderMessage";
 import CartTimer from "./CartTimer";
 
 const CartSummary = () => {
-  const { cartItems, updateItemCount } = useShoppingCart();
+  const { cartItems, updateItemCount, isClickAndCollect } = useShoppingCart();
 
   return (
     <Box
@@ -31,7 +31,7 @@ const CartSummary = () => {
         ))}
       </Card>
       <OrderMessage />
-      <CartTimer />
+      {isClickAndCollect && <CartTimer />}
     </Box>
   );
 };

@@ -1,16 +1,17 @@
+import React from "react";
 import { Box, Radio, RadioGroup, Typography } from "@mui/material";
-import React, { useState } from "react";
 import OrderDate from "./OrderDate";
+import { useShoppingCart } from "../../Context/ShoppingCartContext";
 
 const CartTimer = () => {
-  const [selectedValue, setSelectedValue] = useState("now");
+  const { selectedDay, setSelectedDay } = useShoppingCart();
 
   const handleChange = (event) => {
-    setSelectedValue(event.target.value);
+    setSelectedDay(event.target.value);
   };
 
   const controlProps = (item) => ({
-    checked: selectedValue === item,
+    checked: selectedDay === item,
     onChange: handleChange,
     value: item,
     name: "color-radio-button-demo",
@@ -33,7 +34,7 @@ const CartTimer = () => {
       >
         <RadioGroup
           aria-labelledby="delivery-timing-label"
-          value={selectedValue}
+          value={selectedDay}
           name="delivery-timing-group"
         >
           <Box
@@ -42,7 +43,7 @@ const CartTimer = () => {
               alignItems: "center",
               justifyContent: "space-between",
             }}
-            onClick={() => setSelectedValue("now")}
+            onClick={() => setSelectedDay("now")}
           >
             <Typography variant="body1">Maintenant</Typography>
             <Radio {...controlProps("now")} />
@@ -53,13 +54,13 @@ const CartTimer = () => {
               alignItems: "center",
               justifyContent: "space-between",
             }}
-            onClick={() => setSelectedValue("after")}
+            onClick={() => setSelectedDay("after")}
           >
             <Typography variant="body1">Plus tard</Typography>
             <Radio {...controlProps("after")} />
           </Box>
         </RadioGroup>
-        <Box>{selectedValue === "after" && <OrderDate />}</Box>
+        <Box>{selectedDay === "after" && <OrderDate />}</Box>
       </Box>
     </div>
   );
