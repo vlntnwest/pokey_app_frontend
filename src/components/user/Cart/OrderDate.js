@@ -4,9 +4,11 @@ import dayjs from "dayjs";
 import Picker from "react-mobile-picker";
 import { useShoppingCart } from "../../Context/ShoppingCartContext";
 import { isEmpty } from "../../Utils";
+import { useShop } from "../../Context/ShopContext";
 
 const OrderDate = () => {
   const { selectedDate, setSelectedDate } = useShoppingCart();
+  const { openingHours } = useShop();
 
   // Function to check if a date is Sunday (0) or Monday (1)
   const isSundayOrMonday = (date) => {
@@ -77,11 +79,7 @@ const OrderDate = () => {
       : null;
 
     // Define lunch and dinner time windows
-    const lunchStart = selectedDay.hour(11).minute(45);
-    const lunchEnd = selectedDay.hour(14).minute(0);
-
-    const dinnerStart = selectedDay.hour(18).minute(30);
-    const dinnerEnd = selectedDay.hour(22).minute(0);
+    const { lunchStart, lunchEnd, dinnerStart, dinnerEnd } = openingHours;
 
     const interval = 15;
 
@@ -99,7 +97,7 @@ const OrderDate = () => {
     );
 
     return [...lunchSlots, ...dinnerSlots];
-  }, [selectedDate.date, availableDates]);
+  }, [selectedDate.date, availableDates, openingHours]);
 
   useEffect(() => {
     const dayOfWeek = dayjs().day();

@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Radio, RadioGroup, Typography } from "@mui/material";
 import OrderDate from "./OrderDate";
 import { useShoppingCart } from "../../Context/ShoppingCartContext";
+import { useShop } from "../../Context/ShopContext";
 
 const CartTimer = () => {
   const { selectedDay, setSelectedDay } = useShoppingCart();
+  const { canOrderNow } = useShop();
 
   const handleChange = (event) => {
     setSelectedDay(event.target.value);
@@ -17,6 +19,12 @@ const CartTimer = () => {
     name: "color-radio-button-demo",
     inputProps: { "aria-label": item },
   });
+
+  useEffect(() => {
+    if (!canOrderNow) {
+      setSelectedDay("after");
+    }
+  }, [canOrderNow, setSelectedDay]);
 
   return (
     <div>
@@ -37,17 +45,20 @@ const CartTimer = () => {
           value={selectedDay}
           name="delivery-timing-group"
         >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-            onClick={() => setSelectedDay("now")}
-          >
-            <Typography variant="body1">Maintenant</Typography>
-            <Radio {...controlProps("now")} />
-          </Box>
+          {canOrderNow && (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+              onClick={() => setSelectedDay("now")}
+            >
+              <Typography variant="body1">Au plus vite</Typography>
+              <Radio {...controlProps("now")} />
+            </Box>
+          )}
+
           <Box
             sx={{
               display: "flex",

@@ -11,6 +11,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { getUser } from "../actions/users.action";
 import Onboarding from "../components/user/Onboarding/Onboarding";
 import axios from "axios";
+import ShopProvider from "../components/Context/ShopContext";
 
 const Table = () => {
   const dispatch = useDispatch();
@@ -151,25 +152,27 @@ const Table = () => {
   }
 
   return (
-    <ShoppingCartProvider>
-      <Box
-        style={{
-          "&::WebkitScrollbar": {
-            display: "none",
-          },
-          MsOverflowStyle: "none",
-          scrollbarWidth: "none",
-        }}
-      >
-        <Header auth />
-        <Box component="main">
-          <Popular />
-          {types.map((type, index) => (
-            <MealCategory type={type} key={index} />
-          ))}
+    <ShopProvider>
+      <ShoppingCartProvider>
+        <Box
+          style={{
+            "&::WebkitScrollbar": {
+              display: "none",
+            },
+            MsOverflowStyle: "none",
+            scrollbarWidth: "none",
+          }}
+        >
+          <Header auth />
+          <Box component="main">
+            <Popular />
+            {types.map((type, index) => (
+              <MealCategory type={type} key={index} />
+            ))}
+          </Box>
         </Box>
-      </Box>
-    </ShoppingCartProvider>
+      </ShoppingCartProvider>
+    </ShopProvider>
   );
 };
 

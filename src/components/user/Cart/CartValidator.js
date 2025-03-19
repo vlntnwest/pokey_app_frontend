@@ -16,6 +16,7 @@ import CheckoutForm from "../Checkout/CheckoutForm";
 import { useAuth0 } from "@auth0/auth0-react";
 import FullWidthBtn from "../../Buttons/FullWidthBtn";
 import { formatPrice } from "../../Utils";
+import { useShop } from "../../Context/ShopContext";
 
 const modalStyle = {
   position: "absolute",
@@ -51,8 +52,11 @@ const CartValidator = ({ setOpen }) => {
     setMessage,
     selectedDate,
     setSelectedDate,
+    selectedDay,
     isClickAndCollect,
   } = useShoppingCart();
+
+  const { calculOrderTimeRange } = useShop();
 
   useEffect(() => {
     if (isClickAndCollect) {
@@ -145,6 +149,9 @@ const CartValidator = ({ setOpen }) => {
   };
 
   const handleCheckout = () => {
+    if (selectedDay === "now") {
+      setSelectedDate({ date: "Aujourd'hui", time: calculOrderTimeRange() });
+    }
     if (!isAuthenticated) {
       handleOpenModal();
     } else {

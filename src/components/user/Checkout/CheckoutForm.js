@@ -68,7 +68,6 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
   const createCheckoutSession = useCallback(
     async (email) => {
       try {
-        console.log(items);
         setLoading(true);
         const response = await axios.post(
           `${process.env.REACT_APP_API_URL}api/checkout/create-checkout-session`,
