@@ -3,19 +3,19 @@ import { CheckoutProvider } from "@stripe/react-stripe-js";
 import axios from "axios";
 import { loadStripe } from "@stripe/stripe-js";
 import CheckoutContent from "./CheckoutContent";
-import { TextField } from "@mui/material";
+import { CircularProgress, TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import { validateForm } from "../../../utils/";
 import FullWidthBtn from "../../Buttons/FullWidthBtn";
 import { useSelector } from "react-redux";
 import { formatPrice } from "../../Utils";
 
+const stripe = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY, {
+  betas: ["custom_checkout_beta_5"],
+});
+
 const CheckoutForm = ({ handleSubmit, isGuest }) => {
   const [savedInfo, setSavedInfo] = useState(false);
-  const stripeKey = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
-  const stripe = loadStripe(stripeKey, {
-    betas: ["custom_checkout_beta_5"],
-  });
   const [clientSecret, setClientSecret] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -71,15 +71,10 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
         setLoading(true);
         const response = await axios.post(
           `${process.env.REACT_APP_API_URL}api/checkout/create-checkout-session`,
-          {
-            email,
-            items,
-          }
+          { email, items }
         );
-
         setClientSecret(response.data.checkoutSessionClientSecret);
       } catch (error) {
-        console.error("Erreur lors de la création de la session :", error);
         setError(`Erreur: ${error.message}`);
       } finally {
         setLoading(false);
@@ -94,10 +89,10 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
   }, []);
 
   useEffect(() => {
-    if (!isGuest && user?.email && items.length > 0) {
+    if (!isGuest && user?.email && items.length > 0 && !clientSecret) {
       createCheckoutSession(user.email);
     }
-  }, [isGuest, user?.email, createCheckoutSession, items]);
+  }, [isGuest, user?.email, items, createCheckoutSession, clientSecret]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -120,7 +115,6 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
       console.error("Erreur lors de la création de la session :", error);
       setError(`Erreur: ${error.message}`);
     } finally {
-      setLoading(false);
       setSavedInfo(true);
     }
   };
@@ -178,7 +172,19 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
   }
 
   if (loading) {
-    return <div>Chargement du formulaire de paiement...</div>;
+    return (
+      <Box
+        style={{
+          width: "100vw",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   if (error) {
