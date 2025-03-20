@@ -19,6 +19,11 @@ export function useShop() {
 
 export default function ShopProvider({ children }) {
   const [canOrderNow, setCanOrderNow] = useState(false);
+  const [orderCompleted, setOrderCompleted] = useState(false);
+  const handleOpenCompletedOrderModal = () => setOrderCompleted(true);
+  const handleCloseCompletedOrderModal = () => setOrderCompleted(false);
+  const [orderNumber, setOrderNumber] = useState();
+  const [orderTime, setOrderTime] = useState("");
 
   const openingHours = useMemo(() => {
     return {
@@ -61,6 +66,13 @@ export default function ShopProvider({ children }) {
         canOrderNow,
         openingHours,
         calculOrderTimeRange,
+        orderCompleted,
+        handleCloseCompletedOrderModal,
+        handleOpenCompletedOrderModal,
+        orderNumber,
+        setOrderNumber,
+        orderTime,
+        setOrderTime,
       }}
     >
       {children}

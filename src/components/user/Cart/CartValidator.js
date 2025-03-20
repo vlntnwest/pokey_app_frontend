@@ -44,6 +44,8 @@ const CartValidator = ({ setOpen }) => {
   const [openCheckout, setOpenCheckout] = useState(false);
   const toggleDrawer = (newOpen) => () => setOpenCheckout(newOpen);
   const [isGuest, setIsGuest] = useState(false);
+  const { handleOpenCompletedOrderModal, setOrderNumber, setOrderTime } =
+    useShop();
 
   const {
     cartItems,
@@ -123,7 +125,9 @@ const CartValidator = ({ setOpen }) => {
         `${process.env.REACT_APP_API_URL}api/order`,
         dataToPrint
       );
-      console.log("Commande créée avec succès:", response.data);
+      const res = response.data;
+      setOrderNumber(res.orderNumber);
+      setOrderTime(`${res.orderDate.date} à ${res.orderDate.time}`);
     } catch (error) {
       console.error(
         "Erreur lors de l'envoi des données à l'API:",
@@ -139,6 +143,7 @@ const CartValidator = ({ setOpen }) => {
       date: "Aujourd'hui",
       time: "",
     });
+    handleOpenCompletedOrderModal();
   };
 
   const handleCheckout = () => {

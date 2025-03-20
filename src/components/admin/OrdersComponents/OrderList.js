@@ -26,7 +26,8 @@ const OrderList = ({ order }) => {
     boxShadow: 24,
   };
 
-  const { isArchived, tableNumber, _id, createdAt, orderType } = order;
+  const { isArchived, tableNumber, _id, createdAt, orderType, orderNumber } =
+    order;
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -123,7 +124,7 @@ const OrderList = ({ order }) => {
               {(orderType !== "clickandcollect") & tableNumber ? (
                 <Typography>Table: {tableNumber}</Typography>
               ) : (
-                <Typography>Click & Collect</Typography>
+                <Typography>Click & Collect : {orderNumber}</Typography>
               )}
             </Button>
           </TableCell>

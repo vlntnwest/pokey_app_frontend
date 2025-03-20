@@ -2,7 +2,14 @@ import React, { useEffect, useState } from "react";
 import Header from "../components/user/Header";
 import { useDispatch } from "react-redux";
 import { getDetails } from "../actions/details.action";
-import { Alert, Box, CircularProgress, Container } from "@mui/material";
+import {
+  Alert,
+  Box,
+  CircularProgress,
+  Container,
+  Modal,
+  Typography,
+} from "@mui/material";
 import Popular from "../components/user/Popular";
 import MealCategory from "../components/user/MealCategory";
 import { getMeals } from "../actions/meal.action";
@@ -11,14 +18,14 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { getUser } from "../actions/users.action";
 import Onboarding from "../components/user/Onboarding/Onboarding";
 import axios from "axios";
-import ShopProvider from "../components/Context/ShopContext";
+import ShopProvider, { useShop } from "../components/Context/ShopContext";
+import CheckIcon from "../components/Icons/CheckIcon";
+import { useMotionValue, motion } from "framer-motion";
 
-const Table = () => {
+const ClickAndCollect = () => {
   const dispatch = useDispatch();
   const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
   const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
-
-  const types = ["bowl", "custom", "side", "dessert", "drink"];
 
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -154,26 +161,88 @@ const Table = () => {
   return (
     <ShopProvider>
       <ShoppingCartProvider>
-        <Box
-          style={{
-            "&::WebkitScrollbar": {
-              display: "none",
-            },
-            MsOverflowStyle: "none",
-            scrollbarWidth: "none",
-          }}
-        >
-          <Header auth />
-          <Box component="main">
-            <Popular />
-            {types.map((type, index) => (
-              <MealCategory type={type} key={index} />
-            ))}
-          </Box>
-        </Box>
+        <TableContent />
       </ShoppingCartProvider>
     </ShopProvider>
   );
 };
 
-export default Table;
+export default ClickAndCollect;
+
+const modalStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 2,
+  borderRadius: 1,
+  minWidth: 300,
+  textAlign: "center",
+};
+
+const TableContent = () => {
+  const {
+    orderCompleted,
+    handleCloseCompletedOrderModal,
+    orderNumber,
+    orderTime,
+  } = useShop();
+
+  const types = ["bowl", "custom", "side", "dessert", "drink"];
+
+  let progress = useMotionValue(90);
+
+  return (
+    <Box>
+      <Box
+        style={{
+          "&::WebkitScrollbar": {
+            display: "none",
+          },
+          MsOverflowStyle: "none",
+          scrollbarWidth: "none",
+        }}
+      >
+        <Header auth />
+        <Box component="main">
+          <Popular />
+          {types.map((type, index) => (
+            <MealCategory type={type} key={index} />
+          ))}
+        </Box>
+      </Box>
+      <Modal
+        open={orderCompleted}
+        onClose={handleCloseCompletedOrderModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={modalStyle}>
+          <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+            <motion.div
+              initial={{ x: 0 }}
+              animate={{ x: 100 }}
+              style={{ x: progress }}
+              transition={{ duration: 1 }}
+            />
+            <CheckIcon progress={progress} />
+          </Box>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Commande validé
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Votre commande sera prête:
+            <br />
+            {orderTime}
+            <br />
+            Vous avez le numéro:
+            <br />
+            {orderNumber}
+          </Typography>
+        </Box>
+      </Modal>
+    </Box>
+  );
+};

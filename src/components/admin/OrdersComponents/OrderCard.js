@@ -78,7 +78,6 @@ const OrderCard = ({ order, modal, handleOnChange }) => {
 
     setIsSubmitting(false);
   };
-  console.log(isSuccess);
 
   if (archived === false || modal === true)
     return (
