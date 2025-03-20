@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useCheckout } from "@stripe/react-stripe-js";
 import FullWidthBtn from "../../Buttons/FullWidthBtn";
+import { Typography } from "@mui/material";
 
-const PayButton = ({ handleSubmit, email }) => {
+const PayButton = ({ handleSubmit }) => {
   const { confirm } = useCheckout();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleClick = async () => {
     setLoading(true);
@@ -14,8 +16,11 @@ const PayButton = ({ handleSubmit, email }) => {
         redirect: "if_required",
       });
 
-      if (result.type !== "error") {
-        handleSubmit();
+      if (result.type === "success") {
+        handleSubmit(result.type);
+      }
+      if (result.type !== "success") {
+        setError(result.error.message);
       }
     } catch (error) {
       console.error("Une erreur s'est produite :", error);
@@ -26,6 +31,9 @@ const PayButton = ({ handleSubmit, email }) => {
 
   return (
     <div>
+      <Typography variant="body2" color="error">
+        {error}
+      </Typography>
       <FullWidthBtn
         handleAction={handleClick}
         name={"Payer"}

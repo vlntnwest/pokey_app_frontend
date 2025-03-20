@@ -10,6 +10,7 @@ import { isEmpty } from "../../Utils";
 import { useDispatch } from "react-redux";
 import { toggleArchive } from "../../../actions/order.action";
 import axios from "axios";
+import { Box } from "@mui/system";
 
 const OrderCard = ({ order, modal, handleOnChange }) => {
   const {
@@ -19,8 +20,9 @@ const OrderCard = ({ order, modal, handleOnChange }) => {
     isArchived,
     _id,
     orderType,
-    // createdAt,
     orderDate,
+    isSuccess,
+    orderNumber,
   } = order;
 
   const dispatch = useDispatch();
@@ -76,27 +78,32 @@ const OrderCard = ({ order, modal, handleOnChange }) => {
 
     setIsSubmitting(false);
   };
-
-  // If we want to display the date of the order
-  // const date = new Date(createdAt);
-
-  // const dateFr = new Intl.DateTimeFormat("fr-FR", {
-  //   day: "2-digit",
-  //   month: "2-digit",
-  //   year: "numeric",
-  //   hour: "2-digit",
-  //   minute: "2-digit",
-  //   hour12: false,
-  // }).format(date);
+  console.log(isSuccess);
 
   if (archived === false || modal === true)
     return (
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            {isSuccess ? (
+              <Typography variant="body2" color="success" fontWeight={700}>
+                Payé
+              </Typography>
+            ) : (
+              <Box />
+            )}
+            {orderType === "clickandcollect" && (
+              <Typography variant="body2" fontWeight={700}>
+                {orderNumber}
+              </Typography>
+            )}
+          </Box>
           {orderType === "dine-in" ? (
             <Typography variant="h5">Table: {tableNumber}</Typography>
           ) : (
-            <Typography variant="h5">Click and Collect </Typography>
+            <Box>
+              <Typography variant="h5">Click and Collect</Typography>
+            </Box>
           )}
           {orderDate?.date && (
             <Typography variant="body2">

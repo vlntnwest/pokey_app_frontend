@@ -23,7 +23,7 @@ export default function ShopProvider({ children }) {
   const openingHours = useMemo(() => {
     return {
       lunchStart: dayjs().hour(12).minute(0),
-      lunchEnd: dayjs().hour(17).minute(30),
+      lunchEnd: dayjs().hour(14).minute(30),
       dinnerStart: dayjs().hour(18).minute(30),
       dinnerEnd: dayjs().hour(22).minute(0),
     };

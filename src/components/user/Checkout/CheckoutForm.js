@@ -41,7 +41,6 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
   });
 
   const user = useSelector((state) => state.userReducer);
-  const [email, setEmail] = useState("");
 
   const items = useMemo(() => {
     return cartData.map((item) => {
@@ -109,7 +108,6 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
       return;
     }
     try {
-      setEmail(formData.email);
       await createCheckoutSession(isGuest ? formData.email : user.email);
     } catch (error) {
       console.error("Erreur lors de la création de la session :", error);
@@ -198,7 +196,7 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
   if (clientSecret) {
     return (
       <CheckoutProvider stripe={stripe} options={{ clientSecret }}>
-        <CheckoutContent handleSubmit={handleSubmit} email={email} />
+        <CheckoutContent handleSubmit={handleSubmit} />
       </CheckoutProvider>
     );
   } else {

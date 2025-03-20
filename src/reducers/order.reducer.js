@@ -12,8 +12,8 @@ export default function orderReducer(state = initialState, action) {
       return action.payload;
     case TOGGLE_ARCHIVE:
       return state.map((order) =>
-        order._id === action.payload.id
-          ? { ...order, isArchived: action.payload.isArchived }
+        order._id === action.payload
+          ? { ...order, isArchived: !order.isArchived }
           : order
       );
     case DELETE_ORDER:

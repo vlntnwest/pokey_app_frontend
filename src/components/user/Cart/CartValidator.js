@@ -80,7 +80,7 @@ const CartValidator = ({ setOpen }) => {
     return total.reduce((acc, curr) => acc + curr).toFixed(2);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (isSuccess) => {
     setIsSubmitting(true);
 
     if (!cartItems.length) {
@@ -112,6 +112,10 @@ const CartValidator = ({ setOpen }) => {
       items: items,
       specialInstructions: message,
       orderDate: selectedDate,
+      isSuccess:
+        orderType === "clickandcollect" && isSuccess === "success"
+          ? true
+          : null,
     };
 
     try {
@@ -126,18 +130,7 @@ const CartValidator = ({ setOpen }) => {
         error.response?.data || error.message
       );
     }
-    // try {
-    //   const response = await axios.post(
-    //     `${process.env.REACT_APP_API_URL}api/order/print-order`,
-    //     { orderData: dataToPrint }
-    //   );
-    //   console.log("Commande envoyée avec succès:", response.data);
-    // } catch (error) {
-    //   console.error(
-    //     "Erreur lors de l'envoi des données à l'API:",
-    //     error.response?.data || error.message
-    //   );
-    // }
+
     clearCart();
     setOpen(false);
     setIsSubmitting(false);
