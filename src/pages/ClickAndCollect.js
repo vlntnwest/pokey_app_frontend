@@ -21,6 +21,7 @@ import axios from "axios";
 import ShopProvider, { useShop } from "../components/Context/ShopContext";
 import CheckIcon from "../components/Icons/CheckIcon";
 import { useMotionValue, motion } from "framer-motion";
+import GuestProvider from "../components/Context/guestInfos";
 
 const ClickAndCollect = () => {
   const dispatch = useDispatch();
@@ -161,7 +162,9 @@ const ClickAndCollect = () => {
   return (
     <ShopProvider>
       <ShoppingCartProvider>
-        <TableContent />
+        <GuestProvider>
+          <TableContent />
+        </GuestProvider>
       </ShoppingCartProvider>
     </ShopProvider>
   );
@@ -229,7 +232,7 @@ const TableContent = () => {
             />
             <CheckIcon progress={progress} />
           </Box>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+          <Typography id="modal-modal-title" variant="h6" component="h6">
             Commande validé
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>

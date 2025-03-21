@@ -23,6 +23,7 @@ const OrderCard = ({ order, modal, handleOnChange }) => {
     orderDate,
     isSuccess,
     orderNumber,
+    clientData,
   } = order;
 
   const dispatch = useDispatch();
@@ -114,11 +115,19 @@ const OrderCard = ({ order, modal, handleOnChange }) => {
             <ItemsList key={index} item={item} />
           ))}
           {!isEmpty(specialInstructions) && (
-            <>
+            <Box>
               <Divider sx={{ my: 1 }} />
               <Typography sx={{ color: "text.secondary" }}>Comments</Typography>
               <Typography variant="body2">{specialInstructions}</Typography>
-            </>
+            </Box>
+          )}
+          {clientData && (
+            <Box>
+              <Divider sx={{ my: 1 }} />
+              <Typography sx={{ color: "text.secondary" }}>Infos</Typography>
+              <Typography variant="body2">{clientData.name}</Typography>
+              <Typography variant="body2">{clientData.phone}</Typography>
+            </Box>
           )}
         </CardContent>
         <Grid container spacing={0}>

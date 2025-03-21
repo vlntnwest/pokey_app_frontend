@@ -9,6 +9,7 @@ import { validateForm } from "../../../utils/";
 import FullWidthBtn from "../../Buttons/FullWidthBtn";
 import { useSelector } from "react-redux";
 import { formatPrice } from "../../Utils";
+import { useGuest } from "../../Context/guestInfos";
 
 const stripe = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY, {
   betas: ["custom_checkout_beta_5"],
@@ -22,11 +23,7 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
 
   const [cartData, setCartData] = useState([]);
 
-  const [formData, setFormData] = useState({
-    firstName: "",
-    email: "",
-    phone: "",
-  });
+  const { guestInfos, setGuestInfos } = useGuest();
 
   const [errors, setErrors] = useState({
     firstName: false,
@@ -95,7 +92,7 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setGuestInfos((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -104,11 +101,11 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
   const checkGuest = async (e) => {
     e.preventDefault();
 
-    if (!validateForm(formData, setErrors, setErrorMessages)) {
+    if (!validateForm(guestInfos, setErrors, setErrorMessages)) {
       return;
     }
     try {
-      await createCheckoutSession(isGuest ? formData.email : user.email);
+      await createCheckoutSession(isGuest ? guestInfos.email : user.email);
     } catch (error) {
       console.error("Erreur lors de la création de la session :", error);
       setError(`Erreur: ${error.message}`);
@@ -134,7 +131,7 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
           name="firstName"
           label="Prénom"
           required
-          value={formData.firstName}
+          value={guestInfos.firstName}
           error={errors.firstName}
           helperText={errorMessages.firstName}
           sx={{ width: "100%", mb: 2 }}
@@ -144,7 +141,7 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
           name="email"
           label="Email"
           required
-          value={formData.email}
+          value={guestInfos.email}
           error={errors.email}
           helperText={errorMessages.email}
           sx={{ width: "100%", mb: 2 }}
@@ -154,7 +151,7 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
           name="phone"
           label="Téléphone"
           required
-          value={formData.phone}
+          value={guestInfos.phone}
           error={errors.phone}
           helperText={errorMessages.phone}
           sx={{ width: "100%", mb: 2 }}

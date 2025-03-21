@@ -36,7 +36,7 @@ const CheckoutContent = ({ handleSubmit, email }) => {
           py={1.5}
           mb={2}
         >
-          Commande à prête pour {selectedDate.time}
+          Commande prête pour {selectedDate.time}
         </Box>
         <Box
           sx={{

@@ -17,6 +17,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import FullWidthBtn from "../../Buttons/FullWidthBtn";
 import { formatPrice } from "../../Utils";
 import { useShop } from "../../Context/ShopContext";
+import { useSelector } from "react-redux";
+import { useGuest } from "../../Context/guestInfos";
 
 const modalStyle = {
   position: "absolute",
@@ -34,6 +36,9 @@ const CartValidator = ({ setOpen }) => {
   const { tableNumber } = useParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderType, setOrderType] = useState("");
+
+  const user = useSelector((state) => state.userReducer);
+  const { guestInfos } = useGuest();
 
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(true);
@@ -109,6 +114,7 @@ const CartValidator = ({ setOpen }) => {
     });
 
     const dataToPrint = {
+      userId: user._id ?? null,
       orderType,
       ...(orderType === "dine-in" && { tableNumber }),
       items: items,
@@ -118,6 +124,11 @@ const CartValidator = ({ setOpen }) => {
         orderType === "clickandcollect" && isSuccess === "success"
           ? true
           : null,
+      clientData: {
+        name: user.firstName ?? guestInfos.firstName,
+        email: user.email ?? guestInfos.email,
+        phone: user.phone ?? guestInfos.phone,
+      },
     };
 
     try {
@@ -125,7 +136,9 @@ const CartValidator = ({ setOpen }) => {
         `${process.env.REACT_APP_API_URL}api/order`,
         dataToPrint
       );
+
       const res = response.data;
+
       setOrderNumber(res.orderNumber);
       setOrderTime(`${res.orderDate.date} à ${res.orderDate.time}`);
     } catch (error) {
