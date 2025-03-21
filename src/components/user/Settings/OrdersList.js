@@ -29,11 +29,14 @@ const OrdersList = () => {
         height: "100%",
         display: "flex",
         flexDirection: "column",
+        alignItems: "center",
+        maxWidth: 1200,
+        width: "100%",
       }}
       px={2}
     >
       {orders.map((order) => (
-        <OrderCardHistory order={order} />
+        <OrderCardHistory order={order} key={order._id} />
       ))}
     </Box>
   );

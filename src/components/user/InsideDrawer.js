@@ -18,8 +18,13 @@ const InsideDrawer = ({ toggleDrawer, children, name, back }) => {
         back={back ?? null}
       />
       <Box
-        pt={2}
-        sx={{ flexGrow: "1", backgroundColor: "rgba(208, 208, 208, 0.12)" }}
+        py={2}
+        sx={{
+          flexGrow: "1",
+          backgroundColor: "rgba(208, 208, 208, 0.12)",
+          display: "flex",
+          justifyContent: "center",
+        }}
       >
         {children}
       </Box>

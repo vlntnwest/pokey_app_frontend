@@ -10,8 +10,7 @@ const CartSummary = () => {
 
   return (
     <Box
-      px={2}
-      pt={2}
+      p={2}
       sx={{
         flexGrow: "1",
         backgroundColor: "rgba(208, 208, 208, 0.12)",

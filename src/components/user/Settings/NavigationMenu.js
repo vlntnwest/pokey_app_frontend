@@ -19,6 +19,7 @@ const NavigationMenu = () => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        width: "100%",
       }}
     >
       <Box>

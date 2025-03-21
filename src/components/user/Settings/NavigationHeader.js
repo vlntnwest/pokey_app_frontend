@@ -30,6 +30,7 @@ const NavigationHeader = ({ toggleDrawer, name, back }) => {
                   position: "absolute",
                   transform: "translateX(-50%)",
                   left: "50%",
+                  textAlign: "center",
                 }}
               >
                 <Typography variant="body1" color="black">

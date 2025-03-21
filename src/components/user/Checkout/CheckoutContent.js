@@ -22,8 +22,9 @@ const CheckoutContent = ({ handleSubmit, email }) => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        width: "100%",
       }}
-      p={2}
+      px={2}
     >
       <Box>
         <Box
