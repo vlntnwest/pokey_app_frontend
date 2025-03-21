@@ -8,7 +8,7 @@ const NavigationMenu = () => {
 
   const menuItems = [
     { label: "Détails du compte", component: "AccountDetails" },
-    { label: "Commandes", component: "OrdersList" },
+    { label: "Historique de commandes", component: "OrdersList" },
   ];
 
   return (
@@ -19,7 +19,6 @@ const NavigationMenu = () => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        pb: 2,
       }}
     >
       <Box>

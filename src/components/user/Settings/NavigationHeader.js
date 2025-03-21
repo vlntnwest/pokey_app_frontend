@@ -1,8 +1,9 @@
-import { AppBar, Box, IconButton, Toolbar } from "@mui/material";
+import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
 import React from "react";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 
-const NavigationHeader = ({ toggleDrawer }) => {
+const NavigationHeader = ({ toggleDrawer, name, back }) => {
   return (
     <>
       <Box
@@ -23,8 +24,21 @@ const NavigationHeader = ({ toggleDrawer }) => {
           }}
         >
           <Toolbar sx={{ padding: "0 8px" }}>
+            {name && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  transform: "translateX(-50%)",
+                  left: "50%",
+                }}
+              >
+                <Typography variant="body1" color="black">
+                  {name}
+                </Typography>
+              </Box>
+            )}
             <IconButton onClick={toggleDrawer(false)}>
-              <CloseRoundedIcon />
+              {back ? <ArrowBackIosNewRoundedIcon /> : <CloseRoundedIcon />}
             </IconButton>
           </Toolbar>
         </AppBar>

@@ -61,7 +61,7 @@ const NavigationItem = ({ menuItem }) => {
         </Box>
       </Button>
       <Drawer open={open} onClose={toggleDrawer(false)} anchor="right">
-        <InsideDrawer toggleDrawer={toggleDrawer}>
+        <InsideDrawer toggleDrawer={toggleDrawer} name={menuItem.label} back>
           {ComponentToRender && <ComponentToRender />}
         </InsideDrawer>
       </Drawer>
