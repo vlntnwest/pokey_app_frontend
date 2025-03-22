@@ -13,23 +13,23 @@ const CustomBowlItem = ({
 }) => {
   return (
     <Box sx={{ pt: 2 }}>
-      <Typography variant="h6">
+      <Typography variant="h5">
         {name} x{quantity}
       </Typography>
-      <Typography variant="body1">Base:</Typography>
-      <Typography variant="body2">{base}</Typography>
-      <Typography variant="body1">Protéine:</Typography>
-      <Typography variant="body2">{proteins}</Typography>
-      <Typography variant="body1">Accompagnements:</Typography>
-      <Typography variant="body2">{garnishes.join(", ")}</Typography>
-      <Typography variant="body1">Toppings:</Typography>
-      <Typography variant="body2">{toppings.join(", ")}</Typography>
-      <Typography variant="body1">Sauces:</Typography>
-      <Typography variant="body2">{sauces.join(", ")}</Typography>
+      <Typography variant="h6">Base:</Typography>
+      <Typography variant="body1">{base}</Typography>
+      <Typography variant="h6">Protéine:</Typography>
+      <Typography variant="body1">{proteins}</Typography>
+      <Typography variant="h6">Accompagnements:</Typography>
+      <Typography variant="body1">{garnishes.join(", ")}</Typography>
+      <Typography variant="h6">Toppings:</Typography>
+      <Typography variant="body1">{toppings.join(", ")}</Typography>
+      <Typography variant="h6">Sauces:</Typography>
+      <Typography variant="body1">{sauces.join(", ")}</Typography>
       {extraProtein && extraProtein.length > 0 ? (
         <>
-          <Typography variant="body1">Extra Proteine:</Typography>
-          <Typography variant="body2">{extraProtein.join(", ")}</Typography>
+          <Typography variant="h6">Extra Proteine:</Typography>
+          <Typography variant="body1">{extraProtein.join(", ")}</Typography>
         </>
       ) : null}
     </Box>

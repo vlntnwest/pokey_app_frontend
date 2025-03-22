@@ -4,7 +4,7 @@ import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRound
 import EditCartItems from "./EditCartItems";
 import { formatPrice } from "../../Utils";
 
-const RecapLine = ({ item, updateItemCount }) => {
+const RecapLine = ({ item, updateItemCount, isLast }) => {
   const [open, setOpen] = useState(false);
   const orderDetails = [
     ...[item.base],
@@ -116,7 +116,9 @@ const RecapLine = ({ item, updateItemCount }) => {
           </Box>
         </Box>
       </Button>
-      <Divider variant="middle" sx={{ borderColor: "#0000000a" }} />
+      {!isLast && (
+        <Divider variant="middle" sx={{ borderColor: "#0000000a" }} />
+      )}
       <Drawer open={open} onClose={toggleDrawer(false)} anchor="bottom">
         <EditCartItems
           toggleDrawer={toggleDrawer}

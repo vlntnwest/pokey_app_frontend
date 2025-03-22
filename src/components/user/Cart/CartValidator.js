@@ -98,6 +98,11 @@ const CartValidator = ({ setOpen }) => {
     }
 
     const items = cartItems.map((item) => {
+      const itemPrice =
+        (formatPrice(item.price) +
+          (item.extraProteinPrice ? parseFloat(item.extraProteinPrice) : 0)) *
+        item.quantity;
+
       const meal = {
         type: item.type,
         name: item.name,
@@ -109,6 +114,7 @@ const CartValidator = ({ setOpen }) => {
         toppings: item.toppings,
         sauces: item.sauces,
         quantity: item.quantity,
+        price: itemPrice,
       };
       return meal;
     });
@@ -129,6 +135,7 @@ const CartValidator = ({ setOpen }) => {
         email: user.email ?? guestInfos.email,
         phone: user.phone ?? guestInfos.phone,
       },
+      totalPrice: calculateTotalPrice(),
     };
 
     try {

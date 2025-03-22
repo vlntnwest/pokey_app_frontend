@@ -26,6 +26,7 @@ const CartSummary = () => {
             key={index}
             item={item}
             updateItemCount={updateItemCount}
+            isLast={index === cartItems.length - 1}
           />
         ))}
       </Card>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { Box } from "@mui/material";
+import { Box, Card } from "@mui/material";
 import OrderCardHistory from "../Card/OrderCardHistory";
 
 const OrdersList = () => {
@@ -35,9 +35,15 @@ const OrdersList = () => {
       }}
       px={2}
     >
-      {orders.map((order) => (
-        <OrderCardHistory order={order} key={order._id} />
-      ))}
+      <Card sx={{ border: "1px solid #0000000a", width: "100%" }}>
+        {orders.map((order, index) => (
+          <OrderCardHistory
+            order={order}
+            key={order._id}
+            isLast={index === orders.length - 1}
+          />
+        ))}
+      </Card>
     </Box>
   );
 };

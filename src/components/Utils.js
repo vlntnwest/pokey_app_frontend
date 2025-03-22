@@ -14,3 +14,11 @@ export const formatPrice = (price) => {
 export const formatPriceBack = (price) => {
   return parseFloat(price.replace(".", ","));
 };
+
+export const formatEuros = (number) => {
+  return number.toLocaleString("fr-FR", {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: 2,
+  });
+};

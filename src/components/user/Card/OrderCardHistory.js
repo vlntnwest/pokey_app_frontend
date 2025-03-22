@@ -1,41 +1,63 @@
 import React from "react";
-import ItemsList from "../../admin/OrdersComponents/ItemList";
-import { Card, CardContent, Divider, Typography } from "@mui/material";
+import { Button, Divider, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { isEmpty } from "../../Utils";
+import { formatEuros } from "../../Utils";
+import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 
-const OrderCardHistory = ({ order }) => {
-  const { items, specialInstructions, orderDate, orderNumber, createdAt } =
-    order;
+const OrderCardHistory = ({ order, isLast }) => {
+  const {
+    items,
+    specialInstructions,
+    orderDate,
+    orderNumber,
+    createdAt,
+    totalPrice,
+  } = order;
 
   const isoDate = new Date(createdAt);
-  const localedateformat = isoDate.toLocaleDateString("fr-FR");
+  const localedateformat = isoDate.toLocaleDateString("fr-FR", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
   return (
-    <Card sx={{ minWidth: 300, width: "100%", mb: 2 }}>
-      <CardContent>
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography variant="body2">
-            {localedateformat} - {orderDate.time}
-          </Typography>{" "}
-          <Typography variant="body2" fontWeight={700}>
-            {orderNumber}
-          </Typography>
-        </Box>
-        <Divider sx={{ my: 1 }} />
-        {items.map((item, index) => (
-          <ItemsList key={index} item={item} />
-        ))}
-        {!isEmpty(specialInstructions) && (
-          <Box>
-            <Divider sx={{ my: 1 }} />
-            <Typography sx={{ color: "text.secondary" }}>
-              Commentaires
+    <>
+      <Button
+        color="secondary"
+        disableElevation
+        fullWidth
+        sx={{
+          p: 0,
+          display: "block",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Box sx={{ mr: 1.5, pl: 2, py: 1.5, textAlign: "left" }}>
+            <Typography variant="h3" sx={{ textTransform: "none" }}>
+              Commande #{orderNumber}
             </Typography>
-            <Typography variant="body2">{specialInstructions}</Typography>
+            <Typography variant="body2" sx={{ textTransform: "none" }}>
+              {formatEuros(totalPrice)} • {localedateformat}
+            </Typography>
           </Box>
-        )}
-      </CardContent>
-    </Card>
+          <Box sx={{ display: "flex" }} p={2} ml={1}>
+            <ArrowForwardIosRoundedIcon
+              sx={{ ml: 1, maxHeight: "21px" }}
+              color="primary"
+            />
+          </Box>
+        </Box>
+      </Button>
+      {!isLast && (
+        <Divider variant="middle" sx={{ borderColor: "#0000000a" }} />
+      )}
+    </>
   );
 };
 
