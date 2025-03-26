@@ -125,6 +125,7 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          width: "100%",
         }}
       >
         <TextField
