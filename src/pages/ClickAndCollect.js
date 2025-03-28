@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/user/Header";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getDetails } from "../actions/details.action";
 import {
   Alert,
@@ -21,7 +21,8 @@ import axios from "axios";
 import ShopProvider, { useShop } from "../components/Context/ShopContext";
 import CheckIcon from "../components/Icons/CheckIcon";
 import { useMotionValue, motion } from "framer-motion";
-import GuestProvider from "../components/Context/guestInfos";
+import GuestProvider, { useGuest } from "../components/Context/guestInfos";
+import { isEmpty } from "../components/Utils";
 
 const ClickAndCollect = () => {
   const dispatch = useDispatch();
@@ -186,12 +187,11 @@ const modalStyle = {
 };
 
 const TableContent = () => {
-  const {
-    orderCompleted,
-    handleCloseCompletedOrderModal,
-    orderNumber,
-    orderTime,
-  } = useShop();
+  const { orderCompleted, handleCloseCompletedOrderModal, orderTime } =
+    useShop();
+
+  const { guestInfos } = useGuest();
+  const user = useSelector((state) => state.userReducer);
 
   const types = ["bowl", "custom", "side", "dessert", "drink"];
 
@@ -236,13 +236,16 @@ const TableContent = () => {
             Commande validé
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Votre commande sera prête:
+            Merci pour votre commande,{" "}
+            {isEmpty(guestInfos.firstName)
+              ? user.firstName
+              : guestInfos.firstName}
+            !
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Vous pouvez venir la récupérer:
             <br />
             {orderTime}
-            <br />
-            Vous avez le numéro:
-            <br />
-            {orderNumber}
           </Typography>
         </Box>
       </Modal>

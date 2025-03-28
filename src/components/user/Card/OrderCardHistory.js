@@ -20,8 +20,6 @@ const OrderCardHistory = ({ order, isLast }) => {
     minute: "numeric",
   });
 
-  console.log(order);
-
   return (
     <>
       <Button

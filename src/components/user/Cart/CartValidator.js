@@ -7,9 +7,7 @@ import {
   Modal,
   Typography,
 } from "@mui/material";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState } from "react";
 import { useShoppingCart } from "../../Context/ShoppingCartContext";
 import InsideDrawer from "../InsideDrawer";
 import CheckoutForm from "../Checkout/CheckoutForm";
@@ -17,8 +15,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 import FullWidthBtn from "../../Buttons/FullWidthBtn";
 import { formatPrice } from "../../Utils";
 import { useShop } from "../../Context/ShopContext";
-import { useSelector } from "react-redux";
-import { useGuest } from "../../Context/guestInfos";
 
 const modalStyle = {
   position: "absolute",
@@ -33,12 +29,7 @@ const modalStyle = {
 };
 
 const CartValidator = ({ setOpen }) => {
-  const { tableNumber } = useParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [orderType, setOrderType] = useState("");
-
-  const user = useSelector((state) => state.userReducer);
-  const { guestInfos } = useGuest();
 
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(true);
@@ -49,13 +40,11 @@ const CartValidator = ({ setOpen }) => {
   const [openCheckout, setOpenCheckout] = useState(false);
   const toggleDrawer = (newOpen) => () => setOpenCheckout(newOpen);
   const [isGuest, setIsGuest] = useState(false);
-  const { handleOpenCompletedOrderModal, setOrderNumber, setOrderTime } =
-    useShop();
+  const { handleOpenCompletedOrderModal, setOrderTime } = useShop();
 
   const {
     cartItems,
     clearCart,
-    message,
     setMessage,
     selectedDate,
     setSelectedDate,
@@ -64,16 +53,6 @@ const CartValidator = ({ setOpen }) => {
   } = useShoppingCart();
 
   const { calculOrderTimeRange } = useShop();
-
-  useEffect(() => {
-    if (isClickAndCollect) {
-      setOrderType("clickandcollect");
-    } else if (tableNumber) {
-      setOrderType("dine-in");
-    } else {
-      setOrderType("clickandcollect");
-    }
-  }, [isClickAndCollect, tableNumber]);
 
   const calculateTotalPrice = () => {
     const total = cartItems.map((item) => {
@@ -87,7 +66,7 @@ const CartValidator = ({ setOpen }) => {
     return total.reduce((acc, curr) => acc + curr).toFixed(2);
   };
 
-  const handleSubmit = async (isSuccess) => {
+  const handleSubmit = async (id) => {
     setIsSubmitting(true);
 
     if (!cartItems.length) {
@@ -97,63 +76,8 @@ const CartValidator = ({ setOpen }) => {
       return;
     }
 
-    const items = cartItems.map((item) => {
-      const itemPrice =
-        (formatPrice(item.price) +
-          (item.extraProteinPrice ? parseFloat(item.extraProteinPrice) : 0)) *
-        item.quantity;
-
-      const meal = {
-        type: item.type,
-        name: item.name,
-        base: item.base,
-        proteins: item.proteins,
-        extraProtein: item.extraProtein,
-        extraProteinPrice: item.extraProteinPrice,
-        garnishes: item.garnishes,
-        toppings: item.toppings,
-        sauces: item.sauces,
-        quantity: item.quantity,
-        price: itemPrice,
-      };
-      return meal;
-    });
-
-    const dataToPrint = {
-      userId: user._id ?? null,
-      orderType,
-      ...(orderType === "dine-in" && { tableNumber }),
-      items: items,
-      specialInstructions: message,
-      orderDate: selectedDate,
-      isSuccess:
-        orderType === "clickandcollect" && isSuccess === "success"
-          ? true
-          : null,
-      clientData: {
-        name: user.firstName ?? guestInfos.firstName,
-        email: user.email ?? guestInfos.email,
-        phone: user.phone ?? guestInfos.phone,
-      },
-      totalPrice: calculateTotalPrice(),
-    };
-
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}api/order`,
-        dataToPrint
-      );
-
-      const res = response.data;
-
-      setOrderNumber(res.orderNumber);
-      setOrderTime(`${res.orderDate.date} à ${res.orderDate.time}`);
-    } catch (error) {
-      console.error(
-        "Erreur lors de l'envoi des données à l'API:",
-        error.response?.data || error.message
-      );
-    }
+    setOrderTime(`${selectedDate.date} à ${selectedDate.time}`);
+    handleOpenCompletedOrderModal();
 
     clearCart();
     setOpen(false);
@@ -163,7 +87,6 @@ const CartValidator = ({ setOpen }) => {
       date: "Aujourd'hui",
       time: "",
     });
-    handleOpenCompletedOrderModal();
   };
 
   const handleCheckout = () => {

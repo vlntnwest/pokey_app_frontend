@@ -10,16 +10,21 @@ import FullWidthBtn from "../../Buttons/FullWidthBtn";
 import { useSelector } from "react-redux";
 import { formatPrice } from "../../Utils";
 import { useGuest } from "../../Context/guestInfos";
+import { useShoppingCart } from "../../Context/ShoppingCartContext";
+import { useParams } from "react-router-dom";
 
 const stripe = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY, {
   betas: ["custom_checkout_beta_5"],
 });
 
 const CheckoutForm = ({ handleSubmit, isGuest }) => {
+  const { tableNumber } = useParams();
+
   const [savedInfo, setSavedInfo] = useState(false);
   const [clientSecret, setClientSecret] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [orderType, setOrderType] = useState("");
 
   const [cartData, setCartData] = useState([]);
 
@@ -39,7 +44,10 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
 
   const user = useSelector((state) => state.userReducer);
 
-  const items = useMemo(() => {
+  const { cartItems, message, selectedDate, isClickAndCollect } =
+    useShoppingCart();
+
+  const stripeItems = useMemo(() => {
     return cartData.map((item) => {
       const itemPrice = (
         (formatPrice(item.price) +
@@ -63,11 +71,62 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
 
   const createCheckoutSession = useCallback(
     async (email) => {
+      const calculateTotalPrice = () => {
+        const total = cartItems.map((item) => {
+          const elPrice =
+            (formatPrice(item.price) +
+              (item.extraProteinPrice
+                ? parseFloat(item.extraProteinPrice)
+                : 0)) *
+            item.quantity;
+          return elPrice;
+        });
+
+        return total.reduce((acc, curr) => acc + curr).toFixed(2);
+      };
+
+      const items = cartItems.map((item) => {
+        const itemPrice =
+          (formatPrice(item.price) +
+            (item.extraProteinPrice ? parseFloat(item.extraProteinPrice) : 0)) *
+          item.quantity;
+
+        const meal = {
+          type: item.type,
+          name: item.name,
+          base: item.base,
+          proteins: item.proteins,
+          extraProtein: item.extraProtein,
+          extraProteinPrice: item.extraProteinPrice,
+          garnishes: item.garnishes,
+          toppings: item.toppings,
+          sauces: item.sauces,
+          quantity: item.quantity,
+          price: itemPrice,
+        };
+        return meal;
+      });
+
+      const data = {
+        userId: user._id ?? null,
+        orderType,
+        ...(orderType === "dine-in" && { tableNumber }),
+        items: items,
+        specialInstructions: message,
+        orderDate: selectedDate,
+        clientData: {
+          name: user.firstName ?? guestInfos.firstName,
+          email: user.email ?? guestInfos.email,
+          phone: user.phone ?? guestInfos.phone,
+        },
+        totalPrice: calculateTotalPrice(),
+      };
+
       try {
         setLoading(true);
         const response = await axios.post(
           `${process.env.REACT_APP_API_URL}api/checkout/create-checkout-session`,
-          { email, items }
+          { email, stripeItems, data }
         );
         setClientSecret(response.data.checkoutSessionClientSecret);
       } catch (error) {
@@ -76,8 +135,32 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
         setLoading(false);
       }
     },
-    [items]
+    [
+      stripeItems,
+      guestInfos.email,
+      guestInfos.firstName,
+      guestInfos.phone,
+      message,
+      orderType,
+      selectedDate,
+      tableNumber,
+      user._id,
+      user.email,
+      user.firstName,
+      user.phone,
+      cartItems,
+    ]
   );
+
+  useEffect(() => {
+    if (isClickAndCollect) {
+      setOrderType("clickandcollect");
+    } else if (tableNumber) {
+      setOrderType("dine-in");
+    } else {
+      setOrderType("clickandcollect");
+    }
+  }, [isClickAndCollect, tableNumber]);
 
   useEffect(() => {
     const storedCart = JSON.parse(sessionStorage.getItem("Cart")) || [];
@@ -85,10 +168,10 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
   }, []);
 
   useEffect(() => {
-    if (!isGuest && user?.email && items.length > 0 && !clientSecret) {
+    if (!isGuest && user?.email && stripeItems.length > 0 && !clientSecret) {
       createCheckoutSession(user.email);
     }
-  }, [isGuest, user?.email, items, createCheckoutSession, clientSecret]);
+  }, [isGuest, user?.email, stripeItems, createCheckoutSession, clientSecret]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

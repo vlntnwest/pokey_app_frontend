@@ -17,7 +17,7 @@ const PayButton = ({ handleSubmit }) => {
       });
 
       if (result.type === "success") {
-        handleSubmit(result.type);
+        handleSubmit(result.success.id);
       }
       if (result.type !== "success") {
         setError(result.error.message);
