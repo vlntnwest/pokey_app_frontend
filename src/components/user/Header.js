@@ -6,11 +6,22 @@ import BottomDrawer from "./Modal/BottomDrawer";
 import Cart from "./Cart/Cart";
 import { useShoppingCart } from "../Context/ShoppingCartContext";
 import AuthButtons from "./Auth/AuthButtons";
+import { useLocation } from "react-router-dom";
 
 const Header = ({ auth }) => {
   const [open, setOpen] = useState(false);
   const [cartValue, setCartValue] = useState();
   const { cartItems } = useShoppingCart();
+  const location = useLocation();
+
+  const backHome = (e) => {
+    e.preventDefault();
+    if (location.pathname.includes("confirmation")) {
+      window.location.href = "/";
+    } else {
+      return;
+    }
+  };
 
   useEffect(() => {
     let value = 0;
@@ -40,7 +51,7 @@ const Header = ({ auth }) => {
       >
         <Toolbar>
           <Box sx={{ flexGrow: 1 }}>
-            <div
+            <Box
               style={{
                 width: "100px",
                 backgroundImage:
@@ -49,9 +60,10 @@ const Header = ({ auth }) => {
                 backgroundRepeat: "no-repeat",
                 textIndent: "-9999px",
               }}
+              onClick={(e) => backHome(e)}
             >
               Pokey bar
-            </div>
+            </Box>
           </Box>
           {cartItems.length > 0 ? (
             <IconButton onClick={() => setOpen(true)}>
