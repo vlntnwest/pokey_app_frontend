@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { formatPrice } from "../Utils";
 
 const ShoppingCartContext = createContext({});
 
@@ -9,6 +10,8 @@ export function useShoppingCart() {
 
 export default function ShoppingCartProvider({ children }) {
   const location = useLocation();
+  const [orderType, setOrderType] = useState("");
+
   const [isClickAndCollect, setIsClickAndCollect] = useState(false);
 
   const [cartItems, setCartItems] = useState(() => {
@@ -48,6 +51,40 @@ export default function ShoppingCartProvider({ children }) {
     setCartItems([]);
   };
 
+  const calculateTotalPrice = () => {
+    const total = cartItems.map((item) => {
+      const elPrice =
+        (formatPrice(item.price) +
+          (item.extraProteinPrice ? parseFloat(item.extraProteinPrice) : 0)) *
+        item.quantity;
+      return elPrice;
+    });
+
+    return parseFloat(total.reduce((acc, curr) => acc + curr).toFixed(2));
+  };
+
+  const items = cartItems.map((item) => {
+    const itemPrice =
+      (formatPrice(item.price) +
+        (item.extraProteinPrice ? parseFloat(item.extraProteinPrice) : 0)) *
+      item.quantity;
+
+    const meal = {
+      type: item.type,
+      name: item.name,
+      base: item.base,
+      proteins: item.proteins,
+      extraProtein: item.extraProtein,
+      extraProteinPrice: item.extraProteinPrice,
+      garnishes: item.garnishes,
+      toppings: item.toppings,
+      sauces: item.sauces,
+      quantity: item.quantity,
+      price: itemPrice,
+    };
+    return meal;
+  });
+
   useEffect(() => {
     sessionStorage.setItem("Cart", JSON.stringify(cartItems));
   }, [cartItems]);
@@ -62,8 +99,10 @@ export default function ShoppingCartProvider({ children }) {
   useEffect(() => {
     if (location.pathname.includes("table")) {
       setIsClickAndCollect(false);
+      setOrderType("dine-in");
     } else {
       setIsClickAndCollect(true);
+      setOrderType("clickandcollect");
     }
   }, [location.pathname]);
 
@@ -82,6 +121,9 @@ export default function ShoppingCartProvider({ children }) {
         selectedDay,
         setSelectedDay,
         isClickAndCollect,
+        calculateTotalPrice,
+        items,
+        orderType,
       }}
     >
       {children}

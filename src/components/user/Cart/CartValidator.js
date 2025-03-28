@@ -13,8 +13,10 @@ import InsideDrawer from "../InsideDrawer";
 import CheckoutForm from "../Checkout/CheckoutForm";
 import { useAuth0 } from "@auth0/auth0-react";
 import FullWidthBtn from "../../Buttons/FullWidthBtn";
-import { formatPrice } from "../../Utils";
+import { formatEuros } from "../../Utils";
 import { useShop } from "../../Context/ShopContext";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 const modalStyle = {
   position: "absolute",
@@ -30,6 +32,7 @@ const modalStyle = {
 
 const CartValidator = ({ setOpen }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { tableNumber } = useParams();
 
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(true);
@@ -40,6 +43,7 @@ const CartValidator = ({ setOpen }) => {
   const [openCheckout, setOpenCheckout] = useState(false);
   const toggleDrawer = (newOpen) => () => setOpenCheckout(newOpen);
   const [isGuest, setIsGuest] = useState(false);
+
   const { handleOpenCompletedOrderModal, setOrderTime } = useShop();
 
   const {
@@ -50,23 +54,15 @@ const CartValidator = ({ setOpen }) => {
     setSelectedDate,
     selectedDay,
     isClickAndCollect,
+    calculateTotalPrice,
+    orderType,
+    message,
+    items,
   } = useShoppingCart();
 
   const { calculOrderTimeRange } = useShop();
 
-  const calculateTotalPrice = () => {
-    const total = cartItems.map((item) => {
-      const elPrice =
-        (formatPrice(item.price) +
-          (item.extraProteinPrice ? parseFloat(item.extraProteinPrice) : 0)) *
-        item.quantity;
-      return elPrice;
-    });
-
-    return total.reduce((acc, curr) => acc + curr).toFixed(2);
-  };
-
-  const handleSubmit = async (id) => {
+  const handleSubmit = async () => {
     setIsSubmitting(true);
 
     if (!cartItems.length) {
@@ -74,6 +70,30 @@ const CartValidator = ({ setOpen }) => {
       console.error("Aucune donnée dans le panier");
       setIsSubmitting(false);
       return;
+    }
+
+    if (!isClickAndCollect) {
+      const dataToPrint = {
+        orderType,
+        ...(orderType === "dine-in" && { tableNumber }),
+        items: items,
+        specialInstructions: message,
+        orderDate: selectedDate,
+        totalPrice: calculateTotalPrice(),
+      };
+
+      try {
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_URL}api/order`,
+          dataToPrint
+        );
+        console.log("Commande créée avec succès:", response.data);
+      } catch (error) {
+        console.error(
+          "Erreur lors de l'envoi des données à l'API:",
+          error.response?.data || error.message
+        );
+      }
     }
 
     setOrderTime(`${selectedDate.date} à ${selectedDate.time}`);
@@ -134,7 +154,7 @@ const CartValidator = ({ setOpen }) => {
           </Box>
           <Box>
             <Typography color="textPrimary">
-              {calculateTotalPrice().replace(".", ",")}€
+              {formatEuros(calculateTotalPrice())}
             </Typography>
           </Box>
         </Box>
