@@ -83,11 +83,10 @@ const CartValidator = ({ setOpen }) => {
       };
 
       try {
-        const response = await axios.post(
+        await axios.post(
           `${process.env.REACT_APP_API_URL}api/order`,
           dataToPrint
         );
-        console.log("Commande créée avec succès:", response.data);
       } catch (error) {
         console.error(
           "Erreur lors de l'envoi des données à l'API:",
@@ -154,7 +153,7 @@ const CartValidator = ({ setOpen }) => {
           </Box>
           <Box>
             <Typography color="textPrimary">
-              {formatEuros(calculateTotalPrice())}
+              {formatEuros(calculateTotalPrice() ?? 0)}
             </Typography>
           </Box>
         </Box>

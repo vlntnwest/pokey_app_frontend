@@ -52,6 +52,10 @@ export default function ShoppingCartProvider({ children }) {
   };
 
   const calculateTotalPrice = () => {
+    if (cartItems.length < 1) {
+      return;
+    }
+
     const total = cartItems.map((item) => {
       const elPrice =
         (formatPrice(item.price) +
