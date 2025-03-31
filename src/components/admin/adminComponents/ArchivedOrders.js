@@ -5,16 +5,17 @@ import {
   TableBody,
   TableContainer,
 } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import OrderList from "../OrdersComponents/OrderList";
 import { useDispatch, useSelector } from "react-redux";
-import { UidContext } from "../../Context/AppContext";
 import { getOrders } from "../../../actions/order.action";
 import { isEmpty } from "../../Utils";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const ArchivedOrders = () => {
   const dispatch = useDispatch();
-  const uid = useContext(UidContext);
+  const { getAccessTokenSilently } = useAuth0();
+  const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
   const ordersData = useSelector((state) => state.orderReducer);
 
@@ -25,7 +26,14 @@ const ArchivedOrders = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        await dispatch(getOrders());
+        const token = await getAccessTokenSilently({
+          authorizationParams: {
+            audience: audience,
+            scope: "read:current_user",
+          },
+        });
+
+        await dispatch(getOrders({ token }));
       } catch (error) {
         setError(
           error.response
@@ -38,7 +46,7 @@ const ArchivedOrders = () => {
     };
 
     fetchData();
-  }, [dispatch, uid]);
+  }, [dispatch, getAccessTokenSilently, audience]);
 
   const sortedOrders = !isEmpty(ordersData)
     ? [...ordersData].sort(

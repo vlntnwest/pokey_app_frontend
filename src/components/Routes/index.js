@@ -7,7 +7,9 @@ import OrderConfirmed from "../../pages/OrderConfirmed";
 
 const Index = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter
+      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+    >
       <Routes>
         <Route path="/" element={<ClickAndCollect />} />
         <Route path="/admin" element={<Admin />} />

@@ -4,25 +4,41 @@ import { useSelector } from "react-redux";
 import { Box, Card } from "@mui/material";
 import OrderCardHistory from "../Card/OrderCardHistory";
 import { isEmpty } from "../../Utils";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const OrdersList = () => {
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+  const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
   const user = useSelector((state) => state.userReducer);
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
+        const token = await getAccessTokenSilently({
+          authorizationParams: {
+            audience: audience,
+            scope: "read:current_user read:users_app_metadata delete:users",
+          },
+        });
+
         const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}api/order/history/${user._id}`
+          `${process.env.REACT_APP_API_URL}api/private/orders/history/${user._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         setOrders(response.data);
       } catch (error) {
         console.error(error);
       }
     };
-
-    fetchOrders();
-  }, [user._id]);
+    if (isAuthenticated) {
+      fetchOrders();
+    }
+  }, [user._id, audience, getAccessTokenSilently, isAuthenticated]);
 
   const sortedOrders = !isEmpty(orders)
     ? [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))

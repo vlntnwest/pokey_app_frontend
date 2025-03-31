@@ -4,10 +4,14 @@ export const GET_ORDERS = "GET_ORDERS";
 export const TOGGLE_ARCHIVE = "TOGGLE_ARCHIVE";
 export const DELETE_ORDER = "DELETE_ORDER";
 
-export const getOrders = () => {
+export const getOrders = ({ token }) => {
   return (dispatch) => {
     return axios
-      .get(`${process.env.REACT_APP_API_URL}api/order`)
+      .get(`${process.env.REACT_APP_API_URL}api/private/orders`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
         dispatch({ type: GET_ORDERS, payload: res.data });
       });

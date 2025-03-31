@@ -1,16 +1,17 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { isEmpty } from "../../Utils";
 import { Alert, CircularProgress } from "@mui/material";
-import { UidContext } from "../../Context/AppContext";
 import Box from "@mui/material/Box";
 import Masonry from "@mui/lab/Masonry";
 import OrderCard from "../OrdersComponents/OrderCard";
 import { getOrders } from "../../../actions/order.action";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const OrdersContainer = () => {
   const dispatch = useDispatch();
-  const uid = useContext(UidContext);
+  const { getAccessTokenSilently } = useAuth0();
+  const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
   const ordersData = useSelector((state) => state.orderReducer);
 
@@ -21,7 +22,14 @@ const OrdersContainer = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        await dispatch(getOrders());
+        const token = await getAccessTokenSilently({
+          authorizationParams: {
+            audience: audience,
+            scope: "read:current_user",
+          },
+        });
+
+        await dispatch(getOrders({ token }));
       } catch (error) {
         setError(
           error.response
@@ -34,7 +42,7 @@ const OrdersContainer = () => {
     };
 
     fetchData();
-  }, [dispatch, uid]);
+  }, [dispatch, audience, getAccessTokenSilently]);
 
   const unarchivedOrders = !isEmpty(ordersData)
     ? ordersData.filter((order) => !order.isArchived)
