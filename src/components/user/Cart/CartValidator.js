@@ -161,6 +161,7 @@ const CartValidator = ({ setOpen }) => {
           variant="contained"
           fullWidth
           sx={{ py: 1.5 }}
+          disabled={cartItems.length === 0}
           onClick={isClickAndCollect ? handleCheckout : handleSubmit}
         >
           {isClickAndCollect ? (

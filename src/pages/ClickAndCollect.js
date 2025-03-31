@@ -33,6 +33,8 @@ const ClickAndCollect = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isNewUser, setIsNewUser] = useState(null);
 
+  const userData = useSelector((state) => state.userReducer);
+
   useEffect(() => {
     const handleAuthentication = async () => {
       if (!isAuthenticated || !user?.email) return;
@@ -156,7 +158,10 @@ const ClickAndCollect = () => {
     );
   }
 
-  if (isNewUser === true && isAuthenticated) {
+  if (
+    (isNewUser === true && isAuthenticated) ||
+    (isAuthenticated && !userData?.firstName)
+  ) {
     return <Onboarding setIsNewUser={setIsNewUser} />;
   }
 

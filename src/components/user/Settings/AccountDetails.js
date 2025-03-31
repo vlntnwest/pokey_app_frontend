@@ -232,7 +232,7 @@ const AccountDetails = () => {
         />
       </Box>
       <Box>
-        <FullWidthBtn handleAction={handleEdit} name={"Enregistrer"} />
+        <FullWidthBtn handleAction={handleEdit} name={"Enregistrer"} br0 />
         <Box
           sx={{
             display: "flex",

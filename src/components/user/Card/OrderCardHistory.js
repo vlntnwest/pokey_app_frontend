@@ -92,6 +92,7 @@ const OrderCardHistory = ({ order, isLast }) => {
                     justifyContent: "space-between",
                     alignItems: "flex-start",
                   }}
+                  key={item._id}
                 >
                   <Box sx={{ mr: 1.5, pl: 2, py: 1.5 }}>
                     <Typography

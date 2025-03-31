@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Button, CircularProgress } from "@mui/material";
 
-const FullWidthBtn = ({ handleAction, name, isSubmitting, variant }) => {
+const FullWidthBtn = ({ handleAction, name, isSubmitting, variant, br0 }) => {
   return (
     <Button
       color="primary"
@@ -10,6 +10,7 @@ const FullWidthBtn = ({ handleAction, name, isSubmitting, variant }) => {
       sx={{
         p: 0,
         display: "block",
+        ...(br0 && { borderRadius: 0 }),
       }}
       onClick={handleAction}
       variant={variant ? variant : "contained"}

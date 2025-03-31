@@ -90,7 +90,9 @@ const OrderCard = ({ order, modal, handleOnChange }) => {
                 Payé
               </Typography>
             ) : (
-              <Box />
+              <Typography variant="body2" color="error" fontWeight={700}>
+                À payer
+              </Typography>
             )}
             {orderType === "clickandcollect" && (
               <Typography variant="body2" fontWeight={700}>
@@ -127,6 +129,7 @@ const OrderCard = ({ order, modal, handleOnChange }) => {
               <Typography sx={{ color: "text.secondary" }}>Infos</Typography>
               <Typography variant="body2">{clientData.name}</Typography>
               <Typography variant="body2">{clientData.phone}</Typography>
+              <Typography variant="body2">{clientData.email}</Typography>
             </Box>
           )}
         </CardContent>
