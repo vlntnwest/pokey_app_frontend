@@ -123,7 +123,7 @@ const MealDetails = ({ meal, open, setOpen }) => {
 
     totalPrice *= count;
 
-    return totalPrice.toFixed(2);
+    return totalPrice;
   };
 
   const sendToCart = () => {

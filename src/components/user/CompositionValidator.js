@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { formatEuros } from "../Utils";
 
 const CompositionValidator = ({
   count,
@@ -59,7 +60,7 @@ const CompositionValidator = ({
       {isLoading ? (
         <CircularProgress color="secondary" size={24.5} />
       ) : (
-        `Ajouter pour ${calculateTotalPrice().replace(".", ",")} €`
+        `Ajouter pour ${formatEuros(calculateTotalPrice())}`
       )}
     </Button>
   </Box>
