@@ -31,7 +31,7 @@ const ClickAndCollect = () => {
 
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isNewUser, setIsNewUser] = useState(null);
+  const [isNewUser, setIsNewUser] = useState(false);
 
   const userData = useSelector((state) => state.userReducer);
 
@@ -160,7 +160,7 @@ const ClickAndCollect = () => {
 
   if (
     (isNewUser === true && isAuthenticated) ||
-    (isAuthenticated && !userData?.firstName)
+    (isAuthenticated && isEmpty(userData?.firstName))
   ) {
     return <Onboarding setIsNewUser={setIsNewUser} />;
   }

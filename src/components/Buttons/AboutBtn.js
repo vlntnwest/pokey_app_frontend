@@ -1,23 +1,17 @@
-import React, { useState } from "react";
-import { Box, Button, Divider, Drawer, Typography } from "@mui/material";
+import React from "react";
+import { Button, Divider, Typography } from "@mui/material";
+import { Box } from "@mui/system";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
-import AccountDetails from "./AccountDetails";
-import OrdersList from "./OrdersList";
-import InsideDrawer from "../InsideDrawer";
-import About from "./About";
 
-const componentMap = {
-  AccountDetails,
-  OrdersList,
-  About,
-};
-
-const NavigationItem = ({ menuItem, isLast }) => {
-  const [open, setOpen] = useState(false);
-  const toggleDrawer = (newOpen) => () => setOpen(newOpen);
-
-  const ComponentToRender = componentMap[menuItem.component];
-
+const AboutBtn = ({ label, link, isLast }) => {
+  const handleClick = (e) => {
+    e.preventDefault();
+    if (link.startsWith("mailto:")) {
+      window.location.href = link;
+    } else {
+      window.open(link, "_blank");
+    }
+  };
   return (
     <>
       <Button
@@ -28,8 +22,9 @@ const NavigationItem = ({ menuItem, isLast }) => {
           p: 0,
           display: "block",
         }}
-        onClick={toggleDrawer(true)}
+        onClick={(e) => handleClick(e)}
       >
+        {" "}
         <Box
           sx={{
             display: "flex",
@@ -54,7 +49,7 @@ const NavigationItem = ({ menuItem, isLast }) => {
                 textTransform: "none",
               }}
             >
-              {menuItem.label}
+              {label}
             </Typography>
           </Box>
           <Box sx={{ ml: 2 }}>
@@ -70,13 +65,8 @@ const NavigationItem = ({ menuItem, isLast }) => {
       {!isLast && (
         <Divider variant="middle" sx={{ borderColor: "#0000000a" }} />
       )}
-      <Drawer open={open} onClose={toggleDrawer(false)} anchor="right">
-        <InsideDrawer toggleDrawer={toggleDrawer} name={menuItem.label} back>
-          {ComponentToRender && <ComponentToRender />}
-        </InsideDrawer>
-      </Drawer>
     </>
   );
 };
 
-export default NavigationItem;
+export default AboutBtn;

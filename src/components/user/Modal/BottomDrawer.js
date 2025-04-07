@@ -29,18 +29,6 @@ const childrenStyle = {
   flexDirection: "column",
 };
 
-// const btnContainerStyle = {
-//   position: "absolute",
-//   left: 0,
-//   right: 0,
-//   zIndex: 10,
-//   display: "flex",
-//   justifyContent: "center",
-//   padding: "8px",
-//   height: "10%",
-//   touchAction: "none",
-// };
-
 const BottomDrawer = ({ open, setOpen, children }) => {
   const [scope, animate] = useAnimate();
   const controls = useDragControls();

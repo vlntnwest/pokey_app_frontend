@@ -1,4 +1,4 @@
-import { Box, Link } from "@mui/material";
+import { Box, Card, Link } from "@mui/material";
 import React from "react";
 import NavigationItem from "./NavigationItem";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -9,6 +9,7 @@ const NavigationMenu = () => {
   const menuItems = [
     { label: "Détails du compte", component: "AccountDetails" },
     { label: "Historique de commandes", component: "OrdersList" },
+    { label: "À propos", component: "About" },
   ];
 
   return (
@@ -22,11 +23,15 @@ const NavigationMenu = () => {
         width: "100%",
       }}
     >
-      <Box>
+      <Card sx={{ bgcolor: "background.paper" }}>
         {menuItems.map((menuItem, index) => (
-          <NavigationItem key={index} menuItem={menuItem} />
+          <NavigationItem
+            key={index}
+            menuItem={menuItem}
+            isLast={index === menuItems.length - 1}
+          />
         ))}
-      </Box>
+      </Card>
       <Box
         sx={{
           display: "flex",
