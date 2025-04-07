@@ -4,8 +4,6 @@ import Admin from "../../pages/Admin";
 import Table from "../../pages/Table";
 import ClickAndCollect from "../../pages/ClickAndCollect";
 import OrderConfirmed from "../../pages/OrderConfirmed";
-import ConfidentialityPolicy from "../../pages/ConfidentialityPolicy";
-import GeneralConditions from "../../pages/GeneralConditions";
 
 const Index = () => {
   return (
@@ -18,11 +16,6 @@ const Index = () => {
         <Route path="/table/:tableNumber" element={<Table />} />
         <Route path="/table/*" element={<Navigate to="/" />} />
         <Route path="/clickandcollect" element={<ClickAndCollect />} />
-        <Route
-          path="/politiquedeconfidentialite"
-          element={<ConfidentialityPolicy />}
-        />
-        <Route path="/conditionsgenerales" element={<GeneralConditions />} />
         <Route path="/confirmation/:orderId" element={<OrderConfirmed />} />
         <Route path="/*" element={<Navigate to="/" />} />
       </Routes>
