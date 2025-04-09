@@ -5,8 +5,8 @@ import Badge from "@mui/material/Badge";
 import BottomDrawer from "./Modal/BottomDrawer";
 import Cart from "./Cart/Cart";
 import { useShoppingCart } from "../Context/ShoppingCartContext";
-import AuthButtons from "./Auth/AuthButtons";
 import { useLocation } from "react-router-dom";
+import AuthMenu from "./Auth/AuthMenu";
 
 const Header = ({ auth }) => {
   const [open, setOpen] = useState(false);
@@ -72,7 +72,7 @@ const Header = ({ auth }) => {
               </Badge>
             </IconButton>
           ) : null}
-          {auth ? <AuthButtons /> : null}
+          {auth ? <AuthMenu /> : null}
           <BottomDrawer open={open} setOpen={setOpen}>
             <Cart setOpen={setOpen} />
           </BottomDrawer>

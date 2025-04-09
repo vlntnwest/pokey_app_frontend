@@ -3,7 +3,7 @@ import { CheckoutProvider } from "@stripe/react-stripe-js";
 import axios from "axios";
 import { loadStripe } from "@stripe/stripe-js";
 import CheckoutContent from "./CheckoutContent";
-import { CircularProgress, TextField } from "@mui/material";
+import { CircularProgress, Drawer, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { validateForm } from "../../../utils/";
 import FullWidthBtn from "../../Buttons/FullWidthBtn";
@@ -11,12 +11,43 @@ import { useSelector } from "react-redux";
 import { formatPrice } from "../../Utils";
 import { useGuest } from "../../Context/guestInfos";
 import { useShoppingCart } from "../../Context/ShoppingCartContext";
+import ConfidentialityPolicy from "../Legal/ConfidentialityPolicy";
+import GeneralConditions from "../Legal/GeneralConditions";
+import { Link } from "react-router-dom";
+import InsideDrawer from "../InsideDrawer";
 
 const stripe = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY, {
   betas: ["custom_checkout_beta_5"],
 });
 
+const linkList = [
+  {
+    label: "Politique de confidentialité",
+    component: `ConfidentialityPolicy`,
+  },
+  {
+    label: "Conditions générales",
+    component: "GeneralConditions",
+  },
+];
+
+const componentMap = {
+  ConfidentialityPolicy,
+  GeneralConditions,
+};
+
 const CheckoutForm = ({ handleSubmit, isGuest }) => {
+  const [open, setOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const ComponentToRender = componentMap[selectedItem?.component];
+
+  const toggleDrawer = (newOpen, item = null) => {
+    return () => {
+      setOpen(newOpen);
+      setSelectedItem(item);
+    };
+  };
   const [savedInfo, setSavedInfo] = useState(false);
   const [clientSecret, setClientSecret] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -195,6 +226,35 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
           handleAction={(e) => checkGuest(e)}
           isSubmitting={loading}
         />
+        <Box pt={1}>
+          <Typography
+            variant="body2"
+            sx={{
+              textTransform: "none",
+              color: "rgba(0, 0, 0, 0.6);",
+              fontSize: "0.75rem",
+            }}
+          >
+            En créant un compte, vous acceptez notre{" "}
+            <Link onClick={toggleDrawer(true, linkList[0])}>
+              {linkList[0].label}
+            </Link>{" "}
+            et nos{" "}
+            <Link onClick={toggleDrawer(true, linkList[1])}>
+              {linkList[1].label}
+            </Link>
+            .
+          </Typography>
+        </Box>
+        <Drawer open={open} onClose={toggleDrawer(false)} anchor="bottom">
+          <InsideDrawer toggleDrawer={toggleDrawer} name={selectedItem?.label}>
+            {ComponentToRender ? (
+              <ComponentToRender />
+            ) : (
+              <p>Contenu introuvable</p>
+            )}
+          </InsideDrawer>
+        </Drawer>
       </Box>
     );
   }

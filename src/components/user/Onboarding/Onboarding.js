@@ -1,11 +1,48 @@
-import { Box, Button, Link, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Drawer,
+  Link,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useDispatch, useSelector } from "react-redux";
 import { editUser, getUser } from "../../../actions/users.action";
 import { validateField } from "../../../utils";
+import InsideDrawer from "../InsideDrawer";
+import ConfidentialityPolicy from "../Legal/ConfidentialityPolicy";
+import GeneralConditions from "../Legal/GeneralConditions";
+
+const linkList = [
+  {
+    label: "Politique de confidentialité",
+    component: `ConfidentialityPolicy`,
+  },
+  {
+    label: "Conditions générales",
+    component: "GeneralConditions",
+  },
+];
+
+const componentMap = {
+  ConfidentialityPolicy,
+  GeneralConditions,
+};
 
 const Onboarding = ({ setIsNewUser }) => {
+  const [open, setOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const ComponentToRender = componentMap[selectedItem?.component];
+
+  const toggleDrawer = (newOpen, item = null) => {
+    return () => {
+      setOpen(newOpen);
+      setSelectedItem(item);
+    };
+  };
   const userData = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
 
@@ -89,7 +126,8 @@ const Onboarding = ({ setIsNewUser }) => {
           scope: "read:current_user read:users_app_metadata",
         },
       });
-      dispatch(editUser(formData, userData._id, token));
+      const dataToSend = { ...formData, shouldGiveInformation: false };
+      dispatch(editUser(dataToSend, userData._id, token));
       setIsNewUser(false);
     } catch (err) {
       console.error("Erreur lors de la récupération du token", err);
@@ -183,6 +221,26 @@ const Onboarding = ({ setIsNewUser }) => {
           >
             Continuer
           </Button>
+          <Box pt={1}>
+            <Typography
+              variant="body2"
+              sx={{
+                textTransform: "none",
+                color: "rgba(0, 0, 0, 0.6);",
+                fontSize: "0.75rem",
+              }}
+            >
+              En créant un compte, vous acceptez notre{" "}
+              <Link onClick={toggleDrawer(true, linkList[0])}>
+                {linkList[0].label}
+              </Link>{" "}
+              et nos{" "}
+              <Link onClick={toggleDrawer(true, linkList[1])}>
+                {linkList[1].label}
+              </Link>
+              .
+            </Typography>
+          </Box>
         </Box>
       </Box>
       <Box
@@ -205,6 +263,15 @@ const Onboarding = ({ setIsNewUser }) => {
           Se déconnecter
         </Link>
       </Box>
+      <Drawer open={open} onClose={toggleDrawer(false)} anchor="bottom">
+        <InsideDrawer toggleDrawer={toggleDrawer} name={selectedItem?.label}>
+          {ComponentToRender ? (
+            <ComponentToRender />
+          ) : (
+            <p>Contenu introuvable</p>
+          )}
+        </InsideDrawer>
+      </Drawer>
     </Box>
   );
 };

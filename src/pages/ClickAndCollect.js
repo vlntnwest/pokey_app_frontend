@@ -2,14 +2,7 @@ import React, { useEffect, useState } from "react";
 import Header from "../components/user/Header";
 import { useDispatch, useSelector } from "react-redux";
 import { getDetails } from "../actions/details.action";
-import {
-  Alert,
-  Box,
-  CircularProgress,
-  Container,
-  Modal,
-  Typography,
-} from "@mui/material";
+import { Alert, Box, Container, Modal, Typography } from "@mui/material";
 import Popular from "../components/user/Popular";
 import MealCategory from "../components/user/MealCategory";
 import { getMeals } from "../actions/meal.action";
@@ -30,7 +23,7 @@ const ClickAndCollect = () => {
   const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
   const [error, setError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+
   const [isNewUser, setIsNewUser] = useState(false);
 
   const userData = useSelector((state) => state.userReducer);
@@ -97,7 +90,6 @@ const ClickAndCollect = () => {
 
   useEffect(() => {
     const fetchDetails = async () => {
-      setIsLoading(true);
       try {
         await dispatch(getDetails());
       } catch (error) {
@@ -106,34 +98,11 @@ const ClickAndCollect = () => {
             ? error.response.data.error
             : "Error fetching details data"
         );
-      } finally {
-        setIsLoading(false);
       }
     };
 
     fetchDetails();
   }, [dispatch]);
-
-  if (isLoading) {
-    return (
-      <Container
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          height: "100vh",
-          justifyContent: "center",
-        }}
-      >
-        <img
-          src="https://g10afdaataaj4tkl.public.blob.vercel-storage.com/img/1Fichier-21.svg"
-          alt="Pokey bar logo"
-          style={{ width: "100%" }}
-        />
-        <CircularProgress />
-      </Container>
-    );
-  }
 
   if (error) {
     return (
@@ -160,7 +129,7 @@ const ClickAndCollect = () => {
 
   if (
     (isNewUser === true && isAuthenticated) ||
-    (isAuthenticated && isEmpty(userData?.firstName))
+    (isAuthenticated && userData?.shouldGiveInformation === true)
   ) {
     return <Onboarding setIsNewUser={setIsNewUser} />;
   }
