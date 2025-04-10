@@ -1,17 +1,30 @@
-import { AppBar, Box, Drawer, IconButton, Toolbar } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  Dialog,
+  Drawer,
+  IconButton,
+  Toolbar,
+} from "@mui/material";
 import React, { useState } from "react";
 import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import DeleteCart from "./DeleteCart";
 import { useShoppingCart } from "../../Context/ShoppingCartContext";
+import { useShop } from "../../Context/ShopContext";
 
 const CartHeader = ({ setOpen }) => {
+  const { isMobile } = useShop();
   const [openDrawer, setOpenDrawer] = useState(false);
   const { cartItems } = useShoppingCart();
 
   const toggleDrawer = (newOpen) => () => {
     setOpenDrawer(newOpen);
   };
+
+  const deleteCart = (
+    <DeleteCart toggleDrawer={toggleDrawer} setOpen={setOpen} />
+  );
 
   return (
     <>
@@ -33,7 +46,10 @@ const CartHeader = ({ setOpen }) => {
           }}
         >
           <Toolbar sx={{ padding: "0 8px" }}>
-            <IconButton onClick={() => setOpen(false)}>
+            <IconButton
+              onClick={() => setOpen(false)}
+              sx={{ display: { md: "none" } }}
+            >
               <CloseRoundedIcon />
             </IconButton>
             <Box
@@ -64,9 +80,15 @@ const CartHeader = ({ setOpen }) => {
           </Toolbar>
         </AppBar>
       </Box>
-      <Drawer open={openDrawer} onClose={toggleDrawer(false)} anchor="bottom">
-        <DeleteCart toggleDrawer={toggleDrawer} setOpen={setOpen} />
-      </Drawer>
+      {isMobile ? (
+        <Drawer open={openDrawer} onClose={toggleDrawer(false)} anchor="bottom">
+          {deleteCart}
+        </Drawer>
+      ) : (
+        <Dialog open={openDrawer} onClose={toggleDrawer(false)}>
+          {deleteCart}
+        </Dialog>
+      )}
     </>
   );
 };

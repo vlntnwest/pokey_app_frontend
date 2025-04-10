@@ -1,54 +1,35 @@
-import {
-  AppBar,
-  Box,
-  Button,
-  IconButton,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 import React from "react";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { useShoppingCart } from "../../Context/ShoppingCartContext";
+import { useShop } from "../../Context/ShopContext";
 
 const DeleteCart = ({ toggleDrawer, setOpen }) => {
   const { clearCart } = useShoppingCart();
+  const { isMobile } = useShop();
 
   const deleteCart = () => {
     clearCart();
     toggleDrawer(false)();
-    setOpen(false);
+    if (isMobile) {
+      setOpen(false);
+    }
   };
 
   return (
     <Box>
-      <Box
-        style={{
-          position: "sticky",
-          top: "0",
-          borderBottom: "1px solid #0000000a",
-          zIndex: 10,
-        }}
+      <IconButton
+        onClick={toggleDrawer(false)}
+        sx={{ position: "absolute", right: 16, top: 16 }}
       >
-        <AppBar
-          component="nav"
-          style={{
-            background: "#fff",
-            boxShadow: "none",
-            position: "sticky",
-            top: "0",
-          }}
-        >
-          <Toolbar style={{ padding: "0 8px" }}>
-            <IconButton onClick={toggleDrawer(false)}>
-              <CloseRoundedIcon />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-      </Box>
-      <Box px={2} py={4}>
-        <Typography variant="body2" textAlign={"center"}>
-          Souhaitez vous vraiment supprimer l'ensemble du panier?
-        </Typography>
+        <CloseRoundedIcon />
+      </IconButton>
+      <Box px={8} pt={4} pb={2}>
+        <Box>
+          <Typography variant="body1" sx={{ textAlign: "center" }}>
+            Souhaitez vous vraiment supprimer l'ensemble du panier?
+          </Typography>
+        </Box>
       </Box>
       <Box>
         <Box sx={{ px: 2, pb: 1 }}>

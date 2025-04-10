@@ -20,7 +20,7 @@ export default function AuthMenu() {
       >
         <PersonIcon />
       </IconButton>
-      <Drawer open={openDrawer} onClose={toggleDrawer(false)} anchor="bottom">
+      <Drawer open={openDrawer} onClose={toggleDrawer(false)} anchor="right">
         <Navigation toggleDrawer={toggleDrawer} />
       </Drawer>
     </div>

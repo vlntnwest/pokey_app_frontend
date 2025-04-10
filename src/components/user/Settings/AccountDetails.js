@@ -180,6 +180,7 @@ const AccountDetails = () => {
           backgroundColor: "white",
           borderTop: "1px solid #0000001a",
           borderBottom: "1px solid #0000001a",
+          width: "100%",
         }}
         px={2}
         py={2}
@@ -249,6 +250,7 @@ const AccountDetails = () => {
               textDecoration: "underline",
             }}
             onClick={handleOpen}
+            mt={1}
           >
             Supprimer le compte
           </Link>

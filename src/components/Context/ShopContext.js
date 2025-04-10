@@ -8,6 +8,7 @@ import {
 } from "react";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
+import { useMediaQuery, useTheme } from "@mui/system";
 
 dayjs.extend(isBetween);
 
@@ -24,6 +25,8 @@ export default function ShopProvider({ children }) {
   const handleCloseCompletedOrderModal = () => setOrderCompleted(false);
   const [orderNumber, setOrderNumber] = useState();
   const [orderTime, setOrderTime] = useState("");
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const openingHours = useMemo(() => {
     return {
@@ -73,6 +76,7 @@ export default function ShopProvider({ children }) {
         setOrderNumber,
         orderTime,
         setOrderTime,
+        isMobile,
       }}
     >
       {children}

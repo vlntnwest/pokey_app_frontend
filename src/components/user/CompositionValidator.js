@@ -19,7 +19,7 @@ const CompositionValidator = ({
       flexDirection: "column",
       justifyContent: "center",
       alignItems: "center",
-      width: "100vw",
+      width: "100%",
       backgroundColor: "#fff",
       p: 2,
     }}

@@ -58,7 +58,12 @@ const OrderCardHistory = ({ order, isLast }) => {
       {!isLast && (
         <Divider variant="middle" sx={{ borderColor: "#0000000a" }} />
       )}
-      <Drawer open={open} onClose={toggleDrawer(false)} anchor="right">
+      <Drawer
+        open={open}
+        onClose={toggleDrawer(false)}
+        anchor="right"
+        hideBackdrop
+      >
         <InsideDrawer
           toggleDrawer={toggleDrawer}
           name={`Commande #${orderNumber}`}

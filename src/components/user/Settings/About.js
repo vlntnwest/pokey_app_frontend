@@ -91,7 +91,12 @@ const About = () => {
             </Link>
           ))}
         </Box>
-        <Drawer open={open} onClose={toggleDrawer(false)} anchor="right">
+        <Drawer
+          open={open}
+          onClose={toggleDrawer(false)}
+          anchor="right"
+          hideBackdrop
+        >
           <InsideDrawer
             toggleDrawer={toggleDrawer}
             name={selectedItem?.label}

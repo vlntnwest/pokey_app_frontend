@@ -11,14 +11,18 @@ import AddIcon from "@mui/icons-material/Add";
 import MealDetails from "../MealDetails";
 
 const CategoryMealCard = ({ meal }) => {
-  const [open, setOpen] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
+
+  const toggleDrawer = (newOpen) => () => {
+    setOpenDrawer(newOpen);
+  };
 
   const { name, description, price, picture, isPopular } = meal;
 
   return (
     <>
       <Card>
-        <CardActionArea onClick={() => setOpen(true)}>
+        <CardActionArea onClick={toggleDrawer(true)}>
           <CardContent sx={{ display: "flex" }}>
             <Box sx={{ width: "100%" }}>
               <Typography variant="body1">{name}</Typography>
@@ -71,7 +75,11 @@ const CategoryMealCard = ({ meal }) => {
           </CardContent>
         </CardActionArea>
       </Card>
-      <MealDetails meal={meal} open={open} setOpen={setOpen} />
+      <MealDetails
+        meal={meal}
+        openDrawer={openDrawer}
+        toggleDrawer={toggleDrawer}
+      />
     </>
   );
 };

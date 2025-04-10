@@ -1,10 +1,19 @@
-import { Box, Button, Divider, Drawer, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  Divider,
+  Drawer,
+  Typography,
+} from "@mui/material";
 import React, { useState } from "react";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import EditCartItems from "./EditCartItems";
 import { formatPrice } from "../../Utils";
+import { useShop } from "../../Context/ShopContext";
 
 const RecapLine = ({ item, updateItemCount, isLast }) => {
+  const { isMobile } = useShop();
   const [open, setOpen] = useState(false);
   const orderDetails = [
     ...[item.base],
@@ -119,13 +128,23 @@ const RecapLine = ({ item, updateItemCount, isLast }) => {
       {!isLast && (
         <Divider variant="middle" sx={{ borderColor: "#0000000a" }} />
       )}
-      <Drawer open={open} onClose={toggleDrawer(false)} anchor="bottom">
-        <EditCartItems
-          toggleDrawer={toggleDrawer}
-          item={item}
-          updateItemCount={updateItemCount}
-        />
-      </Drawer>
+      {isMobile ? (
+        <Drawer open={open} onClose={toggleDrawer(false)} anchor="bottom">
+          <EditCartItems
+            toggleDrawer={toggleDrawer}
+            item={item}
+            updateItemCount={updateItemCount}
+          />
+        </Drawer>
+      ) : (
+        <Dialog open={open} onClose={toggleDrawer(false)} anchor="bottom">
+          <EditCartItems
+            toggleDrawer={toggleDrawer}
+            item={item}
+            updateItemCount={updateItemCount}
+          />
+        </Dialog>
+      )}
     </>
   );
 };

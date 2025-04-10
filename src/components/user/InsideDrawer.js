@@ -6,10 +6,10 @@ const InsideDrawer = ({ toggleDrawer, children, name, back }) => {
   return (
     <Box
       sx={{
-        width: "100vw",
         height: "100dvh",
         display: "flex",
         flexDirection: "column",
+        width: { xs: "100vw", sm: "400px" },
       }}
     >
       <NavigationHeader

@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import BottomDrawer from "./Modal/BottomDrawer";
 import MealDisplay from "./MealDisplay";
 import CompositionValidator from "./CompositionValidator";
 import { useShoppingCart } from "../Context/ShoppingCartContext";
 import { formatPrice, isEmpty } from "../Utils";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { Dialog, Drawer } from "@mui/material";
+import { useShop } from "../Context/ShopContext";
 
-const MealDetails = ({ meal, open, setOpen }) => {
+const MealDetails = ({ meal, openDrawer, toggleDrawer }) => {
+  const { isMobile } = useShop();
   const [isLoading, setIsLoading] = useState(false);
   const { addToCart } = useShoppingCart();
 
@@ -55,10 +57,10 @@ const MealDetails = ({ meal, open, setOpen }) => {
   }, []);
 
   useEffect(() => {
-    if (!open) {
+    if (!openDrawer) {
       resetState();
     }
-  }, [open]);
+  }, [openDrawer]);
 
   const resetState = () => {
     setSelectedBase(null);
@@ -165,7 +167,7 @@ const MealDetails = ({ meal, open, setOpen }) => {
     sides.forEach((side) => addToCart(side));
 
     setIsLoading(true);
-    setOpen(false);
+    toggleDrawer(false)();
   };
 
   const handlers = {
@@ -244,13 +246,13 @@ const MealDetails = ({ meal, open, setOpen }) => {
     isSupProtDisabled,
   };
 
-  return (
-    <BottomDrawer open={open} setOpen={setOpen}>
+  const content = (
+    <>
       <MealDisplay
         meal={meal}
         options={options}
         handlers={handlers}
-        setOpen={setOpen}
+        toggleDrawer={toggleDrawer}
       />
       <CompositionValidator
         count={count}
@@ -261,7 +263,22 @@ const MealDetails = ({ meal, open, setOpen }) => {
         isLoading={isLoading}
         calculateTotalPrice={calculateTotalPrice}
       />
-    </BottomDrawer>
+    </>
+  );
+
+  return isMobile ? (
+    <Drawer open={openDrawer} onClose={toggleDrawer(false)} anchor="bottom">
+      {content}
+    </Drawer>
+  ) : (
+    <Dialog
+      open={openDrawer}
+      onClose={toggleDrawer(false)}
+      maxWidth="sm"
+      fullWidth
+    >
+      {content}
+    </Dialog>
   );
 };
 

@@ -179,7 +179,7 @@ const Onboarding = ({ setIsNewUser }) => {
             alignItems: "center",
           }}
         >
-          <Box sx={{ mb: 2 }}>
+          <Box sx={{ mb: 2, maxWidth: 400 }}>
             <TextField
               name="firstName"
               label="Prénom"
@@ -210,36 +210,36 @@ const Onboarding = ({ setIsNewUser }) => {
               sx={{ width: "100%", mb: 2 }}
               onChange={handleChange}
             />
-          </Box>
-          <Button
-            sx={{
-              width: "100%",
-              padding: "16.5px 14px",
-              lineHeight: "1.4375em",
-            }}
-            onClick={handleEdit}
-          >
-            Continuer
-          </Button>
-          <Box pt={1}>
-            <Typography
-              variant="body2"
+            <Button
               sx={{
-                textTransform: "none",
-                color: "rgba(0, 0, 0, 0.6);",
-                fontSize: "0.75rem",
+                width: "100%",
+                padding: "16.5px 14px",
+                lineHeight: "1.4375em",
               }}
+              onClick={handleEdit}
             >
-              En créant un compte, vous acceptez notre{" "}
-              <Link onClick={toggleDrawer(true, linkList[0])}>
-                {linkList[0].label}
-              </Link>{" "}
-              et nos{" "}
-              <Link onClick={toggleDrawer(true, linkList[1])}>
-                {linkList[1].label}
-              </Link>
-              .
-            </Typography>
+              Continuer
+            </Button>
+            <Box pt={1}>
+              <Typography
+                variant="body2"
+                sx={{
+                  textTransform: "none",
+                  color: "rgba(0, 0, 0, 0.6);",
+                  fontSize: "0.75rem",
+                }}
+              >
+                En créant un compte, vous acceptez notre{" "}
+                <Link onClick={toggleDrawer(true, linkList[0])}>
+                  {linkList[0].label}
+                </Link>{" "}
+                et nos{" "}
+                <Link onClick={toggleDrawer(true, linkList[1])}>
+                  {linkList[1].label}
+                </Link>
+                .
+              </Typography>
+            </Box>
           </Box>
         </Box>
       </Box>

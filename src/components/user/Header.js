@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { AppBar, Box, IconButton, Toolbar } from "@mui/material";
+import { AppBar, Box, Drawer, IconButton, Toolbar } from "@mui/material";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import Badge from "@mui/material/Badge";
-import BottomDrawer from "./Modal/BottomDrawer";
 import Cart from "./Cart/Cart";
 import { useShoppingCart } from "../Context/ShoppingCartContext";
 import { useLocation } from "react-router-dom";
@@ -10,6 +9,10 @@ import AuthMenu from "./Auth/AuthMenu";
 
 const Header = ({ auth }) => {
   const [open, setOpen] = useState(false);
+
+  const toggleDrawer = (newOpen) => () => {
+    setOpen(newOpen);
+  };
   const [cartValue, setCartValue] = useState();
   const { cartItems } = useShoppingCart();
   const location = useLocation();
@@ -66,16 +69,19 @@ const Header = ({ auth }) => {
             </Box>
           </Box>
           {cartItems.length > 0 ? (
-            <IconButton onClick={() => setOpen(true)}>
+            <IconButton
+              onClick={toggleDrawer(true)}
+              sx={{ display: { md: "none" } }}
+            >
               <Badge badgeContent={cartValue} color="primary">
                 <ShoppingBagOutlinedIcon />
               </Badge>
             </IconButton>
           ) : null}
           {auth ? <AuthMenu /> : null}
-          <BottomDrawer open={open} setOpen={setOpen}>
+          <Drawer open={open} onClose={toggleDrawer(false)} anchor="bottom">
             <Cart setOpen={setOpen} />
-          </BottomDrawer>
+          </Drawer>
         </Toolbar>
       </AppBar>
     </Box>

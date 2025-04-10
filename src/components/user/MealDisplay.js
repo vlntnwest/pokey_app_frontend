@@ -3,8 +3,9 @@ import { Box, CardMedia, Typography, Divider, Fab } from "@mui/material";
 import FormRenderer from "./Form/FormRenderer";
 import CloseIcon from "@mui/icons-material/Close";
 
-const MealDisplay = ({ meal, options, handlers, setOpen }) => {
+const MealDisplay = ({ meal, options, handlers, toggleDrawer }) => {
   const { name, picture, description, type } = meal;
+
   return (
     <Box sx={{ flexGrow: "1", overflowY: "auto", overflowX: "hidden" }}>
       <CardMedia
@@ -16,9 +17,7 @@ const MealDisplay = ({ meal, options, handlers, setOpen }) => {
       <Fab
         color="primary"
         aria-label="close"
-        onClick={() => {
-          setOpen(false);
-        }}
+        onClick={toggleDrawer(false)}
         sx={{ position: "absolute", top: 0, right: 0, m: 2 }}
       >
         <CloseIcon />

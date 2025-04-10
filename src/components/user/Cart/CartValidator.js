@@ -31,6 +31,7 @@ const modalStyle = {
 };
 
 const CartValidator = ({ setOpen }) => {
+  const { isMobile } = useShop();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { tableNumber } = useParams();
 
@@ -99,7 +100,11 @@ const CartValidator = ({ setOpen }) => {
     handleOpenCompletedOrderModal();
 
     clearCart();
-    setOpen(false);
+    if (isMobile) {
+      setOpen(false);
+    } else {
+      setOpenCheckout(false);
+    }
     setIsSubmitting(false);
     setMessage("");
     setSelectedDate({
@@ -133,7 +138,7 @@ const CartValidator = ({ setOpen }) => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          width: "100vw",
+          width: "100%",
           backgroundColor: "#fff",
           p: 2,
           filter: "drop-shadow(0 1px 4px rgba(0, 0, 0, .08))",

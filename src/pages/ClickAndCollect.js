@@ -16,6 +16,7 @@ import CheckIcon from "../components/Icons/CheckIcon";
 import { useMotionValue, motion } from "framer-motion";
 import GuestProvider, { useGuest } from "../components/Context/guestInfos";
 import { isEmpty } from "../components/Utils";
+import Cart from "../components/user/Cart/Cart";
 
 const ClickAndCollect = () => {
   const dispatch = useDispatch();
@@ -115,14 +116,16 @@ const ClickAndCollect = () => {
           justifyContent: "center",
         }}
       >
-        <img
-          src="https://g10afdaataaj4tkl.public.blob.vercel-storage.com/img/1Fichier-21.svg"
-          alt="Pokey Bar logo"
-          style={{ width: "100%" }}
-        />
-        <Alert severity="error" sx={{ width: "100%" }}>
-          Error: {error}
-        </Alert>
+        <Box sx={{ maxWidth: 400 }}>
+          <img
+            src="https://g10afdaataaj4tkl.public.blob.vercel-storage.com/img/1Fichier-21.svg"
+            alt="Pokey Bar logo"
+            style={{ width: "100%", margin: "0 0 16px 0" }}
+          />
+          <Alert severity="error" sx={{ width: "100%" }}>
+            Error: {error}
+          </Alert>
+        </Box>
       </Container>
     );
   }
@@ -161,6 +164,7 @@ const modalStyle = {
 };
 
 const TableContent = () => {
+  const { isMobile } = useShop();
   const { orderCompleted, handleCloseCompletedOrderModal, orderTime } =
     useShop();
 
@@ -183,11 +187,34 @@ const TableContent = () => {
         }}
       >
         <Header auth />
-        <Box component="main">
-          <Popular />
-          {types.map((type, index) => (
-            <MealCategory type={type} key={index} />
-          ))}
+        <Box
+          component="main"
+          sx={{
+            display: "grid",
+            gridTemplateColumns: {
+              sm: "1fr",
+              md: "minmax(50%, 60%) minmax(420px, 1fr)",
+              lg: "minmax(60%, 70%) minmax(420px, 1fr)",
+              xl: "minmax(60%, 70%) minmax(420px, 1fr)",
+            },
+            margin: "0 auto",
+          }}
+          maxWidth="xl"
+        >
+          <Box>
+            <Popular />
+            {types.map((type, index) => (
+              <MealCategory type={type} key={index} />
+            ))}
+          </Box>
+          {!isMobile && (
+            <Box
+              p={2}
+              sx={{ position: "sticky", top: 65, height: "calc(100vh - 65px)" }}
+            >
+              <Cart />
+            </Box>
+          )}
         </Box>
       </Box>
       <Modal

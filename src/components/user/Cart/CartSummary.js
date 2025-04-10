@@ -14,7 +14,7 @@ const CartSummary = () => {
       sx={{
         flexGrow: "1",
         backgroundColor: "rgba(208, 208, 208, 0.12)",
-        overflowY: "scroll",
+        "::-webkit-scrollbar": { display: "none" },
       }}
     >
       <Typography variant="h2" fontSize={18} pt={1} pb={2} color="textPrimary">

@@ -122,7 +122,7 @@ const Table = () => {
           }}
         >
           <Header />
-          <Box component="main">
+          <Box component="main" maxWidth="lg" sx={{ margin: "0 auto" }}>
             <Popular />
             {types.map((type, index) => (
               <MealCategory type={type} key={index} />

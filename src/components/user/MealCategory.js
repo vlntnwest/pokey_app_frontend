@@ -48,7 +48,17 @@ const MealCategory = ({ type }) => {
         )}
       </Box>
 
-      <Box>
+      <Box
+        sx={{
+          display: "grid",
+          gap: { sm: 0, md: 1 },
+          gridTemplateColumns: {
+            md: "1fr",
+            lg: "repeat(2, 1fr)",
+          },
+          px: { sm: 0, md: 2 },
+        }}
+      >
         {isLoading
           ? Array.from({ length: 3 }).map((_, index) => (
               <Skeleton

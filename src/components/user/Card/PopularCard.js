@@ -12,7 +12,11 @@ import AddIcon from "@mui/icons-material/Add";
 import MealDetails from "../MealDetails";
 
 const PopularCard = ({ meal }) => {
-  const [open, setOpen] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
+
+  const toggleDrawer = (newOpen) => () => {
+    setOpenDrawer(newOpen);
+  };
 
   return (
     <>
@@ -26,7 +30,7 @@ const PopularCard = ({ meal }) => {
       >
         <CardActionArea
           sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}
-          onClick={() => setOpen(true)}
+          onClick={toggleDrawer(true)}
         >
           <CardMedia
             component="img"
@@ -66,7 +70,11 @@ const PopularCard = ({ meal }) => {
           </CardContent>
         </CardActionArea>
       </Card>
-      <MealDetails meal={meal} open={open} setOpen={setOpen} />
+      <MealDetails
+        meal={meal}
+        openDrawer={openDrawer}
+        toggleDrawer={toggleDrawer}
+      />
     </>
   );
 };
