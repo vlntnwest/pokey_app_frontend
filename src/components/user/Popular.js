@@ -37,11 +37,11 @@ const Popular = () => {
         }}
       >
         {isLoading
-          ? Array.from({ length: 3 }).map((_, index) => (
+          ? Array.from({ length: 5 }).map((_, index) => (
               <Skeleton
                 key={index}
                 variant="rectangular"
-                width="123px"
+                width="150px"
                 height="242px"
                 sx={{ borderRadius: 2, flexShrink: 0 }}
               />

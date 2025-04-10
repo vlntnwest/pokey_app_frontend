@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import React, { useEffect, useMemo } from "react";
 import dayjs from "dayjs";
 import Picker from "react-mobile-picker";
@@ -8,7 +8,7 @@ import { useShop } from "../../Context/ShopContext";
 
 const OrderDate = () => {
   const { selectedDate, setSelectedDate } = useShoppingCart();
-  const { openingHours } = useShop();
+  const { openingHours, isMobile } = useShop();
 
   // Function to check if a date is Sunday (0) or Monday (1)
   const isSundayOrMonday = (date) => {
@@ -109,33 +109,75 @@ const OrderDate = () => {
     }
   }, [setSelectedDate, selectedDate?.time, availableTimes]);
 
+  const handleSelectChange = (field) => (event) => {
+    setSelectedDate((prev) => ({
+      ...prev,
+      [field]: event.target.value,
+    }));
+  };
+
   return (
     <Box sx={{ display: "flex", gap: 2 }}>
       <Box sx={{ width: "100%" }}>
-        <Picker
-          value={selectedDate}
-          onChange={(newValue) =>
-            setSelectedDate((prev) => ({
-              ...prev,
-              ...newValue,
-            }))
-          }
-        >
-          <Picker.Column name="date">
-            {availableDates.map((day, index) => (
-              <Picker.Item key={index} value={day.label}>
-                {day.label}
-              </Picker.Item>
-            ))}
-          </Picker.Column>
-          <Picker.Column name="time">
-            {availableTimes.map((time, index) => (
-              <Picker.Item key={index} value={time}>
-                {time}
-              </Picker.Item>
-            ))}
-          </Picker.Column>
-        </Picker>
+        {isMobile ? (
+          <Picker
+            value={selectedDate}
+            onChange={(newValue) =>
+              setSelectedDate((prev) => ({
+                ...prev,
+                ...newValue,
+              }))
+            }
+          >
+            <Picker.Column name="date">
+              {availableDates.map((day, index) => (
+                <Picker.Item key={index} value={day.label}>
+                  {day.label}
+                </Picker.Item>
+              ))}
+            </Picker.Column>
+            <Picker.Column name="time">
+              {availableTimes.map((time, index) => (
+                <Picker.Item key={index} value={time}>
+                  {time}
+                </Picker.Item>
+              ))}
+            </Picker.Column>
+          </Picker>
+        ) : (
+          <Box sx={{ display: "flex", gap: 2, mt: 1 }}>
+            <FormControl fullWidth>
+              <InputLabel id="select-date-label">Date</InputLabel>
+              <Select
+                labelId="select-date-label"
+                value={selectedDate.date || ""}
+                label="Date"
+                onChange={handleSelectChange("date")}
+              >
+                {availableDates.map((day, index) => (
+                  <MenuItem key={index} value={day.label}>
+                    {day.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth>
+              <InputLabel id="select-time-label">Heure</InputLabel>
+              <Select
+                labelId="select-time-label"
+                value={selectedDate.time || ""}
+                label="Heure"
+                onChange={handleSelectChange("time")}
+              >
+                {availableTimes.map((time, index) => (
+                  <MenuItem key={index} value={time}>
+                    {time}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+        )}
       </Box>
     </Box>
   );

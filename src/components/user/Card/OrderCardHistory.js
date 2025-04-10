@@ -55,9 +55,7 @@ const OrderCardHistory = ({ order, isLast }) => {
           </Box>
         </Box>
       </Button>
-      {!isLast && (
-        <Divider variant="middle" sx={{ borderColor: "#0000000a" }} />
-      )}
+      {isLast && <Divider variant="middle" sx={{ borderColor: "#0000000a" }} />}
       <Drawer
         open={open}
         onClose={toggleDrawer(false)}
@@ -89,7 +87,7 @@ const OrderCardHistory = ({ order, isLast }) => {
             <Typography variant="h3" mb={1}>
               Votre commande ({items.length} produits)
             </Typography>
-            <Card sx={{ border: "1px solid #0000000a" }}>
+            <Card sx={{ border: "1px solid rgba(0, 0, 0, 0.05)" }}>
               {items.map((item) => (
                 <Box
                   sx={{

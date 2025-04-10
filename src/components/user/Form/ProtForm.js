@@ -51,7 +51,7 @@ const ProtForm = ({ selectedProt, handleProtChange }) => {
 
   return (
     <RadioGroup value={selectedProt} sx={{ pt: 3 }}>
-      <Typography variant="p" sx={{ fontSize: 20 }}>
+      <Typography variant="h4" sx={{ fontSize: 20 }}>
         Choisis ta protéines
       </Typography>
       <List sx={{ p: 0, pt: 1 }}>
@@ -64,7 +64,7 @@ const ProtForm = ({ selectedProt, handleProtChange }) => {
             <ListItemText
               primary={prot.name}
               disableTypography
-              sx={{ fontSize: 16, fontWeight: "400" }}
+              sx={{ fontSize: 16 }}
             />
             <Radio
               checked={selectedProt === prot.name}

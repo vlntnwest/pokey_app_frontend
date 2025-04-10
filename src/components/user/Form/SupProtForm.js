@@ -54,10 +54,10 @@ const SupProtForm = ({
   }
   return (
     <FormGroup sx={{ pt: 3 }}>
-      <Typography variant="p" sx={{ fontSize: 20 }}>
+      <Typography variant="h4" sx={{ fontSize: 20 }}>
         Protéines supplémentaires
       </Typography>
-      <Typography variant="body2" sx={{ color: "rgb(88, 92, 92)" }}>
+      <Typography variant="body2">
         Voulez-vous des protéines en supplément?
       </Typography>
       <List sx={{ p: 0, pt: 1 }}>
@@ -73,11 +73,9 @@ const SupProtForm = ({
             <ListItemText
               primary={supProt.name}
               disableTypography
-              sx={{ fontSize: 16, fontWeight: "400" }}
+              sx={{ fontSize: 16 }}
             />
-            <span style={{ fontSize: 16, fontWeight: "400" }}>
-              +{supProt.price}€
-            </span>
+            <span style={{ fontSize: 16 }}>+{supProt.price}€</span>
             <Checkbox
               checked={selectedProtSup.includes(supProt.name)}
               onChange={() => handleProtSupChange(supProt.name)}

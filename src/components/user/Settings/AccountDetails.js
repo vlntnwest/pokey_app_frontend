@@ -178,8 +178,8 @@ const AccountDetails = () => {
       <Box
         sx={{
           backgroundColor: "white",
-          borderTop: "1px solid #0000001a",
-          borderBottom: "1px solid #0000001a",
+          borderTop: "1px solid rgba(0, 0, 0, 0.05)",
+          borderBottom: "1px solid rgba(0, 0, 0, 0.05)",
           width: "100%",
         }}
         px={2}

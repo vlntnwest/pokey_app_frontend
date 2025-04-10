@@ -38,16 +38,12 @@ const MealCategory = ({ type }) => {
         ) : (
           <>
             <Typography variant="h2">{details.title}</Typography>
-            <Typography
-              variant="body2"
-              sx={{ fontSize: 16, color: "text.secondary" }}
-            >
+            <Typography variant="body2" sx={{ fontSize: 16 }}>
               {details.description}
             </Typography>
           </>
         )}
       </Box>
-
       <Box
         sx={{
           display: "grid",

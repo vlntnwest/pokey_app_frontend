@@ -192,7 +192,7 @@ const TableContent = () => {
           sx={{
             display: "grid",
             gridTemplateColumns: {
-              sm: "1fr",
+              sm: "100%",
               md: "minmax(50%, 60%) minmax(420px, 1fr)",
               lg: "minmax(60%, 70%) minmax(420px, 1fr)",
               xl: "minmax(60%, 70%) minmax(420px, 1fr)",
@@ -201,7 +201,7 @@ const TableContent = () => {
           }}
           maxWidth="xl"
         >
-          <Box>
+          <Box sx={{ maxWidth: "100vw" }}>
             <Popular />
             {types.map((type, index) => (
               <MealCategory type={type} key={index} />
@@ -209,8 +209,12 @@ const TableContent = () => {
           </Box>
           {!isMobile && (
             <Box
-              p={2}
-              sx={{ position: "sticky", top: 65, height: "calc(100vh - 65px)" }}
+              sx={{
+                position: "sticky",
+                top: 65,
+                height: "calc(100vh - 65px)",
+                padding: "16px 16px 16px 0",
+              }}
             >
               <Cart />
             </Box>

@@ -30,7 +30,7 @@ const CheckoutContent = ({ handleSubmit, email }) => {
         <Box
           sx={{
             backgroundColor: "white",
-            border: "1px solid #0000001a",
+            border: "1px solid rgba(0, 0, 0, 0.05)",
             borderRadius: 1,
           }}
           px={1.5}

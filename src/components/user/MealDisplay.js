@@ -12,7 +12,7 @@ const MealDisplay = ({ meal, options, handlers, toggleDrawer }) => {
         component="img"
         image={`https://g10afdaataaj4tkl.public.blob.vercel-storage.com/img/${picture}.webp`}
         alt={name}
-        sx={{ height: "40%" }}
+        sx={{ aspectRatio: 4 / 3 }}
       />
       <Fab
         color="primary"
@@ -26,9 +26,7 @@ const MealDisplay = ({ meal, options, handlers, toggleDrawer }) => {
         <Typography variant="h3" sx={{ fontSize: 26 }}>
           {name}
         </Typography>
-        <Typography variant="body2" sx={{ fontSize: 16, mt: 1 }}>
-          {description}
-        </Typography>
+        <Typography variant="body2">{description}</Typography>
         <Divider sx={{ mt: 2 }} />
         <FormRenderer type={type} options={options} handlers={handlers} />
       </Box>

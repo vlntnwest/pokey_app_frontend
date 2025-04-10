@@ -43,7 +43,7 @@ const EditCartItems = ({ toggleDrawer, item }) => {
         style={{
           position: "sticky",
           top: "0",
-          borderBottom: "1px solid #0000000a",
+          borderBottom: "1px solid rgba(0, 0, 0, 0.05)",
           zIndex: 10,
         }}
       >

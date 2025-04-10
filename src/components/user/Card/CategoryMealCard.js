@@ -25,16 +25,14 @@ const CategoryMealCard = ({ meal }) => {
         <CardActionArea onClick={toggleDrawer(true)}>
           <CardContent sx={{ display: "flex" }}>
             <Box sx={{ width: "100%" }}>
-              <Typography variant="body1">{name}</Typography>
+              <Typography variant="h3">{name}</Typography>
               <Typography
                 variant="body2"
                 sx={{
-                  color: "text.secondary",
                   display: "-webkit-box",
                   WebkitLineClamp: 2,
                   WebkitBoxOrient: "vertical",
                   overflow: "hidden",
-                  pt: 0.5,
                 }}
               >
                 {description}

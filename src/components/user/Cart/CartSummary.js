@@ -13,14 +13,13 @@ const CartSummary = () => {
       p={2}
       sx={{
         flexGrow: "1",
-        backgroundColor: "rgba(208, 208, 208, 0.12)",
-        "::-webkit-scrollbar": { display: "none" },
+        backgroundColor: "white",
       }}
     >
-      <Typography variant="h2" fontSize={18} pt={1} pb={2} color="textPrimary">
+      <Typography variant="h2" pt={1} pb={2}>
         Panier
       </Typography>
-      <Card sx={{ border: "1px solid #0000000a" }}>
+      <Card sx={{ border: "1px solid rgba(0, 0, 0, 0.05)" }}>
         {cartItems.map((item, index) => (
           <RecapLine
             key={index}

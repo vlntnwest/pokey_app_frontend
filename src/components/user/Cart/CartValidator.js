@@ -32,6 +32,7 @@ const modalStyle = {
 
 const CartValidator = ({ setOpen }) => {
   const { isMobile } = useShop();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { tableNumber } = useParams();
 
@@ -144,24 +145,24 @@ const CartValidator = ({ setOpen }) => {
           filter: "drop-shadow(0 1px 4px rgba(0, 0, 0, .08))",
         }}
       >
-        <Box
-          sx={{
-            width: "100%",
-            display: "flex",
-            pb: 2,
-          }}
-        >
-          <Box sx={{ flex: 1 }}>
-            <Typography variant="body2" color="textPrimary">
-              Total de la commande
-            </Typography>
+        {cartItems.length > 0 && (
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              pb: 2,
+            }}
+          >
+            <Box sx={{ flex: 1 }}>
+              <Typography variant="h4">Total de la commande</Typography>
+            </Box>
+            <Box>
+              <Typography variant="h4">
+                {formatEuros(calculateTotalPrice() ?? 0)}
+              </Typography>
+            </Box>
           </Box>
-          <Box>
-            <Typography color="textPrimary">
-              {formatEuros(calculateTotalPrice() ?? 0)}
-            </Typography>
-          </Box>
-        </Box>
+        )}
         <Button
           variant="contained"
           fullWidth
@@ -190,7 +191,7 @@ const CartValidator = ({ setOpen }) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={modalStyle}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+          <Typography id="modal-modal-title" variant="h3">
             Souhaite-vous vous identifier ?
           </Typography>
           <Box

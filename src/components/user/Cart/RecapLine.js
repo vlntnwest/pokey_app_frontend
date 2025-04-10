@@ -57,7 +57,7 @@ const RecapLine = ({ item, updateItemCount, isLast }) => {
           }}
         >
           <Box sx={{ mr: 1.5, pl: 2, py: 1.5 }}>
-            <Typography sx={{ fontWeight: "400", textTransform: "lowercase" }}>
+            <Typography variant="body1" sx={{ textTransform: "lowercase" }}>
               {item.quantity}x
             </Typography>
           </Box>
@@ -71,14 +71,13 @@ const RecapLine = ({ item, updateItemCount, isLast }) => {
               alignItems: "flex-start",
             }}
           >
-            <Typography sx={{ textAlign: "left", fontWeight: "400" }}>
+            <Typography variant="body1" sx={{ textAlign: "left" }}>
               {item.name}
             </Typography>
             <Typography
               variant="body2"
               sx={{
                 textAlign: "left",
-                color: "text.secondary",
                 textTransform: "none",
                 pt: 0.5,
               }}
@@ -88,10 +87,9 @@ const RecapLine = ({ item, updateItemCount, isLast }) => {
             {item.extraProtein && item.extraProtein.length > 0 && (
               <Box>
                 <Typography
-                  variant="body1"
+                  variant="body2"
                   sx={{
                     textAlign: "left",
-                    color: "text.secondary",
                     textTransform: "none",
                     pt: 0.5,
                   }}
@@ -102,7 +100,6 @@ const RecapLine = ({ item, updateItemCount, isLast }) => {
                   variant="body2"
                   sx={{
                     textAlign: "left",
-                    color: "text.secondary",
                     textTransform: "none",
                     pt: 0.5,
                   }}
@@ -114,7 +111,7 @@ const RecapLine = ({ item, updateItemCount, isLast }) => {
           </Box>
           <Box sx={{ ml: 1.5 }}>
             <Box sx={{ display: "flex", px: 2, py: 1.5, alignItems: "center" }}>
-              <Typography sx={{ fontWeight: "400" }}>
+              <Typography variant="body1" sx={{ fontWeight: "400" }}>
                 {calculateTotalPrice().replace(".", ",")}€
               </Typography>
               <ArrowForwardIosRoundedIcon

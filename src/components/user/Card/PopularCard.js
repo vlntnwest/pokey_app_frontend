@@ -24,8 +24,8 @@ const PopularCard = ({ meal }) => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          minWidth: 125,
-          maxWidth: 125,
+          minWidth: 152,
+          maxWidth: 152,
         }}
       >
         <CardActionArea
@@ -43,16 +43,18 @@ const PopularCard = ({ meal }) => {
               display: "flex",
               flexDirection: "column",
               flexGrow: 1,
-              p: 1,
+              px: 1,
               width: "100%",
             }}
           >
-            <Typography variant="body1" sx={{ flexGrow: 1 }}>
-              {meal.name}
-            </Typography>
-            <Typography variant="body2" sx={{ marginTop: "auto" }}>
-              {meal.price}€
-            </Typography>
+            <Box>
+              <Typography variant="h3" sx={{ flexGrow: 1 }}>
+                {meal.name}
+              </Typography>
+              <Typography variant="body2" sx={{ marginTop: "auto" }}>
+                {meal.price}€
+              </Typography>
+            </Box>
             <Box
               sx={{
                 border: "1px solid rgba(0, 0, 0, 0.12)",
@@ -61,7 +63,7 @@ const PopularCard = ({ meal }) => {
                 display: "inline-flex",
                 alignItems: "center",
                 justifyContent: "center",
-                mt: 1,
+                mt: 2,
                 minHeight: "34px",
               }}
             >

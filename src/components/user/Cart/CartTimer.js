@@ -27,13 +27,13 @@ const CartTimer = () => {
   }, [canOrderNow, setSelectedDay]);
 
   return (
-    <div>
+    <Box>
       <Box
         color="secondary"
         sx={{
           mt: 2,
           padding: "12px 16px 12px 12px",
-          border: "1px solid #0000000a",
+          border: "1px solid rgba(0, 0, 0, 0.05)",
           textTransform: "none",
           flexDirection: "column",
           color: "rgba(0, 0, 0, 0.87)",
@@ -73,7 +73,7 @@ const CartTimer = () => {
         </RadioGroup>
         <Box>{selectedDay === "after" && <OrderDate />}</Box>
       </Box>
-    </div>
+    </Box>
   );
 };
 
