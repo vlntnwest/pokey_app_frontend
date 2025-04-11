@@ -26,7 +26,7 @@ export default function ShopProvider({ children }) {
   const [orderNumber, setOrderNumber] = useState();
   const [orderTime, setOrderTime] = useState("");
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const openingHours = useMemo(() => {
     return {

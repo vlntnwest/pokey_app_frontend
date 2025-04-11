@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { CheckoutProvider } from "@stripe/react-stripe-js";
 import axios from "axios";
 import { loadStripe } from "@stripe/stripe-js";
@@ -8,13 +8,13 @@ import { Box } from "@mui/system";
 import { validateForm } from "../../../utils/";
 import FullWidthBtn from "../../Buttons/FullWidthBtn";
 import { useSelector } from "react-redux";
-import { formatPrice } from "../../Utils";
 import { useGuest } from "../../Context/guestInfos";
 import { useShoppingCart } from "../../Context/ShoppingCartContext";
 import ConfidentialityPolicy from "../Legal/ConfidentialityPolicy";
 import GeneralConditions from "../Legal/GeneralConditions";
 import { Link } from "react-router-dom";
 import InsideDrawer from "../InsideDrawer";
+import useStripeItems from "../../../hooks/useStripeItems";
 
 const stripe = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY, {
   betas: ["custom_checkout_beta_5"],
@@ -71,33 +71,24 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
 
   const user = useSelector((state) => state.userReducer);
 
-  const { message, selectedDate, calculateTotalPrice, items, orderType } =
-    useShoppingCart();
+  const { message, selectedDate, items, orderType } = useShoppingCart();
 
-  const stripeItems = useMemo(() => {
-    return cartData.map((item) => {
-      const itemPrice = (
-        (formatPrice(item.price) +
-          (item.extraProteinPrice ? parseFloat(item.extraProteinPrice) : 0)) *
-        100
-      ).toFixed(0);
-
-      const el = {
-        price_data: {
-          currency: "eur",
-          product_data: {
-            name: item.name,
-          },
-          unit_amount: parseInt(itemPrice),
-        },
-        quantity: item.quantity,
-      };
-      return el;
-    });
-  }, [cartData]);
+  const { stripeItems, loading: stripeLoading } = useStripeItems(cartData);
 
   const createCheckoutSession = useCallback(
     async (email) => {
+      const verifiedTotalPrice = () => {
+        if (stripeItems.length < 1) {
+          return;
+        }
+
+        const total = stripeItems.map((item) => {
+          const elPrice = item.price_data.unit_amount * item.quantity;
+          return elPrice;
+        });
+        return parseFloat(total.reduce((acc, curr) => acc + curr).toFixed(2));
+      };
+
       const data = {
         userId: user._id ?? null,
         orderType,
@@ -109,7 +100,7 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
           email: user.email ?? guestInfos.email,
           phone: user.phone ?? guestInfos.phone,
         },
-        totalPrice: calculateTotalPrice(),
+        totalPrice: verifiedTotalPrice(),
       };
 
       try {
@@ -137,7 +128,6 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
       user.email,
       user.firstName,
       user.phone,
-      calculateTotalPrice,
       items,
     ]
   );
@@ -259,7 +249,7 @@ const CheckoutForm = ({ handleSubmit, isGuest }) => {
     );
   }
 
-  if (loading) {
+  if (loading || stripeLoading) {
     return (
       <Box
         style={{

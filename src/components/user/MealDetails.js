@@ -133,6 +133,7 @@ const MealDetails = ({ meal, openDrawer, toggleDrawer }) => {
 
     const item = {
       id: `${_id}-${Math.floor(Math.random() * timestamp)}`,
+      product_id: _id,
       type,
       name,
       base: selectedBase,
