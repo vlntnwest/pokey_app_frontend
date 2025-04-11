@@ -80,7 +80,6 @@ const CartValidator = ({ setOpen }) => {
         ...(orderType === "dine-in" && { tableNumber }),
         items: items,
         specialInstructions: message,
-        orderDate: selectedDate,
         totalPrice: calculateTotalPrice(),
       };
 
