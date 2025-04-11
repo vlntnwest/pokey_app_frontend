@@ -1,10 +1,48 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Drawer,
+  Link,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useDispatch, useSelector } from "react-redux";
 import { editUser, getUser } from "../../../actions/users.action";
+import { validateField } from "../../../utils";
+import InsideDrawer from "../InsideDrawer";
+import ConfidentialityPolicy from "../Legal/ConfidentialityPolicy";
+import GeneralConditions from "../Legal/GeneralConditions";
+
+const linkList = [
+  {
+    label: "Politique de confidentialité",
+    component: `ConfidentialityPolicy`,
+  },
+  {
+    label: "Conditions générales",
+    component: "GeneralConditions",
+  },
+];
+
+const componentMap = {
+  ConfidentialityPolicy,
+  GeneralConditions,
+};
 
 const Onboarding = ({ setIsNewUser }) => {
+  const [open, setOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const ComponentToRender = componentMap[selectedItem?.component];
+
+  const toggleDrawer = (newOpen, item = null) => {
+    return () => {
+      setOpen(newOpen);
+      setSelectedItem(item);
+    };
+  };
   const userData = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
 
@@ -26,7 +64,7 @@ const Onboarding = ({ setIsNewUser }) => {
     phone: "",
   });
 
-  const { getAccessTokenSilently, user } = useAuth0();
+  const { getAccessTokenSilently, user, logout } = useAuth0();
   const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
   useEffect(() => {
@@ -45,43 +83,6 @@ const Onboarding = ({ setIsNewUser }) => {
     };
     fetchUser();
   }, [user.email, dispatch, getAccessTokenSilently, audience]);
-
-  const validateField = (name, value) => {
-    let isValid = true;
-    let message = "";
-
-    switch (name) {
-      case "firstName":
-        if (!value.trim()) {
-          isValid = false;
-          message = "Le prénom est requis";
-        }
-        break;
-
-      case "lastName":
-        if (!value.trim()) {
-          isValid = false;
-          message = "Le nom est requis";
-        }
-        break;
-
-      case "phone":
-        const phoneRegex = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/;
-        if (!value.trim()) {
-          isValid = false;
-          message = "Le numéro de téléphone est requis";
-        } else if (!phoneRegex.test(value)) {
-          isValid = false;
-          message = "Format de numéro de téléphone invalide";
-        }
-        break;
-
-      default:
-        break;
-    }
-
-    return { isValid, message };
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -125,7 +126,8 @@ const Onboarding = ({ setIsNewUser }) => {
           scope: "read:current_user read:users_app_metadata",
         },
       });
-      dispatch(editUser(formData, userData._id, token));
+      const dataToSend = { ...formData, shouldGiveInformation: false };
+      dispatch(editUser(dataToSend, userData._id, token));
       setIsNewUser(false);
     } catch (err) {
       console.error("Erreur lors de la récupération du token", err);
@@ -133,76 +135,143 @@ const Onboarding = ({ setIsNewUser }) => {
   };
 
   return (
-    <Box sx={{ pt: 6 }}>
-      <Box sx={{ mb: 3 }}>
+    <Box
+      sx={{
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        pt: 6,
+        pb: 2,
+      }}
+    >
+      <Box>
+        <Box sx={{ mb: 3 }}>
+          <Box
+            component="img"
+            sx={{
+              display: "block",
+              width: 240,
+              margin: "24px auto",
+            }}
+            alt="The house from the offer."
+            src="https://g10afdaataaj4tkl.public.blob.vercel-storage.com/img/1Fichier-21.svg"
+          />
+          <Typography
+            variant="h2"
+            sx={{ textAlign: "center", fontWeight: 400 }}
+          >
+            Bienvenue
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{ textAlign: "center", fontWeight: 400 }}
+          >
+            Dites nous en plus à propos de vous.
+          </Typography>
+        </Box>
         <Box
-          component="img"
           sx={{
-            display: "block",
-            width: 240,
-            margin: "24px auto",
+            px: 4,
+            py: 2,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
-          alt="The house from the offer."
-          src="https://g10afdaataaj4tkl.public.blob.vercel-storage.com/img/1Fichier-21.svg"
-        />
-        <Typography variant="h2" sx={{ textAlign: "center", fontWeight: 400 }}>
-          Bienvenue
-        </Typography>
-        <Typography
-          variant="body1"
-          sx={{ textAlign: "center", fontWeight: 400 }}
         >
-          Dites nous en plus à propos de vous.
-        </Typography>
+          <Box sx={{ mb: 2, maxWidth: 400 }}>
+            <TextField
+              name="firstName"
+              label="Prénom"
+              required
+              value={formData.firstName}
+              error={errors.firstName}
+              helperText={errorMessages.firstName}
+              sx={{ width: "100%", mb: 2 }}
+              onChange={handleChange}
+            />
+            <TextField
+              name="lastName"
+              label="Nom"
+              required
+              value={formData.lastName}
+              error={errors.lastName}
+              helperText={errorMessages.lastName}
+              sx={{ width: "100%", mb: 2 }}
+              onChange={handleChange}
+            />
+            <TextField
+              name="phone"
+              label="Téléphone"
+              required
+              value={formData.phone}
+              error={errors.phone}
+              helperText={errorMessages.phone}
+              sx={{ width: "100%", mb: 2 }}
+              onChange={handleChange}
+            />
+            <Button
+              sx={{
+                width: "100%",
+                padding: "16.5px 14px",
+                lineHeight: "1.4375em",
+              }}
+              onClick={handleEdit}
+            >
+              Continuer
+            </Button>
+            <Box pt={1}>
+              <Typography
+                variant="body2"
+                sx={{
+                  textTransform: "none",
+                  color: "rgba(0, 0, 0, 0.6);",
+                  fontSize: "0.75rem",
+                }}
+              >
+                En créant un compte, vous acceptez notre{" "}
+                <Link onClick={toggleDrawer(true, linkList[0])}>
+                  {linkList[0].label}
+                </Link>{" "}
+                et nos{" "}
+                <Link onClick={toggleDrawer(true, linkList[1])}>
+                  {linkList[1].label}
+                </Link>
+                .
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
       </Box>
       <Box
         sx={{
-          px: 4,
-          py: 2,
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        <Box sx={{ mb: 2 }}>
-          <TextField
-            name="firstName"
-            label="Prénom"
-            required
-            value={formData.firstName}
-            error={errors.firstName}
-            helperText={errorMessages.firstName}
-            sx={{ width: "100%", mb: 2 }}
-            onChange={handleChange}
-          />
-          <TextField
-            name="lastName"
-            label="Nom"
-            required
-            value={formData.lastName}
-            error={errors.lastName}
-            helperText={errorMessages.lastName}
-            sx={{ width: "100%", mb: 2 }}
-            onChange={handleChange}
-          />
-          <TextField
-            name="phone"
-            label="Téléphone"
-            required
-            value={formData.phone}
-            error={errors.phone}
-            helperText={errorMessages.phone}
-            sx={{ width: "100%", mb: 2 }}
-            onChange={handleChange}
-          />
-        </Box>
-        <Button
-          sx={{ width: "100%", padding: "16.5px 14px", lineHeight: "1.4375em" }}
-          onClick={handleEdit}
+        <Link
+          sx={{
+            textTransform: "none",
+            color: "rgba(0, 0, 0, 0.6);",
+            fontSize: "0.75rem",
+            fontWeight: "400",
+            textDecoration: "underline",
+          }}
+          onClick={logout}
         >
-          Continuer
-        </Button>
+          Se déconnecter
+        </Link>
       </Box>
+      <Drawer open={open} onClose={toggleDrawer(false)} anchor="bottom">
+        <InsideDrawer toggleDrawer={toggleDrawer} name={selectedItem?.label}>
+          {ComponentToRender ? (
+            <ComponentToRender />
+          ) : (
+            <p>Contenu introuvable</p>
+          )}
+        </InsideDrawer>
+      </Drawer>
     </Box>
   );
 };

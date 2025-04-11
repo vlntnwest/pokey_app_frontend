@@ -54,12 +54,10 @@ const ToppingsForm = ({
   }
   return (
     <FormGroup sx={{ pt: 3 }}>
-      <Typography variant="p" sx={{ fontSize: 20 }}>
+      <Typography variant="h4" sx={{ fontSize: 20 }}>
         Choisis 2 toppings !
       </Typography>
-      <Typography variant="body2" sx={{ color: "rgb(88, 92, 92)" }}>
-        Obligatoire
-      </Typography>
+      <Typography variant="body2">Obligatoire</Typography>
       <List sx={{ p: 0, pt: 1 }}>
         {toppings.map((topping) => (
           <ListItemButton
@@ -73,7 +71,7 @@ const ToppingsForm = ({
             <ListItemText
               primary={topping.name}
               disableTypography
-              sx={{ fontSize: 16, fontWeight: "400" }}
+              sx={{ fontSize: 16 }}
             />
             <Checkbox
               checked={selectedToppings.includes(topping.name)}

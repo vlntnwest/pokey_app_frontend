@@ -3,10 +3,13 @@ import React from "react";
 import CategoryMealCard from "./Card/CategoryMealCard";
 import { useSelector } from "react-redux";
 import { isEmpty } from "../Utils";
+import { Skeleton } from "@mui/material";
 
 const MealCategory = ({ type }) => {
   const mealsData = useSelector((state) => state.mealReducer);
   const detailsData = useSelector((state) => state.detailsReducer);
+
+  const isLoading = isEmpty(detailsData);
 
   const sortedMeals = !isEmpty(mealsData)
     ? mealsData.filter((meal) => meal.type === type)
@@ -27,18 +30,44 @@ const MealCategory = ({ type }) => {
   return (
     <Box mt={3}>
       <Box m={2} mt={0}>
-        <Typography variant="h2">{details.title}</Typography>
-        <Typography
-          variant="body2"
-          sx={{ fontSize: 16, color: "text.secondary" }}
-        >
-          {details.description}
-        </Typography>
+        {isLoading ? (
+          <>
+            <Skeleton variant="text" width="40%" height={40} />
+            <Skeleton variant="text" width="60%" height={20} />
+          </>
+        ) : (
+          <>
+            <Typography variant="h2">{details.title}</Typography>
+            <Typography variant="body2" sx={{ fontSize: 16 }}>
+              {details.description}
+            </Typography>
+          </>
+        )}
       </Box>
-      <Box>
-        {sortedMeals.map((meal, index) => (
-          <CategoryMealCard key={index} meal={meal} />
-        ))}
+      <Box
+        sx={{
+          display: "grid",
+          gap: { sm: 0, md: 1 },
+          gridTemplateColumns: {
+            md: "1fr",
+            lg: "repeat(2, 1fr)",
+          },
+          px: { sm: 0, md: 2 },
+        }}
+      >
+        {isLoading
+          ? Array.from({ length: 3 }).map((_, index) => (
+              <Skeleton
+                key={index}
+                variant="rectangular"
+                width="100%"
+                height={132}
+                sx={{ borderRadius: 2, flexShrink: 0, mb: 0.5 }}
+              />
+            ))
+          : sortedMeals.map((meal, index) => (
+              <CategoryMealCard key={index} meal={meal} />
+            ))}
       </Box>
     </Box>
   );

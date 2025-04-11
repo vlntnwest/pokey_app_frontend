@@ -12,7 +12,11 @@ import AddIcon from "@mui/icons-material/Add";
 import MealDetails from "../MealDetails";
 
 const PopularCard = ({ meal }) => {
-  const [open, setOpen] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
+
+  const toggleDrawer = (newOpen) => () => {
+    setOpenDrawer(newOpen);
+  };
 
   return (
     <>
@@ -20,13 +24,13 @@ const PopularCard = ({ meal }) => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          minWidth: 125,
-          maxWidth: 125,
+          minWidth: 152,
+          maxWidth: 152,
         }}
       >
         <CardActionArea
           sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}
-          onClick={() => setOpen(true)}
+          onClick={toggleDrawer(true)}
         >
           <CardMedia
             component="img"
@@ -39,16 +43,18 @@ const PopularCard = ({ meal }) => {
               display: "flex",
               flexDirection: "column",
               flexGrow: 1,
-              p: 1,
+              px: 1,
               width: "100%",
             }}
           >
-            <Typography variant="body1" sx={{ flexGrow: 1 }}>
-              {meal.name}
-            </Typography>
-            <Typography variant="body2" sx={{ marginTop: "auto" }}>
-              {meal.price}€
-            </Typography>
+            <Box>
+              <Typography variant="h3" sx={{ flexGrow: 1 }}>
+                {meal.name}
+              </Typography>
+              <Typography variant="body2" sx={{ marginTop: "auto" }}>
+                {meal.price}€
+              </Typography>
+            </Box>
             <Box
               sx={{
                 border: "1px solid rgba(0, 0, 0, 0.12)",
@@ -57,7 +63,7 @@ const PopularCard = ({ meal }) => {
                 display: "inline-flex",
                 alignItems: "center",
                 justifyContent: "center",
-                mt: 1,
+                mt: 2,
                 minHeight: "34px",
               }}
             >
@@ -66,7 +72,11 @@ const PopularCard = ({ meal }) => {
           </CardContent>
         </CardActionArea>
       </Card>
-      <MealDetails meal={meal} open={open} setOpen={setOpen} />
+      <MealDetails
+        meal={meal}
+        openDrawer={openDrawer}
+        toggleDrawer={toggleDrawer}
+      />
     </>
   );
 };

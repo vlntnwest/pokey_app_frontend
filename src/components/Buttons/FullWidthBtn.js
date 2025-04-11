@@ -1,7 +1,7 @@
-import { Box, Button, Typography } from "@mui/material";
 import React from "react";
+import { Box, Button, CircularProgress } from "@mui/material";
 
-const FullWidthBtn = ({ handleAction, name }) => {
+const FullWidthBtn = ({ handleAction, name, isSubmitting, variant, br0 }) => {
   return (
     <Button
       color="primary"
@@ -10,18 +10,16 @@ const FullWidthBtn = ({ handleAction, name }) => {
       sx={{
         p: 0,
         display: "block",
-        borderRadius: 0,
-        mb: 4,
+        ...(br0 && { borderRadius: 0 }),
       }}
       onClick={handleAction}
+      variant={variant ? variant : "contained"}
     >
       <Box
         sx={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "flex-start",
-          borderTop: "1px solid #0000001a",
-          borderBottom: "1px solid #0000001a",
         }}
       >
         <Box
@@ -34,7 +32,11 @@ const FullWidthBtn = ({ handleAction, name }) => {
             alignItems: "flex-start",
           }}
         >
-          <Typography sx={{ fontWeight: "400" }}>{name}</Typography>
+          {isSubmitting ? (
+            <CircularProgress color="secondary" size={24.5} />
+          ) : (
+            name
+          )}
         </Box>
       </Box>
     </Button>

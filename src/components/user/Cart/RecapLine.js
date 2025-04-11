@@ -1,14 +1,22 @@
-import { Box, Button, Divider, Drawer, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  Divider,
+  Drawer,
+  Typography,
+} from "@mui/material";
 import React, { useState } from "react";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import EditCartItems from "./EditCartItems";
 import { formatPrice } from "../../Utils";
+import { useShop } from "../../Context/ShopContext";
 
-const RecapLine = ({ item, updateItemCount }) => {
+const RecapLine = ({ item, updateItemCount, isLast }) => {
+  const { isMobile } = useShop();
   const [open, setOpen] = useState(false);
   const orderDetails = [
     ...[item.base],
-    ...(item.extraProtein ? item.extraProtein : []),
     ...(item.garnishes ? item.garnishes : []),
     ...(item.sauces ? item.sauces : []),
     ...(item.toppings ? item.toppings : []),
@@ -23,8 +31,8 @@ const RecapLine = ({ item, updateItemCount }) => {
 
     let totalPrice = item.quantity * price;
 
-    if (item.extraProtein.length > 0) {
-      totalPrice += item.quantity * 3;
+    if (item?.extraProtein?.length > 0 && item.extraProteinPrice) {
+      totalPrice += item.quantity * item.extraProteinPrice;
     }
     return totalPrice.toFixed(2);
   };
@@ -49,7 +57,7 @@ const RecapLine = ({ item, updateItemCount }) => {
           }}
         >
           <Box sx={{ mr: 1.5, pl: 2, py: 1.5 }}>
-            <Typography sx={{ fontWeight: "400", textTransform: "lowercase" }}>
+            <Typography variant="body1" sx={{ textTransform: "lowercase" }}>
               {item.quantity}x
             </Typography>
           </Box>
@@ -63,24 +71,47 @@ const RecapLine = ({ item, updateItemCount }) => {
               alignItems: "flex-start",
             }}
           >
-            <Typography sx={{ textAlign: "left", fontWeight: "400" }}>
+            <Typography variant="body1" sx={{ textAlign: "left" }}>
               {item.name}
             </Typography>
             <Typography
               variant="body2"
               sx={{
                 textAlign: "left",
-                color: "text.secondary",
                 textTransform: "none",
                 pt: 0.5,
               }}
             >
               {orderDetails.filter(Boolean).join(", ")}
             </Typography>
+            {item.extraProtein && item.extraProtein.length > 0 && (
+              <Box>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    textAlign: "left",
+                    textTransform: "none",
+                    pt: 0.5,
+                  }}
+                >
+                  Extra protéine:
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    textAlign: "left",
+                    textTransform: "none",
+                    pt: 0.5,
+                  }}
+                >
+                  {item.extraProtein.map((protein) => protein)}
+                </Typography>
+              </Box>
+            )}
           </Box>
           <Box sx={{ ml: 1.5 }}>
             <Box sx={{ display: "flex", px: 2, py: 1.5, alignItems: "center" }}>
-              <Typography sx={{ fontWeight: "400" }}>
+              <Typography variant="body1" sx={{ fontWeight: "400" }}>
                 {calculateTotalPrice().replace(".", ",")}€
               </Typography>
               <ArrowForwardIosRoundedIcon
@@ -91,14 +122,26 @@ const RecapLine = ({ item, updateItemCount }) => {
           </Box>
         </Box>
       </Button>
-      <Divider variant="middle" sx={{ borderColor: "#0000000a" }} />
-      <Drawer open={open} onClose={toggleDrawer(false)} anchor="bottom">
-        <EditCartItems
-          toggleDrawer={toggleDrawer}
-          item={item}
-          updateItemCount={updateItemCount}
-        />
-      </Drawer>
+      {!isLast && (
+        <Divider variant="middle" sx={{ borderColor: "#0000000a" }} />
+      )}
+      {isMobile ? (
+        <Drawer open={open} onClose={toggleDrawer(false)} anchor="bottom">
+          <EditCartItems
+            toggleDrawer={toggleDrawer}
+            item={item}
+            updateItemCount={updateItemCount}
+          />
+        </Drawer>
+      ) : (
+        <Dialog open={open} onClose={toggleDrawer(false)} anchor="bottom">
+          <EditCartItems
+            toggleDrawer={toggleDrawer}
+            item={item}
+            updateItemCount={updateItemCount}
+          />
+        </Dialog>
+      )}
     </>
   );
 };

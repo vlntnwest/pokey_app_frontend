@@ -106,7 +106,7 @@ const SideForm = ({ handleSideChange }) => {
 
   return (
     <FormGroup sx={{ pt: 3 }}>
-      <Typography variant="p" sx={{ fontSize: 20 }}>
+      <Typography variant="h4" sx={{ fontSize: 20 }}>
         Envie d'accompagnements pour compléter ton pokey ?
       </Typography>
       <List sx={{ p: 0, pt: 1 }}>

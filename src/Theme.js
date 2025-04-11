@@ -24,8 +24,9 @@ const theme = createTheme({
       fontWeight: 700,
     },
     h3: {
-      fontSize: 20,
+      fontSize: 16,
       fontWeight: 700,
+      marginBottom: 2,
     },
     h4: {
       fontSize: 14,
@@ -33,7 +34,7 @@ const theme = createTheme({
     },
     body1: {
       fontSize: 14,
-      fontWeight: 700,
+      fontWeight: 400,
       fontFamily: "sans-serif",
     },
     body2: {
@@ -57,10 +58,8 @@ const theme = createTheme({
       }
           html,
           body {
-            overscroll-behavior: none; 
-          }
-          html::-webkit-scrollbar,
-          body::-webkit-scrollbar {
+            html::-webkit-scrollbar,
+            body::-webkit-scrollbar {
             display: none;
           }
           html {
@@ -82,8 +81,15 @@ const theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          border: "1px solid #0000000a",
+          border: "1px solid rgba(0, 0, 0, 0.05)",
           boxShadow: "none",
+        },
+      },
+    },
+    MuiTypography: {
+      styleOverrides: {
+        body2: {
+          color: "#676767",
         },
       },
     },

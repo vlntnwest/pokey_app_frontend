@@ -3,22 +3,21 @@ import { Box, CardMedia, Typography, Divider, Fab } from "@mui/material";
 import FormRenderer from "./Form/FormRenderer";
 import CloseIcon from "@mui/icons-material/Close";
 
-const MealDisplay = ({ meal, options, handlers, setOpen }) => {
+const MealDisplay = ({ meal, options, handlers, toggleDrawer }) => {
   const { name, picture, description, type } = meal;
+
   return (
     <Box sx={{ flexGrow: "1", overflowY: "auto", overflowX: "hidden" }}>
       <CardMedia
         component="img"
         image={`https://g10afdaataaj4tkl.public.blob.vercel-storage.com/img/${picture}.webp`}
         alt={name}
-        sx={{ height: "40%" }}
+        sx={{ aspectRatio: 4 / 3 }}
       />
       <Fab
         color="primary"
         aria-label="close"
-        onClick={() => {
-          setOpen(false);
-        }}
+        onClick={toggleDrawer(false)}
         sx={{ position: "absolute", top: 0, right: 0, m: 2 }}
       >
         <CloseIcon />
@@ -27,9 +26,7 @@ const MealDisplay = ({ meal, options, handlers, setOpen }) => {
         <Typography variant="h3" sx={{ fontSize: 26 }}>
           {name}
         </Typography>
-        <Typography variant="body2" sx={{ fontSize: 16, mt: 1 }}>
-          {description}
-        </Typography>
+        <Typography variant="body2">{description}</Typography>
         <Divider sx={{ mt: 2 }} />
         <FormRenderer type={type} options={options} handlers={handlers} />
       </Box>

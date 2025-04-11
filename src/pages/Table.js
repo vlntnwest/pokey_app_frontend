@@ -9,6 +9,7 @@ import Popular from "../components/user/Popular";
 import MealCategory from "../components/user/MealCategory";
 import { getMeals } from "../actions/meal.action";
 import ShoppingCartProvider from "../components/Context/ShoppingCartContext";
+import ShopProvider from "../components/Context/ShopContext";
 
 const Table = () => {
   const dispatch = useDispatch();
@@ -109,25 +110,27 @@ const Table = () => {
     );
 
   return (
-    <ShoppingCartProvider>
-      <Box
-        style={{
-          "&::WebkitScrollbar": {
-            display: "none",
-          },
-          MsOverflowStyle: "none",
-          scrollbarWidth: "none",
-        }}
-      >
-        <Header />
-        <Box component="main">
-          <Popular />
-          {types.map((type, index) => (
-            <MealCategory type={type} key={index} />
-          ))}
+    <ShopProvider>
+      <ShoppingCartProvider>
+        <Box
+          style={{
+            "&::WebkitScrollbar": {
+              display: "none",
+            },
+            MsOverflowStyle: "none",
+            scrollbarWidth: "none",
+          }}
+        >
+          <Header />
+          <Box component="main" maxWidth="lg" sx={{ margin: "0 auto" }}>
+            <Popular />
+            {types.map((type, index) => (
+              <MealCategory type={type} key={index} />
+            ))}
+          </Box>
         </Box>
-      </Box>
-    </ShoppingCartProvider>
+      </ShoppingCartProvider>
+    </ShopProvider>
   );
 };
 

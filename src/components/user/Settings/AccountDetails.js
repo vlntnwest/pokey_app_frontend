@@ -178,8 +178,9 @@ const AccountDetails = () => {
       <Box
         sx={{
           backgroundColor: "white",
-          borderTop: "1px solid #0000001a",
-          borderBottom: "1px solid #0000001a",
+          borderTop: "1px solid rgba(0, 0, 0, 0.05)",
+          borderBottom: "1px solid rgba(0, 0, 0, 0.05)",
+          width: "100%",
         }}
         px={2}
         py={2}
@@ -232,7 +233,7 @@ const AccountDetails = () => {
         />
       </Box>
       <Box>
-        <FullWidthBtn handleAction={handleEdit} name={"Enregistrer"} />
+        <FullWidthBtn handleAction={handleEdit} name={"Enregistrer"} br0 />
         <Box
           sx={{
             display: "flex",
@@ -249,6 +250,7 @@ const AccountDetails = () => {
               textDecoration: "underline",
             }}
             onClick={handleOpen}
+            mt={1}
           >
             Supprimer le compte
           </Link>

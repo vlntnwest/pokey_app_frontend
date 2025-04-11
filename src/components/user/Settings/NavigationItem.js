@@ -1,16 +1,18 @@
 import React, { useState } from "react";
-import { Box, Button, Drawer, Typography } from "@mui/material";
+import { Box, Button, Divider, Drawer, Typography } from "@mui/material";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import AccountDetails from "./AccountDetails";
 import OrdersList from "./OrdersList";
 import InsideDrawer from "../InsideDrawer";
+import About from "./About";
 
 const componentMap = {
   AccountDetails,
   OrdersList,
+  About,
 };
 
-const NavigationItem = ({ menuItem }) => {
+const NavigationItem = ({ menuItem, isLast }) => {
   const [open, setOpen] = useState(false);
   const toggleDrawer = (newOpen) => () => setOpen(newOpen);
 
@@ -25,7 +27,6 @@ const NavigationItem = ({ menuItem }) => {
         sx={{
           p: 0,
           display: "block",
-          mb: 2,
         }}
         onClick={toggleDrawer(true)}
       >
@@ -39,19 +40,25 @@ const NavigationItem = ({ menuItem }) => {
           <Box
             sx={{
               flex: 1,
-              py: 2,
+              py: 1.5,
               pl: 2,
               pr: 2,
               mr: "auto",
               alignItems: "flex-start",
             }}
           >
-            <Typography sx={{ textAlign: "left", fontWeight: "400" }}>
+            <Typography
+              sx={{
+                textAlign: "left",
+                fontWeight: "400",
+                textTransform: "none",
+              }}
+            >
               {menuItem.label}
             </Typography>
           </Box>
           <Box sx={{ ml: 2 }}>
-            <Box sx={{ display: "flex", px: 2, py: 2, alignItems: "center" }}>
+            <Box sx={{ display: "flex", px: 2, py: 1.5, alignItems: "center" }}>
               <ArrowForwardIosRoundedIcon
                 sx={{ ml: 1, maxHeight: "21px" }}
                 color="primary"
@@ -60,8 +67,16 @@ const NavigationItem = ({ menuItem }) => {
           </Box>
         </Box>
       </Button>
-      <Drawer open={open} onClose={toggleDrawer(false)} anchor="right">
-        <InsideDrawer toggleDrawer={toggleDrawer}>
+      {!isLast && (
+        <Divider variant="middle" sx={{ borderColor: "#0000000a" }} />
+      )}
+      <Drawer
+        open={open}
+        onClose={toggleDrawer(false)}
+        anchor="right"
+        hideBackdrop
+      >
+        <InsideDrawer toggleDrawer={toggleDrawer} name={menuItem.label} back>
           {ComponentToRender && <ComponentToRender />}
         </InsideDrawer>
       </Drawer>

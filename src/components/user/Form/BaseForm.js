@@ -51,12 +51,10 @@ const BaseForm = ({ selectedBase, handleBaseChange }) => {
 
   return (
     <RadioGroup value={selectedBase} sx={{ pt: 3 }}>
-      <Typography variant="p" sx={{ fontSize: 20 }}>
+      <Typography variant="h4" sx={{ fontSize: 20 }}>
         Choisissez votre base
       </Typography>
-      <Typography variant="body2" sx={{ color: "rgb(88, 92, 92)" }}>
-        Obligatoire
-      </Typography>
+      <Typography variant="body2">Obligatoire</Typography>
       <List sx={{ p: 0, pt: 1 }}>
         {bases.map((base) => (
           <ListItemButton
@@ -67,7 +65,7 @@ const BaseForm = ({ selectedBase, handleBaseChange }) => {
             <ListItemText
               primary={base.name}
               disableTypography
-              sx={{ fontSize: 16, fontWeight: "400" }}
+              sx={{ fontSize: 16 }}
             />
             <Radio
               checked={selectedBase === base.name}
