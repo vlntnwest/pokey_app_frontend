@@ -46,7 +46,8 @@ const CartValidator = ({ setOpen }) => {
   const toggleDrawer = (newOpen) => () => setOpenCheckout(newOpen);
   const [isGuest, setIsGuest] = useState(false);
 
-  const { handleOpenCompletedOrderModal, setOrderTime } = useShop();
+  const { handleOpenCompletedOrderModal, setOrderTime, availableDates } =
+    useShop();
 
   const {
     cartItems,
@@ -166,7 +167,11 @@ const CartValidator = ({ setOpen }) => {
           variant="contained"
           fullWidth
           sx={{ py: 1.5 }}
-          disabled={cartItems.length === 0 || calculateTotalPrice() < 1}
+          disabled={
+            cartItems.length === 0 ||
+            calculateTotalPrice() < 1 ||
+            availableDates.length < 1
+          }
           onClick={isClickAndCollect ? handleCheckout : handleSubmit}
         >
           {isClickAndCollect ? (
