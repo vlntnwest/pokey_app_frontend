@@ -8,7 +8,8 @@ import ProtForm from "./ProtForm";
 import GarnishesForm from "./GarnishesForm";
 import ToppingsForm from "./ToppingsForm";
 
-const FormRenderer = ({ type, options, handlers }) => {
+const FormRenderer = ({ meal, options, handlers }) => {
+  const { type, hasSauce } = meal;
   const {
     selectedBase,
     selectedProt,
@@ -57,7 +58,9 @@ const FormRenderer = ({ type, options, handlers }) => {
           />
         </>
       )}
-      {(type === "bowl" || type === "custom" || type === "side") && (
+      {(type === "bowl" ||
+        type === "custom" ||
+        (type === "side" && hasSauce === true)) && (
         <SaucesForm
           selectedSauces={selectedSauces}
           handleSauceChange={handleSauceChange}

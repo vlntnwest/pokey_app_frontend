@@ -5,7 +5,7 @@ import { useShoppingCart } from "../Context/ShoppingCartContext";
 import { formatPrice, isEmpty } from "../Utils";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { Dialog, Drawer } from "@mui/material";
+import { Box, Dialog, Drawer } from "@mui/material";
 import { useShop } from "../Context/ShopContext";
 
 const MealDetails = ({ meal, openDrawer, toggleDrawer }) => {
@@ -248,7 +248,7 @@ const MealDetails = ({ meal, openDrawer, toggleDrawer }) => {
   };
 
   const content = (
-    <>
+    <Box sx={{ height: "100dvh", display: "flex", flexDirection: "column" }}>
       <MealDisplay
         meal={meal}
         options={options}
@@ -264,7 +264,7 @@ const MealDetails = ({ meal, openDrawer, toggleDrawer }) => {
         isLoading={isLoading}
         calculateTotalPrice={calculateTotalPrice}
       />
-    </>
+    </Box>
   );
 
   return isMobile ? (
