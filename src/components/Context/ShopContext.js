@@ -59,6 +59,36 @@ export default function ShopProvider({ children }) {
     }
   }, [openingHours]);
 
+  // Function to check if a date is Sunday (0) or Monday (1)
+  const isSundayOrMonday = (date) => {
+    const dayOfWeek = date.day();
+    return dayOfWeek === 0 || dayOfWeek === 1;
+  };
+
+  // Generate available dates: today and tomorrow (if not Sunday or Monday)
+  const availableDates = useMemo(() => {
+    const dates = [];
+
+    const today = dayjs();
+    const tomorrow = dayjs().add(1, "day");
+
+    if (!isSundayOrMonday(today)) {
+      dates.push({
+        label: "Aujourd'hui",
+        value: today,
+      });
+    }
+
+    if (!isSundayOrMonday(tomorrow)) {
+      dates.push({
+        label: "Demain",
+        value: tomorrow,
+      });
+    }
+
+    return dates;
+  }, []);
+
   useEffect(() => {
     calculOrderTimeRange();
   }, [calculOrderTimeRange]);
@@ -77,6 +107,7 @@ export default function ShopProvider({ children }) {
         orderTime,
         setOrderTime,
         isMobile,
+        availableDates,
       }}
     >
       {children}

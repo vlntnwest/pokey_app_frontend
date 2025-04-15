@@ -6,7 +6,7 @@ import { useShop } from "../../Context/ShopContext";
 
 const CartTimer = () => {
   const { selectedDay, setSelectedDay } = useShoppingCart();
-  const { canOrderNow } = useShop();
+  const { canOrderNow, availableDates } = useShop();
 
   const handleChange = (event) => {
     setSelectedDay(event.target.value);
@@ -58,18 +58,23 @@ const CartTimer = () => {
               <Radio {...controlProps("now")} />
             </Box>
           )}
-
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-            onClick={() => setSelectedDay("after")}
-          >
-            <Typography variant="body1">Plus tard</Typography>
-            <Radio {...controlProps("after")} />
-          </Box>
+          {availableDates.length > 0 ? (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+              onClick={() => setSelectedDay("after")}
+            >
+              <Typography variant="body1">Plus tard</Typography>
+              <Radio {...controlProps("after")} />
+            </Box>
+          ) : (
+            <Typography variant="body1">
+              Le restaurant est fermé le dimanche et le lundi.
+            </Typography>
+          )}
         </RadioGroup>
         <Box>{selectedDay === "after" && <OrderDate />}</Box>
       </Box>
