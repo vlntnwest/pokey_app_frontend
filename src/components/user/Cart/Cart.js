@@ -11,7 +11,7 @@ const Cart = ({ setOpen }) => {
   return (
     <Box
       sx={{
-        height: { xs: "100vh", md: "100%" },
+        height: { xs: "100dvh", md: "100%" },
         display: "flex",
         flexDirection: "column",
         border: "1px solid  #0000000a",
@@ -50,7 +50,6 @@ const Cart = ({ setOpen }) => {
           </Typography>
         </Container>
       )}
-
       <CartValidator setOpen={setOpen} />
     </Box>
   );

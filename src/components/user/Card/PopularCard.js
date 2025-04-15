@@ -47,7 +47,7 @@ const PopularCard = ({ meal }) => {
               width: "100%",
             }}
           >
-            <Box>
+            <Box sx={{ flex: 1 }}>
               <Typography variant="h3" sx={{ flexGrow: 1 }}>
                 {meal.name}
               </Typography>
