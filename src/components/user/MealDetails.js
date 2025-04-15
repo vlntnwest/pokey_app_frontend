@@ -248,7 +248,7 @@ const MealDetails = ({ meal, openDrawer, toggleDrawer }) => {
   };
 
   const content = (
-    <Box sx={{ height: "100dvh", display: "flex", flexDirection: "column" }}>
+    <>
       <MealDisplay
         meal={meal}
         options={options}
@@ -264,12 +264,14 @@ const MealDetails = ({ meal, openDrawer, toggleDrawer }) => {
         isLoading={isLoading}
         calculateTotalPrice={calculateTotalPrice}
       />
-    </Box>
+    </>
   );
 
   return isMobile ? (
     <Drawer open={openDrawer} onClose={toggleDrawer(false)} anchor="bottom">
-      {content}
+      <Box sx={{ height: "100dvh", display: "flex", flexDirection: "column" }}>
+        {content}
+      </Box>
     </Drawer>
   ) : (
     <Dialog
@@ -278,7 +280,15 @@ const MealDetails = ({ meal, openDrawer, toggleDrawer }) => {
       maxWidth="sm"
       fullWidth
     >
-      {content}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          maxHeight: "calc(100dvh - 64px)",
+        }}
+      >
+        {content}
+      </Box>
     </Dialog>
   );
 };

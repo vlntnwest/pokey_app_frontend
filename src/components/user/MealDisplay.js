@@ -4,10 +4,10 @@ import FormRenderer from "./Form/FormRenderer";
 import CloseIcon from "@mui/icons-material/Close";
 
 const MealDisplay = ({ meal, options, handlers, toggleDrawer }) => {
-  const { name, picture, description, type } = meal;
+  const { name, picture, description } = meal;
 
   return (
-    <Box sx={{ flexGrow: "1", overflowY: "auto", overflowX: "hidden" }}>
+    <Box sx={{ flex: "1", overflowY: "auto", overflowX: "hidden" }}>
       <CardMedia
         component="img"
         image={`https://g10afdaataaj4tkl.public.blob.vercel-storage.com/img/${picture}.webp`}
