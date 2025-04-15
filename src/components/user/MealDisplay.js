@@ -28,7 +28,7 @@ const MealDisplay = ({ meal, options, handlers, toggleDrawer }) => {
         </Typography>
         <Typography variant="body2">{description}</Typography>
         <Divider sx={{ mt: 2 }} />
-        <FormRenderer type={type} options={options} handlers={handlers} />
+        <FormRenderer meal={meal} options={options} handlers={handlers} />
       </Box>
     </Box>
   );

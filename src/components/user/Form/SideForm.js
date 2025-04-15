@@ -85,16 +85,18 @@ const SideForm = ({ handleSideChange }) => {
 
     // Determine the selected sauce based on the new count (null if count is 0)
     const selectedSauce =
-      newCount === 0 ? null : sauceSelections[side.name] || null;
+      newCount === 0
+        ? null
+        : side.hasSauce
+        ? sauceSelections[side.name] || "Sans sauce"
+        : null;
 
     // If the side does not have sauce, notify the parent with the side name, new count, and selected sauce
-    if (side.hasSauce === false) {
-      handleSideChange(side.name, newCount, selectedSauce);
-    }
+    handleSideChange(side.name, newCount, selectedSauce);
   };
 
   const handleSauceChange = (e, sideName) => {
-    const selectedSauce = e.target.value;
+    const selectedSauce = e.target.value || "Sans sauce";
     setSauceSelections((prevSelections) => ({
       ...prevSelections,
       [sideName]: selectedSauce,
@@ -155,6 +157,7 @@ const SideForm = ({ handleSideChange }) => {
                     <MenuItem value="Soja salé">Soja salé</MenuItem>
                     <MenuItem value="Soja sucré">Soja sucré</MenuItem>
                     <MenuItem value="Spicy mayo">Spicy mayo</MenuItem>
+                    <MenuItem value="Sans sauce">Sans sauce</MenuItem>
                   </Select>
                 </FormControl>
               </Box>
