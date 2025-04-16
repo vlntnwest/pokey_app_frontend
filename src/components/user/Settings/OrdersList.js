@@ -5,10 +5,8 @@ import { Box, Card } from "@mui/material";
 import OrderCardHistory from "../Card/OrderCardHistory";
 import { isEmpty } from "../../Utils";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useShop } from "../../Context/ShopContext";
 
 const OrdersList = () => {
-  const { isMobile } = useShop();
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
   const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
   const user = useSelector((state) => state.userReducer);
@@ -47,29 +45,27 @@ const OrdersList = () => {
     : [];
 
   return (
-    isMobile && (
-      <Box
-        sx={{
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          maxWidth: 1200,
-          width: "100%",
-        }}
-        px={2}
-      >
-        <Card sx={{ border: "1px solid rgba(0, 0, 0, 0.05)", width: "100%" }}>
-          {sortedOrders.map((order, index) => (
-            <OrderCardHistory
-              order={order}
-              key={order._id}
-              isLast={index === orders.length - 1}
-            />
-          ))}
-        </Card>
-      </Box>
-    )
+    <Box
+      sx={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        maxWidth: 1200,
+        width: "100%",
+      }}
+      px={2}
+    >
+      <Card sx={{ border: "1px solid rgba(0, 0, 0, 0.05)", width: "100%" }}>
+        {sortedOrders.map((order, index) => (
+          <OrderCardHistory
+            order={order}
+            key={order._id}
+            isLast={index === orders.length - 1}
+          />
+        ))}
+      </Card>
+    </Box>
   );
 };
 

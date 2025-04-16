@@ -44,7 +44,7 @@ const OrderCardHistory = ({ order, isLast }) => {
               Commande #{orderNumber}
             </Typography>
             <Typography variant="body2" sx={{ textTransform: "none" }}>
-              {formatEuros(totalPrice)} • {localedateformat}
+              {formatEuros(totalPrice / 100)} • {localedateformat}
             </Typography>
           </Box>
           <Box sx={{ display: "flex" }} p={2} ml={1}>
@@ -141,7 +141,7 @@ const OrderCardHistory = ({ order, isLast }) => {
                       }}
                     >
                       <Typography sx={{ fontWeight: "400" }}>
-                        {formatEuros(item.price)}
+                        {formatEuros(item.price / 100)}
                       </Typography>
                     </Box>
                   </Box>
