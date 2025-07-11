@@ -82,6 +82,16 @@ const RecapLine = ({ item, updateItemCount, isLast }) => {
                 pt: 0.5,
               }}
             >
+              {item.proteins && item.proteins.trim !== "" && item.proteins}
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                textAlign: "left",
+                textTransform: "none",
+                pt: 0.5,
+              }}
+            >
               {orderDetails.filter(Boolean).join(", ")}
             </Typography>
             {item.extraProtein && item.extraProtein.length > 0 && (
@@ -94,17 +104,7 @@ const RecapLine = ({ item, updateItemCount, isLast }) => {
                     pt: 0.5,
                   }}
                 >
-                  Extra protéine:
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    textAlign: "left",
-                    textTransform: "none",
-                    pt: 0.5,
-                  }}
-                >
-                  {item.extraProtein.map((protein) => protein)}
+                  Extra protéine: {item.extraProtein.map((protein) => protein)}
                 </Typography>
               </Box>
             )}

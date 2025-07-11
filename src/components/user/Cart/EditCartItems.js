@@ -38,7 +38,7 @@ const EditCartItems = ({ toggleDrawer, item }) => {
   };
 
   return (
-    <Box sx={{ width: { xs: "100vw", sm: "400px" } }}>
+    <Box sx={{ width: { xs: "100vw", md: "400px" } }}>
       <Box
         style={{
           position: "sticky",
