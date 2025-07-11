@@ -9,6 +9,7 @@ import rootReducer from "./reducers";
 
 // Auth
 import { Auth0Provider } from "@auth0/auth0-react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 const domain = process.env.REACT_APP_AUTH0_DOMAIN;
 const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
@@ -32,6 +33,7 @@ root.render(
   >
     <Provider store={store}>
       <App />
+      <SpeedInsights />
     </Provider>
   </Auth0Provider>
 );
