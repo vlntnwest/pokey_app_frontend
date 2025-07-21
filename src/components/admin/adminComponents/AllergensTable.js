@@ -165,7 +165,15 @@ const AllergensTable = () => {
         <Table stickyHeader aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell sx={{ backgroundColor: "white" }}>
+              <TableCell
+                sx={{
+                  backgroundColor: "white",
+                  position: "sticky",
+                  left: 0,
+                  zIndex: 20,
+                  width: 74,
+                }}
+              >
                 <Checkbox
                   color="primary"
                   indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -176,7 +184,15 @@ const AllergensTable = () => {
                   }}
                 />
               </TableCell>
-              <TableCell sx={{ backgroundColor: "white", minWidth: 150 }}>
+              <TableCell
+                sx={{
+                  backgroundColor: "white",
+                  position: "sticky",
+                  left: 74,
+                  zIndex: 20,
+                  minWidth: 150,
+                }}
+              >
                 <Typography variant="body1" component="p">
                   Aliments
                 </Typography>
@@ -201,14 +217,32 @@ const AllergensTable = () => {
           <TableBody>
             {foodsData.map((food, foodIndex) => (
               <TableRow key={food.name}>
-                <TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "white",
+                    position: "sticky",
+                    left: 0,
+                    zIndex: 1,
+                    width: 74,
+                  }}
+                >
                   <Checkbox
                     color="primary"
                     onChange={(e) => handleCheckbox(e, food)}
                     checked={isChecked.includes(food._id)}
                   />
                 </TableCell>
-                <TableCell scope="row" style={cellStyle}>
+                <TableCell
+                  scope="row"
+                  sx={{
+                    backgroundColor: "white",
+                    position: "sticky",
+                    left: 74,
+                    zIndex: 1,
+                    minWidth: 150,
+                  }}
+                  style={cellStyle}
+                >
                   <Typography
                     variant="body1"
                     component="p"
