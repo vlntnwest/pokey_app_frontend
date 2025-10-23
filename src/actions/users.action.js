@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../api";
 
 export const GET_USER = "GET_USER";
 export const EDIT_USER = "EDIT_USER";
@@ -6,8 +6,8 @@ export const DELETE_USER = "DELETE_USER";
 
 export const getUser = (email, token) => {
   return (dispatch) => {
-    return axios
-      .get(`${process.env.REACT_APP_API_URL}api/users/${email}`, {
+    return api
+      .get(`api/users/${email}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -25,8 +25,8 @@ export const getUser = (email, token) => {
 
 export const editUser = (data, uid, token) => {
   return (dispatch) => {
-    return axios
-      .put(`${process.env.REACT_APP_API_URL}api/users/${uid}`, data, {
+    return api
+      .put(`api/users/${uid}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -39,8 +39,8 @@ export const editUser = (data, uid, token) => {
 
 export const deleteUser = (uid, token) => {
   return (dispatch) => {
-    return axios
-      .delete(`${process.env.REACT_APP_API_URL}api/users/${uid}`, {
+    return api
+      .delete(`api/users/${uid}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

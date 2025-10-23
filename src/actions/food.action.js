@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../api";
 
 export const GET_FOODS = "GET_FOODS";
 export const ADD_FOOD = "ADD_FOOD";
@@ -7,8 +7,8 @@ export const DELETE_FOOD = "DELETE_FOOD";
 
 export const getFoods = () => {
   return (dispatch) => {
-    return axios
-      .get(`${process.env.REACT_APP_API_URL}api/food/`)
+    return api
+      .get(`api/food/`)
       .then((res) => {
         dispatch({ type: GET_FOODS, payload: res.data });
         return { sucess: true };
@@ -22,8 +22,8 @@ export const getFoods = () => {
 
 export const addFood = (name) => {
   return (dispatch) => {
-    return axios
-      .post(`${process.env.REACT_APP_API_URL}api/food/`, { name })
+    return api
+      .post(`api/food/`, { name })
       .then((res) => {
         dispatch({ type: ADD_FOOD, payload: res.data.food });
         return { sucess: true };
@@ -37,8 +37,8 @@ export const addFood = (name) => {
 
 export const editFood = (id, data) => {
   return (dispatch) => {
-    return axios
-      .put(`${process.env.REACT_APP_API_URL}api/food/${id}`, data)
+    return api
+      .put(`api/food/${id}`, data)
       .then((res) => {
         dispatch({ type: EDIT_FOOD, payload: res.data.food });
       })
@@ -55,8 +55,8 @@ export const editFood = (id, data) => {
 
 export const deleteFood = (ids) => {
   return (dispatch) => {
-    return axios
-      .delete(`${process.env.REACT_APP_API_URL}api/food/`, { data: { ids } })
+    return api
+      .delete(`api/food/`, { data: { ids } })
       .then((res) => {
         dispatch({ type: DELETE_FOOD, payload: ids });
       })

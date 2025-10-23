@@ -1,10 +1,10 @@
-import axios from "axios";
+import api from "../api";
 
 export const GET_MEALS = "GET_MEALS";
 
 export const getMeals = () => {
   return (dispatch) => {
-    return axios.get(`${process.env.REACT_APP_API_URL}api/item`).then((res) => {
+    return api.get(`api/item`).then((res) => {
       dispatch({ type: GET_MEALS, payload: res.data });
     });
   };
