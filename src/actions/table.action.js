@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../api";
 
 export const GET_TABLES = "GET_TABLES";
 export const GET_TABLE = "GET_TABLE";
@@ -7,18 +7,16 @@ export const TOGGLE_TABLES = "TOGGLE_TABLES";
 
 export const getTables = () => {
   return (dispatch) => {
-    return axios
-      .get(`${process.env.REACT_APP_API_URL}api/table`)
-      .then((res) => {
-        dispatch({ type: GET_TABLES, payload: res.data });
-      });
+    return api.get(`api/table`).then((res) => {
+      dispatch({ type: GET_TABLES, payload: res.data });
+    });
   };
 };
 
 export const getTable = (tableNumber) => {
   return (dispatch) => {
-    return axios
-      .get(`${process.env.REACT_APP_API_URL}api/table/${tableNumber}`)
+    return api
+      .get(`api/table/${tableNumber}`)
       .then((res) => {
         if (res.data && Object.keys(res.data).length > 0) {
           dispatch({ type: GET_TABLE, payload: res.data });

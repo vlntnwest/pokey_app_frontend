@@ -7,7 +7,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import {
   Box,
   Checkbox,
@@ -20,6 +19,7 @@ import {
 import { addFood, deleteFood, editFood } from "../../../actions/food.action";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
+import api from "../../../api";
 
 const COLOR_MAP = {
   non: "",
@@ -49,10 +49,7 @@ const AllergensTable = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      await axios
-        .get(`${process.env.REACT_APP_API_URL}api/allergen`)
-        .then((res) => setAllergenData(res.data))
-        .catch((error) => console.log(error));
+      await api.get(`api/allergen`).then((res) => setAllergenData(res.data));
 
       setFoodsData(foodReducer);
     };
