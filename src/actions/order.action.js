@@ -20,7 +20,7 @@ export const getOrders = ({ token }) => {
 
 export const toggleArchive = (payload) => async (dispatch) => {
   try {
-    await axios.put(
+    await api.put(
       `${process.env.REACT_APP_API_URL}api/order/${payload.id}/toggle`
     );
     dispatch({ type: "TOGGLE_ARCHIVE", payload: payload });
@@ -31,7 +31,7 @@ export const toggleArchive = (payload) => async (dispatch) => {
 
 export const deleteOrder = (id) => async (dispatch) => {
   try {
-    await axios.delete(`api/order/${id}`);
+    await api.delete(`api/order/${id}`);
     dispatch({ type: "DELETE_ORDER", payload: id });
   } catch (error) {
     console.error("Error while deleting the order", error);

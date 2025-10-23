@@ -36,7 +36,7 @@ export const getTable = (tableNumber) => {
 
 export const toggleTables = (payload) => async (dispatch) => {
   try {
-    await axios.put(
+    await api.put(
       `${process.env.REACT_APP_API_URL}api/table/${payload._id}/toggle`
     );
     dispatch({ type: "TOGGLE_TABLES", payload: payload });
